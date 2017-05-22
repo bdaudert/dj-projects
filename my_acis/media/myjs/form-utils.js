@@ -58,8 +58,15 @@ function set_vd(vd, vd_fut=['9999-99-99','9999-99-99']){
         $('#valid_daterange_fut').css('display','none');
     }
     else{
-        $('#valid_daterange_fut').css('display','block');
-        $('#valid_daterange_fut').html('And: ' + min_date_fut + ' - ' + max_date_fut);            
+        if ($('#app_name').val() == 'data_comparison'){
+            //Future dateranges do not make sense when comparing to 
+            //station data
+            $('#valid_daterange_fut').css('display','none');
+        }
+        else {
+            $('#valid_daterange_fut').css('display','block');
+            $('#valid_daterange_fut').html('And: ' + min_date_fut + ' - ' + max_date_fut);
+        }
     }
 }
 
@@ -85,9 +92,14 @@ function set_grid_dates(){
     Set max/min dates and valid dateranges
     and checks that form dates lie within valid daterange
     */
-    var vd = grid_vd[String($('#grid').val())][0];
-    if (String($('#grid').val()) == '21'){
-        if ($('#temporal_resolution').val() != 'dly'){
+    var grid = String($('#grid').val()),
+        vd = grid_vd[grid][0],
+        tr = 'dly';
+    if ($('#temporal_resolution').length){
+        tr = $('#temporal_resolution').val();
+    }
+    if (grid == '21'){
+        if (tr != 'dly'){
             vd[0] = '1895-01-01';
         }
         else{
@@ -95,8 +107,8 @@ function set_grid_dates(){
         }
     }
     vd_fut= ['9999-99-99','9999-99-99'];
-    if (grid_vd[String($('#grid').val())].length > 1 && grid_vd[String($('#grid').val())][1].length > 0){
-        vd_fut = grid_vd[String($('#grid').val())][1];
+    if (grid_vd[grid].length > 1 && grid_vd[grid][1].length > 0){
+        vd_fut = grid_vd[grid][1];
     }
     set_max_min_dates(vd,vd_fut);
     set_vd(vd,vd_fut);

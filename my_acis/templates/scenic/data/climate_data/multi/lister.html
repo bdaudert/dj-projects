@@ -14,6 +14,7 @@
     <div id="Docu_area_of_interest">{% include 'includes/Docu_area_of_interest.html'%}</div>
     <div id="Docu_data_type">{% include 'includes/Docu_data_type.html'%}</div>
     <div id="Docu_grids">{% include 'includes/Docu_grids.html'%}</div>
+    <div id="Docu_start_end_date">{% include 'includes/Docu-start-end-date.html'%}</div>
     <div id="Docu_temporal_resolution">{% include 'includes/Docu-temporal-resolution.html'%}</div>
     <div id="Docu_variables">{% include 'includes/Docu_variables.html'%}</div>
     <div id="Docu_units">{% include 'includes/Docu_units.html'%}</div>
@@ -22,7 +23,6 @@
     <div id="Docu_data_summary">{% include 'includes/Docu_data_summary.html'%}</div>
     <div id="Docu_show_flags">{% include 'includes/Docu_show_flags.html'%}</div>
     <div id="Docu_show_observation_time">{% include 'includes/Docu_show_observation_time.html'%}</div>
-    <div id="Docu_start_end_date">{% include 'includes/Docu-start-end-date.html'%}</div>
     <div id="Docu_data_format">{% include 'includes/Docu_data_format.html'%}</div>
     <div id="Docu_delimiter">{% include 'includes/Docu_delimiter.html'%}</div>
 </div><!--End how_to-->
@@ -69,14 +69,14 @@
                 </div>
             </div>
             <div class="form-input-group form-group" align="center">
-                <label class="form-group-header">2. Choose your dataset!</label>
+                <label class="form-group-header">2. Choose your datatype!</label>
                 <div class="input-group">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         {% include 'includes/data_type.html'%}
                     </div>
                 </div>
                 <div class="input-group">
-                    {%if initial.data_type == "grid"%}        
+                    {%if initial.data_type == "grid"%}
                     <span  id="grid_type">{% include 'includes/grids.html'%}</span>
                     <span class="input-group-addon"></span>
                     {% if initial.grid == "21"%}
@@ -88,6 +88,23 @@
                     <span  id="grid_type" style="display:none">{% include 'includes/grids.html'%}</span>
                     <span  id="temp_res" style="display:none">{% include 'includes/temporal-resolution.html'%}</span>
                     {%endif%}
+                </div>
+            </div>
+            <div class="form-input-group form-group" align="center">
+                <label class="form-group-header">4. Define your date ranges! </label>
+                {% include 'includes/valid_daterange.html'%}
+                <div class="input-group">
+                    {% include 'includes/start-date.html'%}
+                    <span class="input-group-addon"></span>
+                    {% include 'includes/end-date.html'%}
+                </div>
+            </div>
+            <div class="form-input-group form-group" align="center">
+                <label class="form-group-header">2. Choose your dataset!</label>
+                <div class="input-group">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        {% include 'includes/data_type.html'%}
+                    </div>
                 </div>
                 <div class="input-group">
                     <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8"> 
@@ -167,15 +184,6 @@
                     <span class="input-group-addon"></span>
                     <span  id="obs_time" style="display:none">{% include 'includes/show_observation_time.html'%}</span>
                 {%endif%}
-                </div>
-            </div>
-            <div class="form-input-group form-group" align="center">
-                <label class="form-group-header">4. Define your date ranges! </label>
-                {% include 'includes/valid_daterange.html'%}
-                <div class="input-group">
-                    {% include 'includes/start-date.html'%}
-                    <span class="input-group-addon"></span>
-                    {% include 'includes/end-date.html'%}
                 </div>
             </div>
             <div class="form-input-group form-group" align="center">

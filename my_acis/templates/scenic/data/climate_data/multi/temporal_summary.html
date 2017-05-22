@@ -13,13 +13,13 @@ w
 </div>
 <div id="how_to" style="display:none;">
     <div id="Docu_area_of_interest">{% include 'includes/Docu_area_of_interest.html'%}</div>
+    <div id="Docu_start_end_date">{% include 'includes/Docu-start-end-date.html'%}</div>
     <div id="Docu_variables">{% include 'includes/Docu_variables.html'%}</div>
     <div id="Docu_units">{% include 'includes/Docu_units.html'%}</div> 
     <div id="Docu_add_degree_days">{% include 'includes/Docu_add_degree_days.html'%}</div>
     <div id="Docu_degree_days">{% include 'includes/Docu_degree_days.html'%}</div>
     <div id="Docu_grids">{% include 'includes/Docu_grids.html'%}</div>
     <div id="Docu_temporal_summary">{% include 'includes/Docu_temporal_summary.html'%}</div>
-    <div id="Docu_start_end_date">{% include 'includes/Docu-start-end-date.html'%}</div>
 </div><!--End how_to-->
 
 <!--Hidden variables-->
@@ -60,7 +60,23 @@ w
                     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                         <span id="area">{% include 'includes/area.html'%}</span>
                     </div>
-                </div> 
+                </div>
+                <span class="grid" id="grid_type">{% include 'includes/grids.html'%}</span>
+            </div>
+           <div class="form-input-group form-group" align="center">
+                <label class="form-group-header">3. Define your date ranges! </label>
+                {% include 'includes/valid_daterange.html'%}
+                <div class="input-group">
+                    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                        {% include 'includes/start-date.html'%}
+                    </div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                        <span class="input-group-addon"></span>
+                    </div>
+                    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                        {% include 'includes/end-date.html'%}
+                    </div>
+                </div>
             </div>
             <div class="form-input-group form-group" align="center">
                 <label class="form-group-header">2. Choose your dataset!</label>
@@ -83,7 +99,6 @@ w
                     {%endif%}
                 </div>
                 <div class="input-group">
-                    <span class="grid" id="grid_type">{% include 'includes/grids.html'%}</span>
                     <span id="temp_summary">{% include 'includes/temporal-summary.html'%}</span>
                     <!--<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
                     </div>
@@ -92,21 +107,6 @@ w
                     </div>
                     <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
                     </div>-->
-                </div>
-            </div>
-            <div class="form-input-group form-group" align="center">
-                <label class="form-group-header">3. Define your date ranges! </label>
-                {% include 'includes/valid_daterange.html'%}
-                <div class="input-group">
-                    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
-                        {% include 'includes/start-date.html'%}
-                    </div>
-                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                        <span class="input-group-addon"></span>
-                    </div>
-                    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
-                        {% include 'includes/end-date.html'%}
-                    </div>
                 </div>
             </div>
             <hr>

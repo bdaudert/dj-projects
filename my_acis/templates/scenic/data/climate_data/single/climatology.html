@@ -64,23 +64,15 @@
                         </div>
                     </div>
                     {%if initial.area_type == "location"%}
-                    <span  id="stn_finder" style="display:none">{% include 'includes/station-finder.html'%}</span>
-                    {%else%}
-                    <span  id="stn_finder">{% include 'includes/station-finder.html'%}</span>
-                    {%endif%}
-                </div>
-               <div class="form-input-group form-group" align="center">
-                    <label class="form-group-header">2. Choose your dataset!</label>
-                    {%if initial.area_type == "location"%}
                     <span class="grid" id="grid_type">{% include 'includes/grids.html'%}</span>
                     {% else%}
                     <span class="grid" id="grid_type" style="display:none">{% include 'includes/grids.html'%}</span>
                     {%endif%}
-                    <div class="input-group">
-                        {% include 'includes/climatology_summary_type.html'%}
-                        <span class="input-group-addon"></span>
-                        {% include 'includes/units.html'%}
-                    </div>
+                    {%if initial.area_type == "location"%}
+                    <span  id="stn_finder" style="display:none">{% include 'includes/station-finder.html'%}</span>
+                    {%else%}
+                    <span  id="stn_finder">{% include 'includes/station-finder.html'%}</span>
+                    {%endif%}
                 </div>
                 <div class="form-input-group form-group" align="center">
                     <label class="form-group-header">4. Define your date ranges! </label>
@@ -88,13 +80,21 @@
                     {% include 'includes/start-end-year.html'%}
                 </div>
                 <div class="form-input-group form-group" align="center">
+                    <label class="form-group-header">2. Choose your dataset!</label>
+                    <div class="input-group">
+                        {% include 'includes/climatology_summary_type.html'%}
+                        <span class="input-group-addon"></span>
+                        {% include 'includes/units.html'%}
+                    </div>
+                 </div>
+                 <div class="form-input-group form-group" align="center">
                     {% include 'includes/max_missing_days.html'%}
-                </div>
-                <div class="form-group">
+                 </div>
+                 <div class="form-group">
                     <button type="submit" class="main-form-button btn btn-large btn-primary pull-left" name="formData" style="width:100%">
                     Get Data
                     </button>
-                </div>
+                 </div>
             </form>
         </div><br /><!--col-sm-4-->
         <!--Main: Errors/maps-->

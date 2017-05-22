@@ -1050,6 +1050,7 @@ def spatial_summary(request):
         #Set form and initial
         form = DJANGOUtils.set_form(initial, clean=False)
         form_cleaned = DJANGOUtils.set_form(initial)
+        #context['xx'] = form_cleaned
         #Form Check
         fields_to_check = [form['area_type'],'start_date', 'end_date','degree_days', 'variables']
         #,'connector_line_width', 'vertical_axis_min', 'vertical_axis_max']

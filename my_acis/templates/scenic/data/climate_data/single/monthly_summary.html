@@ -14,14 +14,14 @@
 <div id="how_to" style="display:none;">
     <div id="Docu_point_of_interest">{% include 'includes/Docu_point_of_interest.html'%}</div>
     <div id="Docu_grids">{% include 'includes/Docu_grids.html'%}</div>
+    <div id="Docu_start_end_year">{% include 'includes/Docu_start_end_year.html'%}</div>
+    <div id="Docu_start_month" style="display:none;">{% include 'includes/Docu_start_month.html'%}</div>
     <div id="Docu_variable">{% include 'includes/Docu_variable.html'%}</div>
     <div id="Docu_units">{% include 'includes/Docu_units.html'%}</div>
     <div id="Docu_base_temperature">{% include 'includes/Docu_base_temperature.html'%}</div> 
     <div id="Docu_statistic_period" style="display:none">{% include 'includes/Docu_statistic_period.html'%}</div>
     <div id="Docu_statistic">{% include 'includes/Docu_monthly_summary_statistic.html'%}</div>
     <div id="Docu_num_days_thresholds">{% include 'includes/Docu_num_days_thresholds.html'%}</div>
-    <div id="Docu_start_end_year">{% include 'includes/Docu_start_end_year.html'%}</div>
-    <div id="Docu_start_month" style="display:none;">{% include 'includes/Docu_start_month.html'%}</div>
     <div id="Docu_max_missing_days">{% include 'includes/Docu_max_missing_days.html'%}</div>
     <div id="Docu_departure_from_averages">{% include 'includes/Docu_departure_from_averages.html'%}</div>
 </div>
@@ -69,11 +69,21 @@
                             <span id="area">{% include 'includes/area.html'%}</span>
                         </div>
                     </div>
+                    {%if initial.area_type == "location"%}
+                    <span class="grid" id="grid_type">{% include 'includes/grids.html'%}</span>
+                    {% else%}
+                    <span class="grid" id="grid_type" style="display:none">{% include 'includes/grids.html'%}</span>
+                    {%endif%}
                     {%if initial.area_type == "location"%} 
                     <span  id="stn_finder" style="display:none">{% include 'includes/station-finder.html'%}</span>
                     {%else%}
                     <span  id="stn_finder">{% include 'includes/station-finder.html'%}</span>
                     {%endif%}
+                </div>
+                <div class="form-input-group form-group" align="center">
+                    <label class="form-group-header">2. Choose your year range!</label>
+                    {% include 'includes/valid_daterange.html'%}
+                    {% include 'includes/start-end-year.html'%}
                 </div>
                 <div class="form-input-group form-group" align="center">
                     <label class="form-group-header">2. Choose your dataset!</label>
@@ -123,11 +133,6 @@
                         <span id="threshold_below"  style="display:none">{% include 'includes/num_days_thresholds_below.html'%}</span>
                         {%endif%}
                     </div>
-                </div>
-                <div class="form-input-group form-group" align="center">
-                    <label class="form-group-header">2. Choose your year range!</label>
-                    {% include 'includes/valid_daterange.html'%}
-                    {% include 'includes/start-end-year.html'%}
                 </div>
                 <div class="form-input-group form-group" align="center">
                     <div class="input-group">
