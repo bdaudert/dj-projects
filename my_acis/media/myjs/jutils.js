@@ -4,6 +4,16 @@ String.prototype.rsplit = function(sep, maxsplit) {
     return maxsplit ? [ split.slice(0, -maxsplit).join(sep) ].concat(split.slice(-maxsplit)) : split;
 }
 
+function int_time_to_date_string(int_time_epoch){
+    //int_time_epoch is seconds since 19700101
+    var d = new Date(0); // The 0 there is the key, which sets the date to the epoch
+    d.setUTCSeconds(int_time_epoch / 1000);
+    month = '' + (d.getMonth() + 1),
+    day = '' + d.getDate(),
+    year = d.getFullYear();
+    return year + '-' + month + '-' + day;
+}
+
 function set_back_date(num_days){
     var d = new Date();
     d.setDate(d.getDate() - parseInt(num_days));

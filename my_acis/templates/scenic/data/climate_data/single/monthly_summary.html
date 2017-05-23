@@ -25,6 +25,16 @@
     <div id="Docu_max_missing_days">{% include 'includes/Docu_max_missing_days.html'%}</div>
     <div id="Docu_departure_from_averages">{% include 'includes/Docu_departure_from_averages.html'%}</div>
 </div>
+<div class="docu" id="Docu_monthly_summary_main_table_header" style="display:none;">
+    {% include 'includes/Docu_monthly_summary_main_table_header.html'%}
+</div>
+<div class="docu" id="Docu_monthly_summary_summary_table_header" style="display:none;">
+    {% include 'includes/Docu_monthly_summary_summary_table_header.html'%}
+</div>
+<div class="docu" id="Docu_monthly_summary_visualization_table_header" style="display:none;">
+    {% include 'includes/Docu_monthly_summary_visualization_header.html'%}
+</div>
+
 <!--Hidden variables-->
 <input type="hidden" id="app_name" name="app_name" value="{{app_name}}">
 <!--Set up autofill-->
@@ -196,21 +206,8 @@
             {%endif%}
             {%endfor%}
             </p>
-    
-            {% if results.variable == "evap"%} 
-            <p><b>A note about Evaporation: </b><br />
-                Standard daily pan evaporation is measured using the four-foot diameter Class A evaporation pan. The pan water level reading is adjusted when precipitation is measure to obtain the actual evaporation. Most Class A pans are installed above ground, allowing effects such as radiation on the side walls and heat exchanges with the pan material. These effects tend to increase the evaporation totals. The amounts can then be adjusted by multiplying the totals b 0.70 or 0.80 to more closely estimate the evaporation from naturally existing surfaces such as a shallow lake, wet soil or other moist natural surfaces.
-Many stations do not measure pan evaporation during winter months. A "0.00" total indicates no measurement is taken. 
-            </p>
-            {%endif%}               
- 
-            <p><b>Missing values</b><br />
-             Letters after data values show number of missing days.<br />  
-             Letters after annual values indicate number of missing months.<br />
-            (a = 1 day missing, b = 2 days missing, f = 6 days missing, z = 26 or more values missing).</p>
-
+            <!-- 
             <div class="row button-row">
-                <!--Buttons-->
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                          <input class="btn btn-success" id="show_hide_data" type='button' value='Hide Data'>
@@ -222,10 +219,105 @@ Many stations do not measure pan evaporation during winter months. A "0.00" tota
                         <input class="btn btn-success" id="show_hide_graph" type='button' value='Hide Graph'>
                     </div>
                 </div>
-            </div><br />
-
-            {%if results.graph_data%}
-            <!--CHART-->
+            </div><br />-->
+    
+            <!--Summary Table-->
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                        <input align="left" class="btn btn-success" id="show_hide_summary" type='button' value='Hide Summary'>
+                    </div>
+                    <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
+                        <h3 align="left"> <img alt="Click me!" title="More Info" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_monthly_summary_summary_table_header')"> Summary</h3>
+                    </div>
+                </div>
+            </div>
+        <div id="summary-table">
+            <div class="dataTableInfo" id="dataTableInfo-1" style="display:none">
+            {%for key_val in results.header%}
+                {%if key_val%}  {{key_val.0}} {{key_val.1}}, {%endif%}
+            {%endfor%}
+            </div>
+            <table border="1" class="dataTable smallFont nowrap" id="dataTable-1">
+                {%for s_data in results.data_summary%}
+                {%if forloop.counter0 <= 6%}
+                {%if forloop.counter0 == 0%}
+                    <thead><tr>
+                    {%for s in s_data%}
+                    {%if forloop.counter == 1%}
+                        <th>{{s}}</th>
+                    {%else%}
+                        {%if forloop.counter|divisibleby:2%}<th>{{s}}{%endif%}
+                        {%if not forloop.counter|divisibleby:2%}{{s}}</th>{%endif%}
+                    {%endif%}
+                    {%endfor%}
+                    </tr></thead>
+                    <tbody>
+                    {%else%}
+                        <tr>
+                        {%for s in s_data%}
+                        {%if forloop.counter == 1%}
+                            <td>{{s}}</td>
+                        {%else%}
+                        {%if forloop.counter|divisibleby:2%}<td>{{s}}{%endif%}
+                        {%if not forloop.counter|divisibleby:2%}{{s}}</td>{%endif%}
+                        {%endif%}
+                        {%endfor%}
+                        </tr>
+                    {%endif%}
+                {%endif%}
+                {%endfor%}
+                </tbody>
+            </table><!--end summary-table--><br />
+        </div>
+        <!--Main table -->
+         <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                    <input align="left" class="btn btn-success" id="show_hide_data" type='button' value='Hide Data'>
+                </div>
+                <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
+                    <h3 align="left"><img alt="Click me!" title="More Info" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_monthly_summary_main_table_header')"> Data</h3>        
+                </div>
+            </div>
+        </div>
+        <div id="main-table" align="center">
+            <div class="dataTableInfo" id="dataTableInfo-0" style="display:none">
+            {%for key_val in results.header%}
+                {%if key_val%} {{key_val.0}} {{key_val.1}},{%endif%}
+            {%endfor%}
+            </div>
+            <table class="dataTable smallFont nowrap" id="dataTable-0" border=1>
+            {%for yr_data in results.data%}
+            {%if forloop.counter0 == 0%}
+                <thead><tr align="left">{%for dat in yr_data %}<td>{{dat}}</td>{%endfor%}</tr></thead>
+                <tfoot><tr align="left">{%for dat in yr_data%}<td>{{dat}}</td>{%endfor%}</tr></tfoot>
+                <tbody>
+            {%else%}
+                <tr>
+                {%for dat in yr_data%}
+                    <td>{{dat}}</td>
+                {%endfor%}
+                </tr>
+            {%endif%}
+            {%endfor%}
+            </tbody>
+            </table>
+        </div><!--End div="main-table"-->
+        
+        <!--CHART-->
+        {%if results.graph_data%}
+         <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                    <input align="left" class="btn btn-success" id="show_hide_graph" type='button' value='Hide Graph'>
+                </div>
+                <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
+                    <h3 align="left"><img alt="Click me!" title="More Info" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_monthly_summary_visualization_table_head
+er')"> Visualization</h3>
+                </div>
+            </div>
+        </div>
             <div id="main-graph" align="center">
                 <!--Chart Layers-->
                 <div class="row chart-layers">
@@ -273,87 +365,6 @@ Many stations do not measure pan evaporation during winter months. A "0.00" tota
             <br />
         {%endif%}<!--end if results.graph_data-->
 
-        <!--Main table -->
-        <div id="main-table" align="center">
-            <div class="dataTableInfo" id="dataTableInfo-0" style="display:none">
-            {%for key_val in results.header%}
-                {%if key_val%} {{key_val.0}} {{key_val.1}},{%endif%}
-            {%endfor%}
-            </div>
-            <table class="dataTable smallFont nowrap" id="dataTable-0" border=1>
-            {%for yr_data in results.data%}
-            {%if forloop.counter0 == 0%}
-                <thead><tr align="left">{%for dat in yr_data %}<td>{{dat}}</td>{%endfor%}</tr></thead>
-                <tfoot><tr align="left">{%for dat in yr_data%}<td>{{dat}}</td>{%endfor%}</tr></tfoot>
-                <tbody>
-            {%else%}
-                <tr>
-                {%for dat in yr_data%}
-                    <td>{{dat}}</td>
-                {%endfor%}
-                </tr>
-            {%endif%}
-            {%endfor%}
-            </tbody>
-            </table>
-        </div><!--End div="main-table"-->
-        <div id="summary-table" align="center">
-            <!--Header-->
-            <p>
-            {%for key_val in results.header%}
-            {%if key_val.0 == "Variable"%}
-                <b>{{key_val.0}}</b> {{key_val.1}}
-            {%elif key_val.0 == "Start Year"%}
-                <b>{{key_val.1}}</b>
-            {%elif key_val.0 == "End Year"%}
-                 -- <b>{{key_val.1}}</b><br />
-            {%elif key_val.0 == "Units" or key_val.0 == "Base Temperature"%}
-                &nbsp;({{key_val.1}})<br />
-            {%else%}
-                <b>{{key_val.0}}</b> {{key_val.1}}<br />
-            {%endif%}
-            {%endfor%}
-            </p>
-
-            <!--Summary Table-->
-            <h3>Summary:</h3>
-            <div class="dataTableInfo" id="dataTableInfo-1" style="display:none">
-            {%for key_val in results.header%}
-                {%if key_val%}  {{key_val.0}} {{key_val.1}}, {%endif%}
-            {%endfor%}
-            </div>
-            <table border="1" class="dataTable smallFont nowrap" id="dataTable-1">
-                {%for s_data in results.data_summary%}
-                {%if forloop.counter0 <= 6%}
-                {%if forloop.counter0 == 0%}
-                    <thead><tr>
-                    {%for s in s_data%}
-                    {%if forloop.counter == 1%}
-                        <th>{{s}}</th>
-                    {%else%}
-                        {%if forloop.counter|divisibleby:2%}<th>{{s}}{%endif%}
-                        {%if not forloop.counter|divisibleby:2%}{{s}}</th>{%endif%}
-                    {%endif%}
-                    {%endfor%}
-                    </tr></thead>
-                    <tbody>
-                    {%else%}
-                        <tr>
-                        {%for s in s_data%}
-                        {%if forloop.counter == 1%}
-                            <td>{{s}}</td>
-                        {%else%}
-                        {%if forloop.counter|divisibleby:2%}<td>{{s}}{%endif%}
-                        {%if not forloop.counter|divisibleby:2%}{{s}}</td>{%endif%}
-                        {%endif%}
-                        {%endfor%}
-                        </tr>
-                    {%endif%}
-                {%endif%}
-                {%endfor%}
-                </tbody>
-            </table>
-            </div><!--end summary-table-->
         </div><!--results-->
     {%endif%}<!--End results.data-->
     </div><!--col-xs-12-->

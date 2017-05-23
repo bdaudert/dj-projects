@@ -1554,6 +1554,7 @@ def monthly_summary(request):
             }
         #Write data to file for highcharts
         hc_data = WRCCUtils.extract_highcarts_data_monthly_summary(results['data'],form_cleaned)
+        context['xx'] = form_cleaned
         graph_data = []
         for p_idx,d in enumerate(hc_data):
             if app_params['statistic_period'] == 'monthly':

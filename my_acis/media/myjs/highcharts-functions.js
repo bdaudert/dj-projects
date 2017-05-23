@@ -6,7 +6,6 @@ String.prototype.inList=function(list){
 var myChart;
 var downloadMenu = $.extend(true,[],Highcharts.getOptions().exporting.buttons.contextButton.menuItems.splice(2));
 
-
 function generateTS_individual(chart_indices) {
     /*
     Generates highcarts figure
