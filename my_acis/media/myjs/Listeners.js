@@ -10,8 +10,25 @@ $(document).ready(function () {
             window.vd_stations_vds.push([$('#min_year').val() + '-01-01',$('#max_year').val() + '-01-01']);
         }
     }
-    //Bootstrap nav menue
+    
+    //Bootstrap nav menu
+    /*
+    $(function($) {
+        $('.navbar .dropdown').hover(function() {
+            $(this).find('.dropdown-menu').first().stop(true, true).delay(250).slideDown();
+        }, function() {
+        $(this).find('.dropdown-menu').first().stop(true, true).delay(100).slideUp();
+
+        });
+
+        $('.navbar .dropdown > a').click(function(){
+            location.href = this.href;
+        });
+    });
+    */ 
     $('[data-submenu]').submenupicker();
+
+    //activate dataTables
     var dataTables = $('.dataTable'), id;
     dataTables.each(function(index, dT){
         if ( !$.fn.dataTable.isDataTable( '#station_list' ) ) {

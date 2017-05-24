@@ -1,0 +1,83 @@
+{% extends "csc_base.html" %}
+
+{% block content %}
+    <!--Documentation-->
+<div class="row">
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" align="center">
+    <div class="docu" id="Docu_howto_scenic_manual" style="display:none;">
+        <iframe src="{{MEDIA_URL}}img/Docu_howto_scenic_manual.pdf" width="70%" height="100%"></iframe>
+    </div>
+    <div class="docu" id="Docu_howto_station_finder" style="display:none;">
+        {% include 'includes/Docu_howto_station_finder.html'%}
+    </div>
+    <div class="docu" id="Docu_howto_multi_lister" style="display:none;">
+        {% include 'includes/Docu_howto_multi_lister.html'%}
+    </div>
+    <div class="docu" id="Docu_howto_monthly_summary" style="display:none;">
+        {% include 'includes/Docu_howto_monthly_summary.html'%}
+    </div>
+    <div class="docu" id="Docu_howto_climate_primer" style="display:none;">
+        <iframe src={{MEDIA_URL}}img/Docu_howto_climate_primer.pdf width="70%" height="100%"></iframe>
+    </div>
+    <div class="docu" id="Docu_howto_scenic_data" style="display:none;">
+        {% include 'includes/Docu_howto_scenic_data.html'%}
+    </div>
+   <!-- <div class="docu" id="Docu_howto_climate_engine_data" style="display:none;">
+        {% include 'includes/Docu_howto_climate_engine_data.html'%}
+    </div>-->
+
+    <div class="docu" id="Docu_howto_LOCA" style="display:none;">
+        {% include 'includes/Docu_howto_LOCA.html'%}
+    </div>
+    <div>
+</div>
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" align="center">
+            <div class="bg-primary full-col">
+                <h2 id="about_scenic" name="about_scenic">About SCENIC</h2>
+            </div>
+            <div class="bg-info">
+            <p class="error">This document is under development!</p>
+            <p class="lead link bg-info" onclick="ShowPopupDocu('Docu_howto_scenic_manual')">
+                SCENIC User Guide
+            </p>
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" align="center">
+            <div class="bg-primary full-col">
+                <h2 id="about_data" name="about_data">About Data</h2>
+            </div>
+            <div class="bg-info">             
+            <p class="lead link bg-info" onclick="ShowPopupDocu('Docu_howto_scenic_data')">
+                What datasets are available in SCENIC?
+            </p>
+            <!--
+            <p class="lead link bg-info" onclick="ShowPopupDocu('Docu_howto_climate_engine_data')">
+                What datasets are available in Climate Engine?
+            </p>-->
+            <p class="lead link bg-info" onclick="ShowPopupDocu('Docu_howto_climate_primer')">
+                Understanding climate data (Primer on climate data and global climate models).
+            </p>
+            <p class="lead link bg-info" onclick="ShowPopupDocu('Docu_howto_LOCA')">
+                Working with projection data (LOCA)
+            </p>
+            </div>
+            <div class="bg-primary full-col">
+                <h2 id="step_by_step_examples" name="step_by_step_examples">Step by step examples</h2>
+            </div> 
+            <div class="bg-info">
+            <p class="lead link bg-info" onclick="ShowPopupDocu('Docu_howto_station_finder')">
+                Find stations in an area that have precipitation and minimum temperature data
+                between two dates.
+            </p>
+            <p class="lead link bg-info" onclick="ShowPopupDocu('Docu_howto_multi_lister')">
+                How to download temperature data for all stations in a region between two dates.
+            </p>
+            <p class="lead link bg-info" onclick="ShowPopupDocu('Docu_howto_monthly_summary')">
+                Find the highest monthly temperature ever recorded at a weather station.
+            </p>
+            </div>
+        </div><!--end col...-12-->
+    </div><!--end row-->
+{% endblock %}
