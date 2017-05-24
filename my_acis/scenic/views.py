@@ -93,8 +93,8 @@ def monitoring(request):
     context['year_short_wy'] = '%s%s' % (year_wy[-2], year_wy[-1])
     return render_to_response(url, context, context_instance=RequestContext(request))
 
-def howto(request):
-    app_name = 'howto'
+def help(request):
+    app_name = 'help'
     url = settings.APPLICATIONS[app_name][2]
     app_url = settings.APPLICATIONS[app_name][1]
     context = {
