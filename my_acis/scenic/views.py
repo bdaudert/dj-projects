@@ -1530,6 +1530,7 @@ def monthly_summary(request):
             return render_to_response(url, context, context_instance=RequestContext(request))
         else:
             header_list = []
+            header_list_summary = []
             dataTableInfo = ''
             if app_params['statistic_period'] == 'monthly':
                 p =  copy.deepcopy(WRCCData.MONTH_NAMES_LETTER)
@@ -1538,8 +1539,10 @@ def monthly_summary(request):
                 context['weeks'] = copy.deepcopy(p)
             for m in p:
                 header_list.append(str(m))
+                header_list_summary.append(str(m))
                 #space for data flag slots
                 header_list.append('F')
+                header_list_summary.append(' ')
 
             results = {
                 'header':header,
@@ -1550,7 +1553,7 @@ def monthly_summary(request):
                 'running_mean_years':'5',
                 'show_range': False,
                 'data': [['Yr'] + header_list + ['An', 'F']] + data[0][0:-6],
-                'data_summary':[[' '] + header_list + ['An', ' ']] + data[0][-6:]
+                'data_summary':[[' '] + header_list_summary + ['An', ' ']] + data[0][-6:]
             }
         #Write data to file for highcharts
         hc_data = WRCCUtils.extract_highcarts_data_monthly_summary(results['data'],form_cleaned)

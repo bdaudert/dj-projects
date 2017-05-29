@@ -685,11 +685,12 @@ function show_polygon_map(){
 }
 
 
-function set_map(node){
+function set_map(){
     /*
     Sets map interfaces for data and applications
     node is the area selector
     */
+    var node = $('#area_type');
     var area_type, TMP_URL,state,kml_file_path;
     //Get TMP env variable (defined in templates/csc_base.html)
     area_type = node.val();

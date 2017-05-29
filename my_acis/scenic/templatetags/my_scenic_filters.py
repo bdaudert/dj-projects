@@ -59,7 +59,7 @@ def is_in(var, args):
     return str(var) in arg_list
 
 @register.filter(name='not_in')
-def is_in(var, args):
+def not_in(var, args):
     if args is None and var is not None:
         return True
     if isinstance(args, basestring):

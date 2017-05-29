@@ -872,7 +872,6 @@ $(document).ready(function () {
     $('#temporal_resolution').on('change', function(){
         set_grid_dates();
     });
-
     /*
     DATA TYPE
     Sets form fields according to data_type (station/grid)
@@ -895,7 +894,6 @@ $(document).ready(function () {
             if ($('#stn_finder').length ){$('#stn_finder').css('display','none');}
             //Disable station_ids option
             $('#area_type option[value="station_ids"]').attr('disabled',true);
-            $('#area_type option[value="location"]').attr('disabled',false);
             $('#area_type option[value="locations"]').attr('disabled',false);
             //If prism hide special degree days
             if ($('#grid').val() == '21'){
@@ -937,19 +935,21 @@ $(document).ready(function () {
 
         }
         //Set station form fields
-        if (data_type == 'station'){    
+        if (data_type == 'station'){
+            /*
             if ( $('#area_type').length && $('#area_type').val() == 'station_id'){
                     ajax_set_station_vd();
             }
             else{
                 set_station_dates();
             }
+            */
+            set_station_dates();
             //Show link to station finder
             if ($('#stn_finder').length){$('#stn_finder').css('display','block');}
             //Enable station_ids option
             $('#area_type option[value="station_ids"]').attr('disabled',false); 
             $('#area_type option[value="locations"]').attr('disabled',true);
-            $('#area_type option[value="location"]').attr('disabled',true);
             //Show add degree day option    
             $('#add').css('display','block');
             $("#variables option").each(function(){
@@ -1076,17 +1076,32 @@ $(document).ready(function () {
     depending on area type
     */
     //resets overlay map if same region is chosen
+    /*
     $('.area_type').on('mouseup', function() {
         if ($(this).val().inList(['basin','county_warning_area', 'county','climate_division'])){
             $('.area_type').trigger("change");
         } 
     });
+    */
     $('.area_type').on('keydown change', function(){
         //Set area, variables and maps form field
         set_area($(this)); //form_utils function
         set_variables();
-        set_map($(this)); //form_utils function
+        set_map(); //form_utils function
         update_value($(this).val()); //form_utils function
+        //Show or Hide the update buttons for maps and station valid daterange
+        if ($(this).val().inList(['station_id'])){
+            $('#set_station_vd-button').css('display','block');
+            $('#set_map-button').css('display','none');
+        }
+        else if ($(this).val().inList(['basin','county_warning_area', 'county','climate_division'])){
+            $('#set_station_vd-button').css('display','none');
+            $('#set_map-button').css('display','block'); 
+        }
+        else {
+            $('#set_station_vd-button').css('display','none');
+            $('#set_map-button').css('display','none');
+        }
         //Set the date form fields
         //Single Apps, if area_type changes, data_type changes
         if ($(this).val().inList(['station_id','station_ids'])){
@@ -1100,6 +1115,7 @@ $(document).ready(function () {
         else {
             //Multi apps, no change in data type
             if ($('#data_type').val() == 'station'){
+                /*
                 if ($(this).val() == 'station_id'){
                     //Ajax call to fiond valid daterange 
                     //and set max/min and valid dateranges
@@ -1112,6 +1128,8 @@ $(document).ready(function () {
                     //Set to 1850-01-01 to present
                     set_station_dates();
                 }
+                */
+                set_station_dates();
             }
             if ($('#data_type').val() == 'grid'){
                 set_grid_dates();
@@ -1459,12 +1477,14 @@ $(document).ready(function () {
     ****************/
     //STATION_ID Change --> Find POR of station
     //$('#station_id').on('change',function(){
+    /*
     $('span#area-form-input').on('change','input:text', function () {
         if ($(this).attr('id') == 'station_id'){
             //AJAX call to find station vd, set max_min_dates and show valid daterange
             ajax_set_station_vd();
         }
     });
+    */
 
     //OVERLAY_STATES
     $('#overlay_state').on('change', function(){

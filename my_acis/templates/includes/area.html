@@ -1,3 +1,4 @@
+{%load my_scenic_filters%}
 <div class="form-group">
     <label id="area-type-label" for="area">{{initial.area_type_label}}</label>
     <img class="qmark" id="qmark-area" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
@@ -20,6 +21,16 @@
         <input type="text" class="area form-control" size="30" id="{{initial.area_type}}" name="{{initial.area_type}}"
             value="{{initial.area_type_value}}" list="{{initial.autofill_list}}" 
             onchange="update_value(this.value) &update_maps(this)">
-    {%endif%} 
-    </span>      
-</div> 
+    {%endif%}
+    </span> 
+    <!--Update buttons for maps and station valid daterange -->
+    <input class="btn btn-info" type='button' id="set_map-button"
+    {%if initial.area_type|is_in:"basin,county,climate_division,county_warning_area"%}style="display:block"{%else%}style="display:none"{%endif%}
+    value='Update map' onclick="set_map();">
+    <!--<p class="message">Update map</p>-->
+    
+    <input class="btn btn-info" type='button' id="set_station_vd-button"
+    {%if initial.area_type|is_in:"station_id"%}style="display:block"{%else%}style="display:none"{%endif%}
+    value='Check date range' onclick="ajax_set_station_vd();">
+    <!--<p class="message">Update date range</p>-->
+</div>
