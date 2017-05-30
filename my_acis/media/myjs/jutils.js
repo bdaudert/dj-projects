@@ -230,11 +230,18 @@ function create_ajax_no_vd_response(station_id){
     return 'no_vd';
 }
 
+function DestroyPopupDocu(DivId){
+    $('#' + DivId).dialog('destroy');
+}
+
 function ShowPopupDocu(DivId){
     //Close all dialogs that happen to be open
     $(':ui-dialog').each(function(){
         if ($(this).dialog('isOpen')){
-            $(this).dialog('destroy');
+            console.log(DivId);
+            if (DivId != 'formDownload'){
+                $(this).dialog('destroy');
+            }
         }
     });
     try {
@@ -245,6 +252,9 @@ function ShowPopupDocu(DivId){
     var max_height = $(window).height()*0.6, 
         max_width = wWidth * 0.6;
     if (DivId == 'formDownload' || DivId == 'largeRequestForm'){
+        var max_width = wWidth * 0.3;
+    }
+    if (DivId.inList('Docu_COOP,Docu_GHCN,Docu_ICAO,Docu_NWSLI,Docu_FAA,Docu_WMO,Docu_WBAN,Docu_CoCoRaHS,Docu_Threadex')){
         var max_width = wWidth * 0.3;
     }
     //Open the dialog

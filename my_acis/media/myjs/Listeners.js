@@ -191,7 +191,9 @@ $(document).ready(function () {
         //Close all dialogs that happen to be open
         $(':ui-dialog').each(function(){
             if ($(this).dialog('isOpen')){
-                $(this).dialog('destroy');
+                if ($(this).attr('id') != 'formDownload'){
+                    $(this).dialog('destroy');
+                }
             }   
         });
         var id = $(this).attr('id');

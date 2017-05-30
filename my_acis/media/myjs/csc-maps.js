@@ -426,7 +426,8 @@ function initialize_station_finder() {
             var html_text = '<input type="checkbox" id="' + name + '"' +
             '" onclick="my_boxclick(this,\''+ name +'\')" checked /> ' +
             '<img style="cursor:pointer;" onclick="ShowPopupDocu(\'Docu_' + name + '\')" alt="Icon" title="Icon" src="' + icon + '">' + 
-            '<div style="cursor:pointer;" onclick="ShowPopupDocu(\'Docu_' + name + '\')" >' + 
+            '<div style="cursor:pointer;" onmouseover="ShowPopupDocu(\'Docu_' + name + '\')" ' +
+            'onmouseout="DestroyPopupDocu(\'Docu_' + name + '\')" >' + 
             name + '</div>';
             td.html(html_text)
             tr.append(td);
