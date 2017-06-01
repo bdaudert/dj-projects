@@ -1,4 +1,28 @@
 <b>Data Summary </b><br />
+<b>None</b>:<br />
+No data summary will be performed.<br />
+<b>Windowed Data</b>:<br />
+Returns data for seklect time windows within the date range you selected<br /> 
+<em>Example</em>:<br />
+Start Date: 2000-01-01, End Date: 2002-12-31,                   
+Window Start: 05-15, Window end: 05-17<br />
+<em>Returns</em> data for:<br />     
+2000-05-15, 2000-05-16, 2000-05-17<br />
+2001-05-15, 2001-05-16, 2001-05-17<br />
+2002-05-15, 2002-05-16, 2002-05-17<br />
+<b>Temporal</b>:<br />
+Data is summarized over time defined by Start Date and End Date at each data point.
+The result is a geospatial layer.<br />
+<em>Example</em>:<br />Temporal summary of sum of precipitation from  2000-01-01 to 2000-01-31 over all stations in Nevada<br />
+<em>Returns</em> the sum of January precipitaion at each station in Nevada.<br />
+<b>Spatial</b>:<br />
+Data is summarized over each point in the selected region.
+The result is a time series.<br />
+<em>Example</em>:<br />Spatial summary of daily precipitation from  2000-01-01 to 2000-01-31 averaged over all stations in Nevada<br />
+<em>Returns</em> mean daily precipitation of all stations in Nevada for each day in January 2000.
+<br />
+
+<!--
 <ul>
 <li>
 <b>Windowed data</b>:<br />
@@ -20,6 +44,6 @@
 <li><b>Minimum: </b>Finds the minimum value over an area or time range.</li>
 <li><b>Mean: </b>Finds the average value over an area or time range.</li>
 <li><b>Sum: </b>Finds the sum of the values over an area or time range.</li>
-<!--<li><b>Median: </b>Finds the median of the values over an area or time range.</li>-->
 </ul>
-</li></ul>
+</li></ul>-->
+

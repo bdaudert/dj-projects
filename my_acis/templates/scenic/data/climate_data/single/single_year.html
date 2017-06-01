@@ -19,6 +19,10 @@
     <div id="Docu_cumulative_or_values">{% include 'includes/Docu_cumulative_or_values.html'%}</div>
 </div><!--End how_to-->
 
+<div class="docu" id="Docu_single_year_visualization" style="display:none;">
+    {% include 'includes/Docu_single_year_visualization.html'%}
+</div>
+
 <!---Hidden variables-->
 <input type="hidden" id="app_name" name="app_name" value="{{app_name}}">
 <!--Set up autofill-->
@@ -162,6 +166,9 @@
             </div><!--col-sm-3-->
             <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
                 <p>
+                <img alt="Click me!" title="More Info" style="cursor: pointer;"
+                src="{{ MEDIA_URL }}img/QMark.png" 
+                onclick="ShowPopupDocu('Docu_single_year_visualization')">
                 {%for key_val in params_display_list%}
                     <b>{{key_val.0}}</b>: {{key_val.1}};<br />
                 {%endfor%}

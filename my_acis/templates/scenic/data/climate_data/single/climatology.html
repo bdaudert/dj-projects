@@ -12,16 +12,20 @@
     {% include 'includes/Docu_app_climatology.html'%}
 </div>
 <div id="how_to" style="display:none;">
-        <div id="Docu_point_of_interest">{% include 'includes/Docu_point_of_interest.html'%}</div>
-        <div id="Docu_grids">{% include 'includes/Docu_grids_historic.html'%}</div>
-        <div id="Docu_start_end_year">{% include 'includes/Docu_year_range.html'%}</div>
-        <div id="Docu_climatology_smry_type">{% include 'includes/Docu_climatology_smry_type.html'%}</div>
-        <div id="Docu_units">{% include 'includes/Docu_units.html'%}</div>
-        <div id="Docu_max_missing_days">{% include 'includes/Docu_max_missing_days.html'%}</div>
-        <script type="text/javascript">            
+    <div id="Docu_point_of_interest">{% include 'includes/Docu_point_of_interest.html'%}</div>
+    <div id="Docu_grids">{% include 'includes/Docu_grids_historic.html'%}</div>
+    <div id="Docu_start_end_year">{% include 'includes/Docu_year_range.html'%}</div>
+    <div id="Docu_climatology_smry_type">{% include 'includes/Docu_climatology_smry_type.html'%}</div>
+    <div id="Docu_units">{% include 'includes/Docu_units.html'%}</div>
+    <div id="Docu_max_missing_days">{% include 'includes/Docu_max_missing_days.html'%}</div>
+    <script type="text/javascript">            
         $("#Docu_plot_opts").load("{{HTML_URL}}/Docu_PLOT_OPTS_SODSUMM.html");
-        </script>
-        </div>
+    </script>
+</div>
+
+<div class="docu" id="Docu_climatology_visualization" style="display:none;">
+    {% include 'includes/Docu_climatology_visualization.html'%}
+</div>
 
 <!--Hidden variables-->
 <input type="hidden" id="app_name" name="app_name" value="{{app_name}}">
@@ -137,6 +141,9 @@
             <p class="stronger">Station: {{station_name.0}}</br>
             {%endif%}
             From Year {{start_year}} To Year {{end_year}}</br>
+           <img alt="Click me!" title="More Info" style="cursor: pointer;"
+                src="{{ MEDIA_URL }}img/QMark.png" 
+                onclick="ShowPopupDocu('Docu_climatology_visualization')"> 
             </p></br>
             <ul class="nav nav-tabs">
             {%for tab in tab_list%}

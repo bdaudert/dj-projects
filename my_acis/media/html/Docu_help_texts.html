@@ -228,7 +228,8 @@ Wyoming wy<br />
 </div>
 
 <div id="ht_dates_constraints">
-    <p>Choose <em>Any</em> if you are looking for stations that have at least one data record between Start and End Date.<br />Choose <em>All</em> if you are looking for stations that have data records for all dates between Start and End Date.</p>
+    Choose <em>All</em> if you are looking for stations that have data records for all dates between start and end date you selected.</p>
+    <p>Choose <em>Any</em> if you are looking for stations that have at least one data record between start and end date you selected.<br />
 </div>
 
 <div id="ht_variables">
@@ -283,7 +284,8 @@ Wyoming wy<br />
 
 
 <div id="ht_variables_constraints">
-    <p>Choose <em>Any</em> if you are looking for stations that have one or more of the listed variables.<br />Choose <em>All</em> if you are looking for stations that have all of the variables listed.</p>
+    <p>Choose <em>All</em> if you are looking for stations that have all of the variables you selected.</p>
+    <p>Choose <em>Any</em> if you are looking for stations that have one or more of the variables you slected.<br />
 </div>
 
 <div id="ht_temporal_resolution">
@@ -469,14 +471,28 @@ Wyoming wy<br />
 <b>None</b>:<br />
 No data summary will be performed.<br />
 <b>Windowed Data</b>:<br />
-Returns data within Start Window and End Window 
-for each year from Start Date to End Date.<br />
+Returns data for seklect time windows within the date range you selected<br /> 
+<em>Example</em>:<br />
+Start Date: 2000-01-01, End Date: 2002-12-31, 
+Window Start: 05-15, Window end: 05-17<br />
+<em>Returns</em> data for:<br /> 
+2000-05-15, 2000-05-16, 2000-05-17<br />
+2001-05-15, 2001-05-16, 2001-05-17<br />
+2002-05-15, 2002-05-16, 2002-05-17<br />
 <b>Temporal</b>:<br />
-Data is summarized over time at each data point.
+Data is summarized over time defined by Start Date and End Date at each data point.
 The result is a geospatial layer.<br />
+<em>Example</em>:<br />
+Temporal summary of sum of precipitation from  2000-01-01 to 2000-01-31 over all stations in Nevada<br />
+<em>Returns</em> the sum of January precipitaion at each station in Nevada.<br /> 
 <b>Spatial</b>:<br />
-Data is summarized over the search area.
-The result is a time series.
+Data is summarized over each point in the selected region.
+The result is a time series.<br />
+<em>Example</em>:<br />
+Spatial summary of daily precipitation from  2000-01-01 to 2000-01-31 averaged over all stations in Nevada<br />
+<em>Returns</em> mean daily precipitation of all stations in Nevada for each day in January 2000.
+<br />
+
 </div>
 
 <div id="ht_likelihood_threshold">
