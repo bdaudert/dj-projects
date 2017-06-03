@@ -331,6 +331,11 @@ table.smallFont td, th{
 
 /* content styles */
 
+.nopadding {
+   padding: 0 !important;
+   margin: 0 !important;
+}
+
 .inside {
   margin-top: 20px;
   margin-bottom: 20px;

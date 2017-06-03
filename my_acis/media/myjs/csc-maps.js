@@ -276,12 +276,9 @@ function initialize_station_finder() {
             'dom': 'Bfrtip',
             'paging': false,
             'scrollY': 400,
-            /*
-            'bScrollCollapse': true,
-            'sScrollX':'100%',
-            'scrollX':true,
-            'sScrollXInner': '99.2%',
-            */
+            'autoWidth':false,
+            'scrollX': 'auto',
+            'scrollCollapse': true,
             'aaSorting':[],
             'oLanguage': {
                 'sSearch': 'Filter:',
@@ -503,9 +500,13 @@ function initialize_station_finder() {
             marker.sid = c.sid;
             //Fit map to encompass all markers
             map_bounds.extend(latlon);
-
+        
             var avbl_variables = '<br /><b>' + c.available_variables[0][1] + '</b><br />';
-            //var avbl_variables = '<br />'
+            /*
+            var avbl_variables = '<div class="accordion">' +
+                    '<h3>Available Variables</h3>' +
+                    '<br /><b>' + c.available_variables[0][1] + '</b><br />';
+            */
             var greg_flag = false;
             var dr = c.available_variables[0][1];
             for (var i=0;i<c.available_variables.length;i++){
@@ -515,6 +516,7 @@ function initialize_station_finder() {
                 }
                 avbl_variables += c.available_variables[i][0] + '<br />'     
             }
+            //avbl_variables += '</div>' // end accordion div
             var metadict = {
                 'name':String(c.name),
                 'state':String(c.state),
@@ -525,39 +527,75 @@ function initialize_station_finder() {
                 'elev':String(c.elevation),
                 'valid_daterange':String(avbl_variables)
             }
-            var data_portal_href = '/csc/scenic/data/climate_data/single/lister/'+
+            var single_prod_href = '/csc/scenic/data/climate_data/single/';
+            var data_portal_href = single_prod_href + 'lister/' +
             '?area_type=station_id&station_id=' + encodeURIComponent(c.name) + ',' + c.sid; 
-            var app_portal_href = '/csc/scenic/data/climate_data/single/'+
+            var app_portal_href = single_prod_href +             
+            '?area_type=station_id&station_id=' + encodeURIComponent(c.name) + ',' + c.sid;
+            var monthly_summary_href = single_prod_href + 'monthly_summary/' +
+            '?area_type=station_id&station_id=' + encodeURIComponent(c.name) + ',' + c.sid;
+            var seasonal_summary_href = single_prod_href + 'seasonal_summary/' +
+            '?area_type=station_id&station_id=' + encodeURIComponent(c.name) + ',' + c.sid;
+            var single_year_href = single_prod_href + 'single_year/' +
+            '?area_type=station_id&station_id=' + encodeURIComponent(c.name) + ',' + c.sid;
+            var data_comparison_href = single_prod_href + 'data_comparison/' +
+            '?area_type=station_id&station_id=' + encodeURIComponent(c.name) + ',' + c.sid;
+            var climatology_href = single_prod_href + 'climatology/' +
             '?area_type=station_id&station_id=' + encodeURIComponent(c.name) + ',' + c.sid;
             for (var k =0;k<el_list.length;k++){
                 data_portal_href = data_portal_href + '&variables=' + el_list[k];
                 app_portal_href = app_portal_href + '&variables=' + el_list[k];
             }
-            /*
-            data_portal_href = data_portal_href + '&variables=' + el_string;
-            app_portal_href = app_portal_href + '&variables=' + el_string;
-            */
-
+            monthly_summary_href = monthly_summary_href + '&variable=' + el_list[0];
+            seasonal_summary_href = seasonal_summary_href + '&variable=' + el_list[0];
+            single_year_href = single_year_href + '&variable=' + el_list[0];
+            data_comparison_href = data_comparison_href + '&variable=' + el_list[0] + '&grid=21';
+ 
             data_portal_href = data_portal_href + '&start_date=' + start_date;
             app_portal_href = app_portal_href + '&start_date=' + start_date; 
+            monthly_summary_href = monthly_summary_href + '&start_date=' + start_date;
+            seasonal_summary_href = seasonal_summary_href + '&start_date=' + start_date;
+            single_year_href = single_year_href + '&start_date=' + start_date;
+            data_comparison_href = data_comparison_href + '&start_date=' + start_date;
+            climatology_href = climatology_href + '&start_date=' + start_date; 
+            
             data_portal_href = data_portal_href + '&end_date=' + end_date;
             app_portal_href = app_portal_href + '&end_date=' + end_date; 
-            var data_portal_link = '<button class="btn-info" onclick="window.open(\'' + data_portal_href + '\')">Get Data</button>';
-            var app_portal_link = '<button class="btn-info"onclick="window.open(\'' + app_portal_href + '\')">Run Analysis</button>';
-            var contentString = '<div id="MarkerWindow" class="row">'+
-                '<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">' + 
-                data_portal_link + '</div>' +
-                '<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">' +
-                app_portal_link + '</div><br />' +
-                '<b>Name: </b><font color="#FF007F">' + c.name + '</font><br/>'+
-                '<b>Station ID: </b>' + c.sid + '<br/>' +
-                '<b>Network: </b>' + c.stn_network + '<br/>' +
-                '<b>State, Elev ft, Lon, Lat: </b>' + c.state + ', ' + c.elevation + ', ' + c.lon + ', ' +c.lat +'<br/>' +
-                '<b>Available variables with date range: </b>' + avbl_variables + '<br />' +
-                '</div>';
+            monthly_summary_href = monthly_summary_href + '&end_date=' + end_date;
+            seasonal_summary_href = seasonal_summary_href + '&end_date=' + end_date;
+            single_year_href = single_year_href + '&end_date=' + end_date;
+            data_comparison_href = data_comparison_href + '&end_date=' + end_date;
+            climatology_href = climatology_href + '&end_date=' + end_date; 
+
+            
+            var data_portal_link = '<button style="width:80%" class="btn-primary" onclick="window.open(\'' + data_portal_href + '\')">Get Data</button>';
+            var app_portal_link = '<button style="width:80%" class="btn-primary"onclick="window.open(\'' + app_portal_href + '\')">Run Analysis</button>';
+            var monthly_summary_portal_link = '<button style="width:80%" class="btn-primary"onclick="window.open(\'' + monthly_summary_href + '\')">Monthly Summary</button>'; 
+            var seasonal_summary_portal_link = '<button style="width:80%" class="btn-primary"onclick="window.open(\'' + seasonal_summary_href + '\')">Seasonal Summary</button>';
+            var single_year_portal_link = '<button style="width:80%" class="btn-primary"onclick="window.open(\'' + single_year_href + '\')">Single Year Time Series</button>';
+            var data_comparison_portal_link = '<button style="width:80%" class="btn-primary"onclick="window.open(\'' + data_comparison_href + '\')">Grid/Station Data Comparison</button>';
+            var climatology_portal_link = '<button style="width:80%" class="btn-primary"onclick="window.open(\'' + climatology_href + '\')">Climatology</button>'; 
+            var contentString = '<div id="MarkerWindow" class="row nopadding">'+
+                '<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 nopadding">' +
+                    '<b>Name: </b><font color="#FF007F">' + c.name + '</font><br/>'+
+                    '<b>Station ID: </b>' + c.sid + '<br/>' +
+                    '<b>Network: </b>' + c.stn_network + '<br/>' +
+                    '<b>State, Elev ft, Lon, Lat: </b>' + c.state + ', ' + c.elevation + ', ' + c.lon + ', ' +c.lat +'<br/>' +
+                    '<b>Available variables with date range: </b>' + avbl_variables + '<br />' +
+                '</div>' + 
+                '<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 nopadding">' +
+                    data_portal_link + '<br /><br />' +
+                    monthly_summary_portal_link + '<br /><br />' +
+                    seasonal_summary_portal_link + '<br /><br />' +
+                    single_year_portal_link + '<br /><br />' +
+                    data_comparison_portal_link + '<br /><br />' +
+                    climatology_portal_link + 
+                '</div>' + 
+            '</div>'; 
+                    
             marker.contentString = contentString;
 
-           //Open info window when user clicks on marker
+            //Open info window when user clicks on marker
             google.maps.event.addListener(marker, 'click', function() {
                 infowindow.close();
                 infowindow.setContent(contentString);
