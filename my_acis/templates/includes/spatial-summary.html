@@ -2,7 +2,7 @@
 <div class="form-group">
     <label for="spatial_summary">Spatial{%if app_name == "spatial_summary"%} Summary{%endif%}</label>
     <img class="qmark" id="qmark-spatial_summary" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
-    <div class="pop-up">
+    <div title="Spatial Summary" class="pop-up">
         <div id="ht_spatial_summary"></div>
         <script type="text/javascript">                        
             $("#ht_spatial_summary").load("{{HTML_URL}}/Docu_help_texts.html #ht_spatial_summary");

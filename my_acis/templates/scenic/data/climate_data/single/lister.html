@@ -7,10 +7,10 @@
 {% block content %} 
 
 <!--Documentation-->
-<div class="docu" id="tool_info" style="display:none;">
+<div title="About this tool" class="docu" id="tool_info" style="display:none;">
     {% include 'includes/Docu_app_single_lister.html'%}
 </div>
-<div id="how_to" style="display:none;">
+<div title="How to use this tool"id="how_to" style="display:none;">
     <div id="Docu_point_of_interest">{% include 'includes/Docu_point_of_interest.html'%}</div>
     <div id="Docu_grids">{% include 'includes/Docu_grids.html'%}</div>
     <div id="Docu_start_end_date">{% include 'includes/Docu-start-end-date.html'%}</div>
@@ -33,7 +33,6 @@
     <script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
 {%endif%}
 
-<!--Button row-->
 {% include 'includes/button-row.html'%}
 
  <!--FORM/MAP/ERRORS-->

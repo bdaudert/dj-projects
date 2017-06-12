@@ -39,8 +39,10 @@ yrs_ago = WRCCUtils.set_back_date(3660)[0:4]
 ###PAGES
 ############################################
 def home(request):
+    app_name = 'home'
     context = {
         'title': settings.APPLICATIONS['home'][0],
+        'app_name':app_name,
     }
     url = settings.APPLICATIONS['home'][2]
     return render_to_response(url, context, context_instance=RequestContext(request))
@@ -52,8 +54,10 @@ def swcke_home(request):
     return render_to_response('scenic/swcke_home.html', context, context_instance=RequestContext(request))
 
 def about(request):
+    app_name = 'about'
     context = {
         'title': settings.APPLICATIONS['about'][0],
+        'app_name':app_name,
         'icon':'AboutUs.png'
     }
     url = settings.APPLICATIONS['about'][2]

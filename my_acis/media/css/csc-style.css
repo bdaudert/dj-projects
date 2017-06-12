@@ -293,10 +293,6 @@ table.smallFont td, th{
 }
 
 #ee_iframe {
-    /*
-    width: 2000px;
-    height: 1350px;
-    */
     width:110%;
     height:960px;
     border: 0;

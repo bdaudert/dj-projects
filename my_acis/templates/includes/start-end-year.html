@@ -6,10 +6,10 @@
     <input type="hidden" id="max_year_fut" value="{{initial.max_year_fut}}">
     <span><b>Year Range</b></span>&nbsp;&nbsp;
     <img class="qmark" id="qmark-year_range" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
-    <div class="pop-up">
-        <div id="Docu_year_range" class="pop-up"></div>
+    <div title="Year Range" class="pop-up" id="year-range-pop-up">
+        <div id="Docu_year_range"></div>
         <script type="text/javascript">                        
-            $("#Docu_year_range").load("{{HTML_URL}}Docu_help_texts.html #ht_year_range.html");
+            $("#Docu_year_range").load("{{HTML_URL}}Docu_help_texts.html #ht_year_range");
         </script>
     </div> 
     <div class="input-group">

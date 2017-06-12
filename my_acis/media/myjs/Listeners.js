@@ -196,17 +196,22 @@ $(document).ready(function () {
                 }
             }   
         });
-        var id = $(this).attr('id');
-        var pop_up = $('#' + id).next('div.pop-up');
-        var max_height = $(window).height()*0.3, 
-            max_width = $(window).width()*0.2;
+        var id = $(this).attr('id'),
+            pop_up = $('#' + id).next('div.pop-up'),
+            max_height = $(window).height()*0.3, 
+            max_width = $(window).width()*0.3,
+            title = 'You can move me!';
+            
+        if (pop_up.attr('title')){
+            title = pop_up.attr('title');
+        }
         $(pop_up).dialog({
             position:{
                 my:'bottom left',
                 at:'top right',
                 of:'#' + id
             },
-            title:'You can move me!',
+            title:title,
             resizable: true,
             modal: false,
             width:'auto',
@@ -790,17 +795,13 @@ $(document).ready(function () {
     PLOTS
     */    
     $('#plot_opts_button').on('click', function(){
-        if ($('.plOpts:first').css('display') == 'none'){ 
-            if ($(this).val().inList(['image_size','cmap'])){
-                $('.plOpts').css('display','inline-block');
-            }
-            else{
-                $('.plOpts').css('display','block');
-            }
-            
+        if ($('.plOpts:first').css('display') == 'none'){
+            $('#form-image-size').css('display','inline');
+            $('#form-colormap').css('display','inline');
         }
         else {   
-            $('.plOpts').css('display','none');
+           $('#form-image-size').css('display','none');
+           $('#form-colormap').css('display','none'); 
         }
     });
 

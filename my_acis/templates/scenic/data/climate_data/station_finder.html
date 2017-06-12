@@ -7,10 +7,10 @@
 {% block content %}
 
 <!--Documentation-->
-<div align="left" id="tool_info" style="display:none;">
+<div title="About this tool" align="left" id="tool_info" style="display:none;">
     {% include 'includes/Docu_app_station_finder.html'%}
 </div>
-<div id="how_to" style="display:none;">
+<div title="How to use this tool" id="how_to" style="display:none;">
      <div id="Docu_area_of_interest">{% include 'includes/Docu_area_of_interest.html'%}</div>
      <div id="Docu_start_end_date">{% include 'includes/Docu-start-end-date.html'%}</div>
      <div id="Docu_date_constraints">{% include 'includes/Docu_date_constraints.html'%}</div>
@@ -20,47 +20,47 @@
 </div>
 
 <!--Network Documentation-->
-<div id="Docu_COOP" style="display:none;"></div>
+<div title="COOP" id="Docu_COOP" style="display:none;"></div>
 <script type="text/javascript">                        
 $("#Docu_COOP").load("{{HTML_URL}}/Docu_networks.html #Docu_COOP");
 </script> 
-<div id="Docu_GHCN" style="display:none;"></div>
+<div title="GHCN" id="Docu_GHCN" style="display:none;"></div>
 <script type="text/javascript">                        
 $("#Docu_GHCN").load("{{HTML_URL}}/Docu_networks.html #Docu_GHCN");
 </script>
-<div id="Docu_ICAO" style="display:none;"></div>
+<div title="ICAO" id="Docu_ICAO" style="display:none;"></div>
 <script type="text/javascript">                        
 $("#Docu_ICAO").load("{{HTML_URL}}/Docu_networks.html #Docu_ICAO");
 </script>
-<div id="Docu_NWSLI" style="display:none;"></div>
+<div title="NWSLI" id="Docu_NWSLI" style="display:none;"></div>
 <script type="text/javascript">                        
 $("#Docu_NWSLI").load("{{HTML_URL}}/Docu_networks.html #Docu_NWSLI");
 </script>
-<div id="Docu_FAA" style="display:none;"></div>
+<div title="FAA" id="Docu_FAA" style="display:none;"></div>
 <script type="text/javascript">                        
 $("#Docu_FAA").load("{{HTML_URL}}/Docu_networks.html #Docu_FAA");
 </script>
-<div id="Docu_WBAN" style="display:none;"></div>
+<div title="WBAN" id="Docu_WBAN" style="display:none;"></div>
 <script type="text/javascript">                        
 $("#Docu_WBAN").load("{{HTML_URL}}/Docu_networks.html #Docu_WBAN");
 </script>
-<div id="Docu_WMO" style="display:none;"></div>
+<div title="WMO" id="Docu_WMO" style="display:none;"></div>
 <script type="text/javascript">                        
 $("#Docu_WMO").load("{{HTML_URL}}/Docu_networks.html #Docu_WMO");
 </script>
-<div id="Docu_CoCoRaHS" style="display:none;"></div>
+<div title="CoCoRaHS" id="Docu_CoCoRaHS" style="display:none;"></div>
 <script type="text/javascript">                        
 $("#Docu_CoCoRaHS").load("{{HTML_URL}}/Docu_networks.html #Docu_CoCoRaHS");
 </script>
-<div id="Docu_Threadex" style="display:none;"></div>
+<div title="Threadex" id="Docu_Threadex" style="display:none;"></div>
 <script type="text/javascript">                        
 $("#Docu_Threadex").load("{{HTML_URL}}/Docu_networks.html #Docu_Threadex");
 </script>   
-<div id="Docu_SNOTEL" style="display:none;"></div>
+<div title="SNOTEL" id="Docu_SNOTEL" style="display:none;"></div>
 <script type="text/javascript">                        
 $("#Docu_SNOTEL").load("{{HTML_URL}}/Docu_networks.html #Docu_SNOTEL");
 </script>
-<div id="Docu_RAWS" style="display:none;"></div>
+<div title="RAWS" id="Docu_RAWS" style="display:none;"></div>
 <script type="text/javascript">                        
 $("#Docu_RAWS").load("{{HTML_URL}}/Docu_networks.html #Docu_RAWS");
 </script>

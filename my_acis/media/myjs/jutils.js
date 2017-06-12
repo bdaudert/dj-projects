@@ -235,11 +235,17 @@ function DestroyPopupDocu(DivId){
 }
 
 function ShowPopupDocu(DivId){
+    var title = 'You can move and resize me!',
+        wWidth = $(window).width(),
+        max_height = $(window).height()*0.6,
+        max_width = wWidth * 0.6;
+    if ($('#' + DivId).attr('title')){
+        title = $('#' + DivId).attr('title');
+    }    
     //Close all dialogs that happen to be open
     $(':ui-dialog').each(function(){
         if ($(this).dialog('isOpen')){
-            console.log(DivId);
-            if (DivId != 'formDownload'){
+            if (!DivId.inList('formDownload,Docu_SpottedOwlKristen,Docu_SpottedOwlData35.2,Docu_SpottedOwlData34,Docu_SpottedOwlData30')){
                 $(this).dialog('destroy');
             }
         }
@@ -248,9 +254,7 @@ function ShowPopupDocu(DivId){
         var bootstrapButton = $.fn.button.noConflict();
         $.fn.bootstrapBtn = bootstrapButton;
     }catch(e){};
-    var wWidth = $(window).width();
-    var max_height = $(window).height()*0.6, 
-        max_width = wWidth * 0.6;
+    
     if (DivId == 'formDownload' || DivId == 'largeRequestForm'){
         var max_width = wWidth * 0.3;
     }
@@ -264,7 +268,7 @@ function ShowPopupDocu(DivId){
             at:'center',
             of:window
         },
-        title:'You can move and resize me!',
+        title:title,
         resizable: true,
         modal: false,
         width:'auto',

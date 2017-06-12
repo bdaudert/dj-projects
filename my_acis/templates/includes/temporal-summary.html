@@ -3,7 +3,7 @@
     <label for="temporal_summary">Temporal
     {%if app_name == 'temporal_summary' or app_name == 'seasonal_summary'%} Summary{%endif%}</label>
     <img class="qmark" id="qmark-temporal_summary" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
-    <div class="pop-up">
+    <div title="Temporal Summary" class="pop-up">
         <div id="ht_temporal_summary"></div>
         <script type="text/javascript">                        
             $("#ht_temporal_summary").load("{{HTML_URL}}/Docu_help_texts.html #ht_temporal_summary");

@@ -4,29 +4,26 @@
     <!--Documentation-->
 <div class="row">
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" align="center">
-    <div class="docu" id="Docu_howto_scenic_manual" style="display:none;">
+    <div title="SCENIC Manual" class="docu" id="Docu_howto_scenic_manual" style="display:none;">
         <iframe src="{{MEDIA_URL}}img/Docu_howto_scenic_manual.pdf" width="70%" height="100%"></iframe>
     </div>
-    <div class="docu" id="Docu_howto_station_finder" style="display:none;">
+    <div title="Example: Station Finder" class="docu" id="Docu_howto_station_finder" style="display:none;">
         {% include 'includes/Docu_howto_station_finder.html'%}
     </div>
-    <div class="docu" id="Docu_howto_multi_lister" style="display:none;">
+    <div title="Example: Data Lister" class="docu" id="Docu_howto_multi_lister" style="display:none;">
         {% include 'includes/Docu_howto_multi_lister.html'%}
     </div>
-    <div class="docu" id="Docu_howto_monthly_summary" style="display:none;">
+    <div title="Example: Monthly Summary" class="docu" id="Docu_howto_monthly_summary" style="display:none;">
         {% include 'includes/Docu_howto_monthly_summary.html'%}
     </div>
-    <div class="docu" id="Docu_howto_climate_primer" style="display:none;">
+    <div title="Climate Data Primer" class="docu" id="Docu_howto_climate_primer" style="display:none;">
         <iframe src={{MEDIA_URL}}img/Docu_howto_climate_primer.pdf width="70%" height="100%"></iframe>
     </div>
-    <div class="docu" id="Docu_howto_scenic_data" style="display:none;">
+    <div title="Data in SCENIC" class="docu" id="Docu_howto_scenic_data" style="display:none;">
         {% include 'includes/Docu_howto_scenic_data.html'%}
     </div>
-   <!-- <div class="docu" id="Docu_howto_climate_engine_data" style="display:none;">
-        {% include 'includes/Docu_howto_climate_engine_data.html'%}
-    </div>-->
 
-    <div class="docu" id="Docu_howto_LOCA" style="display:none;">
+    <div title="About LOCA" class="docu" id="Docu_howto_LOCA" style="display:none;">
         {% include 'includes/Docu_howto_LOCA.html'%}
     </div>
     <div>
@@ -52,10 +49,6 @@
             <p class="lead link bg-info" onclick="ShowPopupDocu('Docu_howto_scenic_data')">
                 What datasets are available in SCENIC?
             </p>
-            <!--
-            <p class="lead link bg-info" onclick="ShowPopupDocu('Docu_howto_climate_engine_data')">
-                What datasets are available in Climate Engine?
-            </p>-->
             <p class="lead link bg-info" onclick="ShowPopupDocu('Docu_howto_climate_primer')">
                 Understanding climate data (Primer on climate data and global climate models).
             </p>
