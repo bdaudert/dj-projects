@@ -52,15 +52,33 @@
                     onclick="window.location='{{HOME_URL}}'">
                 </div>
                 <!--contact buttons-->
+                <!--contact buttons-->
                 <span style="float:right;padding:2px 0px">
-                <a class="btn btn-primary" href="mailto:scenic@dri.edu" target="_top">Send Feedback</a>
-                <a class="btn btn-primary" href="{{ABOUT_URL}}#contact_us">Contact Us</a>
-                <!--Search Box-->
-                <form target="_blank"  method="get" action="http://www.google.com/search" style="display: inline;">
-                    <input type="text"   name="q" size="25" maxlength="255"/>
-                    <input type="submit" value="Search" />
-                    <input type="radio" style="display:none;"  name="sitesearch" value="http://wrcc.dri.edu/csc/scenic/" checked />
-                </form>
+                    <a class="btn btn-primary" href="mailto:scenic@dri.edu" target="_top">Send Feedback</a>
+                    <a class="btn btn-primary" href="{{ABOUT_URL}}#contact_us">Contact Us</a>
+                    <!--Search Box-->
+                    <form target="_blank"  method="get" action="http://www.google.com/search" style="display: inline;">
+                        <input type="text"   name="q" size="25" maxlength="255"/>
+                        <input type="submit" value="Search" />
+                        <input type="radio" style="display:none;"  name="sitesearch" value="http://wrcc.dri.edu/csc/scenic/" checked />
+                    </form>
+                    <!--
+                    <span style="display:inline;width:255px">
+                    <script>
+                        (function() {
+                            var cx = '002253838298126628722:xlc0h-mi3h0';
+                            var gcse = document.createElement('script');
+                            gcse.type = 'text/javascript';
+                            gcse.async = true;
+                            gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+                            var s = document.getElementsByTagName('script')[0];
+                            //s.style.width = '255px';
+                            //s.style.display = 'inline';
+                            s.parentNode.insertBefore(gcse, s);
+                        })();
+                    </script>
+                    <gcse:search></gcse:search>
+                    </span>-->
                 </span> 
                 
                 <ul class="nav navbar-nav">
