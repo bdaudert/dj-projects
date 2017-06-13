@@ -214,7 +214,7 @@ $(document).ready(function () {
             title:title,
             resizable: true,
             modal: false,
-            width:'auto',
+            width:max_width,
             height:'auto',
             maxHeight:max_height,
             open: function() {
@@ -226,7 +226,7 @@ $(document).ready(function () {
             },
             create: function(){
                 $(this).css("maxWidth", max_width);
-                //$(this).css("maxHeight", max_height);
+                $(this).css("maxHeight", max_height);
             },
             close: function () {
                $(pop_up).dialog('destroy');

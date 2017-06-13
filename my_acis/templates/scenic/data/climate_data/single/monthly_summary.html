@@ -79,16 +79,12 @@
                             <span id="area">{% include 'includes/area.html'%}</span>
                         </div>
                     </div>
-                    {%if initial.area_type == "location"%}
-                    <span class="grid" id="grid_type">{% include 'includes/grids.html'%}</span>
-                    {% else%}
-                    <span class="grid" id="grid_type" style="display:none">{% include 'includes/grids.html'%}</span>
-                    {%endif%}
-                    {%if initial.area_type == "location"%} 
-                    <span  id="stn_finder" style="display:none">{% include 'includes/station-finder.html'%}</span>
-                    {%else%}
-                    <span  id="stn_finder">{% include 'includes/station-finder.html'%}</span>
-                    {%endif%}
+                    <span class="grid" id="grid_type"
+                    {%if initial.area_type != "location"%}style="display:none"{%endif%}
+                    >{% include 'includes/grids.html'%}</span>
+                    <span  id="stn_finder" 
+                    {%if initial.area_type == "location"%}style="display:none"{%endif%}
+                    >{% include 'includes/station-finder.html'%}</span>
                 </div>
                 <div class="form-input-group form-group" align="center">
                     <label class="form-group-header">2. Choose your year range!</label>
@@ -97,11 +93,6 @@
                 </div>
                 <div class="form-input-group form-group" align="center">
                     <label class="form-group-header">2. Choose your dataset!</label>
-                    {%if initial.area_type == "location"%}        
-                    <span class="grid" id="grid_type">{% include 'includes/grids.html'%}</span> 
-                    {% else%}
-                    <span class="grid" id="grid_type" style="display:none">{% include 'includes/grids.html'%}</span>
-                    {%endif%}
                     <div class="input-group">
                         <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
                             {% include 'includes/variable.html'%}

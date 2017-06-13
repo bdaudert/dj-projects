@@ -1054,7 +1054,6 @@ def spatial_summary(request):
         #Set form and initial
         form = DJANGOUtils.set_form(initial, clean=False)
         form_cleaned = DJANGOUtils.set_form(initial)
-        #context['xx'] = form_cleaned
         #Form Check
         fields_to_check = [form['area_type'],'start_date', 'end_date','degree_days', 'variables']
         #,'connector_line_width', 'vertical_axis_min', 'vertical_axis_max']
@@ -1303,7 +1302,6 @@ def station_finder(request):
         form = DJANGOUtils.set_form(request,clean=False)
         form_cleaned = DJANGOUtils.set_form(request,clean=True)
         fields_to_check = [form_cleaned['area_type'],'start_date', 'end_date']
-        context['xx'] = form_cleaned
         #form_error = check_form(form_cleaned, fields_to_check)
         form_error = None
         if form_error:
@@ -1561,7 +1559,6 @@ def monthly_summary(request):
             }
         #Write data to file for highcharts
         hc_data = WRCCUtils.extract_highcarts_data_monthly_summary(results['data'],form_cleaned)
-        context['xx'] = form_cleaned
         graph_data = []
         for p_idx,d in enumerate(hc_data):
             if app_params['statistic_period'] == 'monthly':
