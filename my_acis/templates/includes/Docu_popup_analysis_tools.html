@@ -1,13 +1,23 @@
 <p class="lead"><small>
     <ul style="list-style: none;">
-    <li><span class="link" onclick="ShowPopupDocu('Docu_popup_station_finder')" onmouseover="ShowPopupDocu('Docu_popup_station_finder')" onmouseout="DestroyPopupDocu('Docu_popup_station_finder')">Station Finder</span></li>
-    <li><span class="link" onclick="ShowPopupDocu('Docu_popup_single_point_prods')" onmouseover="ShowPopupDocu('Docu_popup_single_point_prods')" onmouseout="DestroyPopupDocu('Docu_popup_single_point_prods')">Single Point Products</span>
-    <br />
-    for individual weather stations or gridpoints
+    <li><a href="{{SCENIC_URL}}analysis/station_finder/"><b>Station Finder</b></a>
+        <ul>
+            <li>Find stations with data for specific climate variables and time range.</li>
+        </ul>
     </li>
-    <li><span class="link" onclick="ShowPopupDocu('Docu_popup_multi_point_prods')" onmouseover="ShowPopupDocu('Docu_popup_multi_point_prods')" onmouseout="DestroyPopupDocu('Docu_popup_multi_point_prods')">Multi Point Products</span>
-    <br />
-    for stations and gridpoints in states, climate divisions, counties, basins and custom polygons
+    <li><a href="{{SCENIC_URL}}analysis/single/"><b>Single Point Products</b></a>
+        <ul>
+            <li>Monthly and annual summary tables and time series</li>
+            <li>Climatologies</li>
+            <li>Compare station to gridded data at a lon,lat coordinate</li>
+        </ul>
+    </li>
+    <li><a href="{{SCENIC_URL}}analysis/single/"><b>Multi Point Products</b></a>
+        <ul>
+            <li>Summarize data over custom polygons or Climate Divisions, Counties, States, etc.</li>
+            <li>Compute spatial summaries (Time Series)</li>
+            <li>Compute temporal summaries (Maps)</li>
+        </ul>
     </li>
     </ul>
 </small></p>

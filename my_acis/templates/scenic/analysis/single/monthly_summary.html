@@ -1,0 +1,359 @@
+{% extends "csc_base.html" %}
+
+<meta name="keywords" content="Time Series, Monthly Summary,graph, coop station, station data, historic data,application, product, tool">
+<meta name="description" content="SCENIC Custom Statistic/Time Series">
+
+{%load my_scenic_filters%}
+
+{% block content %}
+
+<!--Documentation-->
+<div class="docu" id="tool_info" style="display:none;">
+    {% include 'includes/Docu_app_monthly_summary.html'%}
+</div>
+<div id="how_to" style="display:none;">
+    <div id="Docu_point_of_interest">{% include 'includes/Docu_point_of_interest.html'%}</div>
+    <div id="Docu_grids">{% include 'includes/Docu_grids.html'%}</div>
+    <div id="Docu_start_end_year">{% include 'includes/Docu_start_end_year.html'%}</div>
+    <div id="Docu_start_month" style="display:none;">{% include 'includes/Docu_start_month.html'%}</div>
+    <div id="Docu_variable">{% include 'includes/Docu_variable.html'%}</div>
+    <div id="Docu_units">{% include 'includes/Docu_units.html'%}</div>
+    <div id="Docu_base_temperature">{% include 'includes/Docu_base_temperature.html'%}</div> 
+    <div id="Docu_statistic_period" style="display:none">{% include 'includes/Docu_statistic_period.html'%}</div>
+    <div id="Docu_statistic">{% include 'includes/Docu_monthly_summary_statistic.html'%}</div>
+    <div id="Docu_num_days_thresholds">{% include 'includes/Docu_num_days_thresholds.html'%}</div>
+    <div id="Docu_max_missing_days">{% include 'includes/Docu_max_missing_days.html'%}</div>
+    <div id="Docu_departure_from_averages">{% include 'includes/Docu_departure_from_averages.html'%}</div>
+</div>
+<div class="docu" id="Docu_monthly_summary_main_table_header" style="display:none;">
+    {% include 'includes/Docu_monthly_summary_main_table_header.html'%}
+</div>
+<div class="docu" id="Docu_monthly_summary_summary_table_header" style="display:none;">
+    {% include 'includes/Docu_monthly_summary_summary_table_header.html'%}
+</div>
+<div class="docu" id="Docu_monthly_summary_visualization_table_header" style="display:none;">
+    {% include 'includes/Docu_monthly_summary_visualization_header.html'%}
+</div>
+
+<!--Hidden variables-->
+<input type="hidden" id="app_name" name="app_name" value="{{app_name}}">
+<!--Set up autofill-->
+{%if initial.autofill_list %}
+    <script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
+{%endif%}
+
+<!--Button row-->
+{% include 'includes/button-row.html'%}
+
+{% if not results.data%}
+<div id="top_of_page">
+{%else%}
+<div id="top_of_page" style="display:none">
+{%endif%}
+    <div class="row" height="100%">
+        <!--Form-->
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"> 
+            <form method="post" class="main-form" id="DataForm" action="" onsubmit="show_loading()">{% csrf_token %}
+                <div class="form-group">
+                    <button type="submit" class="main-form-button btn btn-large btn-primary pull-left" name="formData" style="width:100%">
+                    Get Data
+                    </button>
+                </div>
+                <input type="hidden" name="app_name" value="monthly_summary">
+                <input type="hidden" name="data_type" id="data_type" class="data_type" value="{{initial.data_type}}">
+                <input type="hidden" class="chart_indices_string" id="chart_indices_string" 
+                    value="{{initial.chart_indices_string}}" name="chart_indices_string">
+                <input type="hidden" value="{{initial.chart_type}}" name="chart_type" class="chart_type">
+                <input type="hidden" value="{{initial.show_running_mean}}" name="show_running_mean" class="show_running_mean">
+                <input type="hidden" value="{{initial.running_mean_years}}" name="running_mean_days" class="running_mean_days">
+                <input type="hidden" value="{{initial.show_range}}" name="show_range" class="show_range">
+                <input type="hidden" value="{{initial.chart_summary}}" name="chart_summary" class="chart_summary">
+                <div class="form-input-group form-group" align="center">
+                    <label class="form-group-header">1. Define your region!</label> 
+                    <div class="input-group">
+                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                            {% include 'includes/area-type.html'%}
+                            <span class="input-group-addon"></span>
+                        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                            <span id="area">{% include 'includes/area.html'%}</span>
+                        </div>
+                    </div>
+                    <span class="grid" id="grid_type"
+                    {%if initial.area_type != "location"%}style="display:none"{%endif%}
+                    >{% include 'includes/grids.html'%}</span>
+                    <span  id="stn_finder" 
+                    {%if initial.area_type == "location"%}style="display:none"{%endif%}
+                    >{% include 'includes/station-finder.html'%}</span>
+                </div>
+                <div class="form-input-group form-group" align="center">
+                    <label class="form-group-header">2. Choose your year range!</label>
+                    {% include 'includes/valid_daterange.html'%}
+                    {% include 'includes/start-end-year.html'%}
+                </div>
+                <div class="form-input-group form-group" align="center">
+                    <label class="form-group-header">2. Choose your dataset!</label>
+                    <div class="input-group">
+                        <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                            {% include 'includes/variable.html'%}
+                            <span class="input-group-addon"></span>
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                            {% include 'includes/units.html'%}
+                        </div>
+                    </div>
+                    {%if initial.variable == "gdd" or initial.variable == "hdd" or initial.variable == "gdd"%}
+                    <span id="base_temp" >{% include 'includes/base_temperature.html'%}</span>
+                    {%else%}
+                    <span id="base_temp"  style="display:none">{% include 'includes/base_temperature.html'%}</span>
+                    {%endif%}
+                    <div class="input-group">
+                        <span style="display:none" >{% include 'includes/statistic-period.html'%}</span>
+                        <span >{% include 'includes/monthly_summary_statistic.html'%}</span>
+                        {%if initial.statistic == "ndays"%}
+                        <span id="threshold_type" >{% include 'includes/number_of_days.html'%}</span>
+                        {%if initial.less_greater_or_between == "b"%}
+                        <span id="threshold_between" >{% include 'includes/num_days_thresholds_between.html'%}</span>
+                        {%else%}
+                        <span id="threshold_between"  style="display:none">{% include 'includes/num_days_thresholds_between.html'%}</span>
+                        {%endif%}
+                        {%if initial.less_greater_or_between == "g"%}
+                        <span id="threshold_above" >{% include 'includes/num_days_thresholds_above.html'%}</span>
+                        {%else%}
+                        <span id="threshold_above"  style="display:none">{% include 'includes/num_days_thresholds_above.html'%}</span>
+                        {%endif%}
+                        {%if initial.less_greater_or_between == "l"%}
+                        <span id="threshold_below" >{% include 'includes/num_days_thresholds_below.html'%}</span>
+                        {%else%}
+                         <span id="threshold_below"  style="display:none">{% include 'includes/num_days_thresholds_below.html'%}</span>
+                        {%endif%}
+                        {%else%}
+                        <span id="threshold_type"  style="display:none">{% include 'includes/number_of_days.html'%}</span>
+                        <span id="threshold_between"  style="display:none">{% include 'includes/num_days_thresholds_between.html'%}</span>
+                        <span id="threshold_above"  style="display:none">{% include 'includes/num_days_thresholds_above.html'%}</span>
+                        <span id="threshold_below"  style="display:none">{% include 'includes/num_days_thresholds_below.html'%}</span>
+                        {%endif%}
+                    </div>
+                </div>
+                <div class="form-input-group form-group" align="center">
+                    <div class="input-group">
+                        {% include 'includes/max_missing_days.html'%}
+                        <span class="input-group-addon"></span>
+                        {% include 'includes/departures_from_averages.html'%}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="main-form-button btn btn-large btn-primary pull-left" name="formData" style="width:100%">
+                    Get Data
+                    </button>
+                </div>
+            </form>
+        </div><!--col-sm-4--><br />
+        <!--Main: Errors/maps-->
+        <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+             <!--Ajax Error-->
+            <div class="ajax_error error"></div> 
+            {%if not results.data and run_done%}
+            <div class="results" align="center">
+                {% include 'includes/no_results.html'%}
+            </div>
+            {% endif %}
+            <!--Form errors-->
+            {%if form_error%}
+            <div class="results" align="center">
+                {% include 'includes/form_error.html'%}
+            </div>
+            {%endif%}
+            <!--Request errors-->
+            {%if results.errors%}
+            <div class="results" align="center">
+                <p class="error">{{results.errors}}</p>
+            </div>
+            {%endif%}
+        <!--Map section-->
+        <!--Gridpoint map-->
+        {% include 'includes/map-gridpoint.html'%}
+        </div><!--col-sm-8-->
+    </div><!--row--><br />
+</div><!--top_of_page-->
+<!--Main Results-->
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"> 
+    {%if results.data%}
+        <div class="results" >
+            <!--Header-->
+            <p>
+            {%for key_val in results.header%}
+            {%if key_val.0 == "Variable"%}
+                <b>{{key_val.0}}</b> {{key_val.1}}
+            {%elif key_val.0 == "Start Year"%}
+                <b>{{key_val.1}}</b>
+            {%elif key_val.0 == "End Year"%}
+                -- <b>{{key_val.1}}</b><br />
+            {%elif key_val.0 == "Units" or key_val.0 == "Base Temperature"%}
+                &nbsp;({{key_val.1}})<br />
+            {%else%}
+                <b>{{key_val.0}}</b> {{key_val.1}}<br />
+            {%endif%}
+            {%endfor%}
+            </p>
+            <!--Summary Table-->
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                        <input align="left" class="btn btn-primary" id="show_hide_summary" type='button' value='Hide Summary'>
+                    </div>
+                    <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
+                        <h3 align="left">
+                            <img alt="Click me!" title="More Info" style="cursor: pointer;"
+                            src="{{ MEDIA_URL }}img/QMark.png" 
+                            onclick="ShowPopupDocu('Docu_monthly_summary_summary_table_header')"> Summary
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        <div id="summary-table">
+            <div class="dataTableInfo" id="dataTableInfo-1" style="display:none">
+            {%for key_val in results.header%}
+                {%if key_val%}  {{key_val.0}} {{key_val.1}}, {%endif%}
+            {%endfor%}
+            </div>
+            <table border="1" class="dataTable smallFont nowrap" id="dataTable-1">
+                {%for s_data in results.data_summary%}
+                {%if forloop.counter0 <= 6%}
+                {%if forloop.counter0 == 0%}
+                    <thead><tr>
+                    {%for s in s_data%}
+                    {%if forloop.counter == 1%}
+                        <th>{{s}}</th>
+                    {%else%}
+                        {%if forloop.counter|divisibleby:2%}<th>{{s}}{%endif%}
+                        {%if not forloop.counter|divisibleby:2%}{{s}}</th>{%endif%}
+                    {%endif%}
+                    {%endfor%}
+                    </tr></thead>
+                    <tbody>
+                    {%else%}
+                        <tr>
+                        {%for s in s_data%}
+                        {%if forloop.counter == 1%}
+                            <td>{{s}}</td>
+                        {%else%}
+                        {%if forloop.counter|divisibleby:2%}<td>{{s}}{%endif%}
+                        {%if not forloop.counter|divisibleby:2%}{{s}}</td>{%endif%}
+                        {%endif%}
+                        {%endfor%}
+                        </tr>
+                    {%endif%}
+                {%endif%}
+                {%endfor%}
+                </tbody>
+            </table><!--end summary-table--><br />
+        </div>
+        <!--Main table -->
+         <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                    <input align="left" class="btn btn-primary" id="show_hide_data" type='button' value='Hide Data'>
+                </div>
+                <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
+                    <h3 align="left">
+                        <img alt="Click me!" title="More Info" style="cursor: pointer;"
+                        src="{{ MEDIA_URL }}img/QMark.png" 
+                        onclick="ShowPopupDocu('Docu_monthly_summary_main_table_header')"> Data
+                    </h3>        
+                </div>
+            </div>
+        </div>
+        <div id="main-table" align="center">
+            <div class="dataTableInfo" id="dataTableInfo-0" style="display:none">
+            {%for key_val in results.header%}
+                {%if key_val%} {{key_val.0}} {{key_val.1}},{%endif%}
+            {%endfor%}
+            </div>
+            <table class="dataTable smallFont nowrap" id="dataTable-0" border=1>
+            {%for yr_data in results.data%}
+            {%if forloop.counter0 == 0%}
+                <thead><tr align="left">{%for dat in yr_data %}<td>{{dat}}</td>{%endfor%}</tr></thead>
+                <tfoot><tr align="left">{%for dat in yr_data%}<td>{{dat}}</td>{%endfor%}</tr></tfoot>
+                <tbody>
+            {%else%}
+                <tr>
+                {%for dat in yr_data%}
+                    <td>{{dat}}</td>
+                {%endfor%}
+                </tr>
+            {%endif%}
+            {%endfor%}
+            </tbody>
+            </table>
+        </div><!--End div="main-table"-->
+        
+        <!--CHART-->
+        {%if results.graph_data%}
+         <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                    <input align="left" class="btn btn-primary" id="show_hide_graph" type='button' value='Hide Graph'>
+                </div>
+                <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
+                    <h3 align="left">
+                        <img alt="Click me!" title="More Info" style="cursor: pointer;"
+                        src="{{ MEDIA_URL }}img/QMark.png" 
+                        onclick="ShowPopupDocu('Docu_monthly_summary_visualization_table_header')"> Visualization
+                    </h3>
+                </div>
+            </div>
+        </div>
+            <div id="main-graph" align="center">
+                <!--Chart Layers-->
+                <div class="row chart-layers">
+                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                        <div class="row" height="50%">
+                            {% include 'includes/chart-smry-monthly-summary.html'%}
+                        </div>
+                        <div class="row" height="50%">
+                            {% include 'includes/chart-indices-monthly-summary.html'%}
+                        </div>
+                    </div>
+                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                        <div class="row" height="50%">
+                            {% include 'includes/chart-running-mean-years.html'%}
+                        </div>
+                        <div class="row" height="50%">
+                            {% include 'includes/chart-range.html'%}
+                        </div>
+                    </div>
+                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                        <div class="row" height="50%">
+                        {% include 'includes/chart-show-hide-legend.html'%}
+                        </div>
+                        <div class="row" height="50%">
+                        {% include 'includes/chart-type.html'%}
+                        </div>
+                    </div>
+                </div>
+                <!--Chart-->
+                <div class="row">
+                    <div id="hc-container" style="width:97%"></div>
+                    {% if initial.chart_summary == "individual"%}
+                    <script type="text/javascript">
+                        var graph_data = {{results.graph_data | safe_json}};
+                        generateTS_individual();
+                    </script>
+                    {%else%}
+                    <script type="text/javascript">
+                        var graph_data = {{results.graph_data | safe_json}};
+                        generateTS_smry();
+                    </script>
+                    {%endif%}
+                </div><!--row-->
+            </div><!--main-graph-->
+            <br />
+        {%endif%}<!--end if results.graph_data-->
+
+        </div><!--results-->
+    {%endif%}<!--End results.data-->
+    </div><!--col-xs-12-->
+</div><!--row-->
+{%endblock%}

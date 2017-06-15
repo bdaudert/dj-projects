@@ -189,8 +189,41 @@ def data(request):
     }
     return render_to_response(url, context, context_instance=RequestContext(request))
 
+def analysis(request):
+    app_name = 'analysis'
+    url = settings.APPLICATIONS[app_name][2]
+    app_url = settings.APPLICATIONS[app_name][1]
+    context = {
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
+        'app_url': app_url
+    }
+    return render_to_response(url, context, context_instance=RequestContext(request))
+
 def climate_data(request):
     app_name = 'climate_data'
+    url = settings.APPLICATIONS[app_name][2]
+    app_url = settings.APPLICATIONS[app_name][1]
+    context = {
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
+        'app_url': app_url
+    }
+    return render_to_response(url, context, context_instance=RequestContext(request))
+
+def station_data(request):
+    app_name = 'station_data'
+    url = settings.APPLICATIONS[app_name][2]
+    app_url = settings.APPLICATIONS[app_name][1]
+    context = {
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
+        'app_url': app_url
+    }
+    return render_to_response(url, context, context_instance=RequestContext(request))
+
+def gridded_data(request):
+    app_name = 'gridded_data'
     url = settings.APPLICATIONS[app_name][2]
     app_url = settings.APPLICATIONS[app_name][1]
     context = {
