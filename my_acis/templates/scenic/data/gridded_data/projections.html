@@ -1,0 +1,137 @@
+{% extends "csc_base.html" %}
+
+{% block content %}
+
+<!--Documentation-->
+<div class="docu" id="Docu_CCTAG_report" style="display:none;">
+    <iframe src={{MEDIA_URL}}img/1_14_16_PerspectivesAndGuidanceForClimateChangeAnalysis_MasterFile_FINAL_08_14_2015_LRW.pdf width="70%" height="2000%"></iframe>
+</div>
+<div class="docu" title="LOCA FAQs" id="Docu_faq_LOCA" style="display:none;">
+{% include 'includes/Docu_faq_LOCA.html'%}
+</div>
+
+<div class="docu" title="Climate Data Primer" id="Docu_howto_climate_primer" style="display:none;">
+    <iframe src={{MEDIA_URL}}img/Docu_howto_climate_primer.pdf width="650px" height="900px"></iframe>
+</div>
+
+<div class="docu" title="Case Study: Temperature Extremes" id="Docu_SpottedOwl" style="display:none;">
+{% include 'includes/Docu_SpottedOwl.html'%}
+</div>
+
+<div class="docu" title="Case Study: Heatwaves" id="Docu_HeatWaveProbability" style="display:none;">
+{% include 'includes/Docu_HeatWaveProbability.html'%}
+</div>
+
+<div class="docu" title="Case Study: Temperature Extremes" id="Docu_SpottedOwlKristen" style="display:none;">
+{% include 'includes/Docu_SpottedOwlKristen.html'%}
+</div>
+
+<div class="docu" title="Number of days exceeding 35.2 Degree Celsius" id="Docu_SpottedOwlData352" style="display:none;">
+{% include 'includes/Docu_SpottedOwlData35.2.html'%}
+</div>
+
+<div class="docu" title="Number of days exceeding 34 Degree Celsius" id="Docu_SpottedOwlData34" style="display:none;">
+{% include 'includes/Docu_SpottedOwlData34.html'%}
+</div>
+
+<div class="docu" title="Number of days exceeding 30 Degree Celsius" id="Docu_SpottedOwlData30" style="display:none;">
+{% include 'includes/Docu_SpottedOwlData30.html'%}
+</div>
+
+<div style="padding:5px;">
+    <p class="link" align="center" onclick="ShowPopupDocu('Docu_faq_LOCA')">Localized Constructed Analogs (LOCA) FAQs</p>
+    <div class="row">
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            <h2 class="bg-success" style="padding:1.7%;" align="center">Introduction</h2>
+            <p>
+            Climate is an emergent product of Earth’s orbit, volcanic activity, atmospheric gases, and 
+energy transfers among air, water, and land. Climate models include equations that represent   
+the physical drivers of climate sufficiently to  make useful statistical predictions at global extents 
+and over long time periods. Solving the equations requires substantial amounts of observed or  
+modeled data.
+            <p class="link" onclick="ShowPopupDocu('Docu_howto_climate_primer')">Read more (Primer on climate data and global climate models).</p>
+            The 10 downscaled climate models that area available on SCENIC were chosen following a three step screening process.
+            <ol>
+                <li>Evaluation of the Global Climate Models at global scale</li>
+                <li>Evaluation of the Global Climate Models over teh Western United States</li>
+                <li>Evaluation of the Global Climate Models for the specific needs of the California Department of Water Resources </li>
+            </ol>
+            Read more here:
+            <p class="link" onclick="ShowPopupDocu('Docu_CCTAG_report')">CCTAG Report.</p>
+            <a target="_blank" href="http://www.water.ca.gov/climatechange/cctag.cfm"><b>Climate Change Technical Advisory Group (CCTAG) Home Page</b></a>        
+            </p>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            <div class="row">
+                <h2 class="bg-success" style="padding:1.7%;" align="center">Data Access</h2>
+            </div>
+            <div class="row">
+                <h3 class="bg-info" align="center">{% include 'includes/projections_data_access.html'%}</h3>
+            </div>
+            <div class="row">
+                <h3 class="bg-info" align="center">{% include 'includes/projections_analysis_plots.html'%}</h3>
+            </div>
+        </div>
+    <div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <h2 class="bg-success" style="padding:1%;" align="center">Case studies for natural resource management</h2>
+            <!--
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-height">
+                <div class="bg-info main-col inside inside-full-height">
+                    <h3>Temperature Extremes<br />
+                        <small>Thermal tolerance of wildlife species</small>
+                    </h3>
+                    <table class="padded">
+                    <td valign="top">
+                        <img class="app_img" src="{{MEDIA_URL}}img/NumDaysMaxtGT35.2C.png">
+                    </td>
+                    <td valign="top">
+                        <p>Identifying where on a landscape temperature extremes are exceeded now and 
+                        where they may be exceeded in the future 
+                        could help prioritize where to manage for different species.</p>
+                        <p class="link" onclick="ShowPopupDocu('Docu_SpottedOwl')">Read more</p>
+                    </td>
+                    </table>
+                </div>
+            </div>
+            -->
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-height">
+                <div class="bg-info main-col inside inside-full-height">
+                    <h3>Heatwaves
+                        <small>Investigating changes in heatwave probabilities under a warming climate</small>
+                    </h3>
+                    <table class="padded">
+                        <td valign="top"><img class="app_img" src="{{MEDIA_URL}}img/HeatWaveProbability.png"></td>
+                        <td valign="top">
+                            <p>
+                            Changes in heat wave probability do not directly follow changes in background warming.  Background warming in the Southwest is greatest in the northern part of the domain, however, the largest increases in heat wave probability occurs in the central part of the domain.
+                            </p>
+                            <p class="link" onclick="ShowPopupDocu('Docu_HeatWaveProbability')">Read more</p>
+                        </td>
+                    </table>
+                </div>
+            </div>
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-height">
+                <div class="bg-info main-col inside inside-full-height">
+                    <h3>Temperature Extremes<br />
+                        <small>Thermal tolerance of wildlife species</small>
+                    </h3>
+                    <table class="padded">
+                    <td valign="top">
+                        <img class="app_img" src="{{MEDIA_URL}}img/SpottedOwlKristenResults2.png">
+                    </td>
+                    <td valign="top">
+                        <p>Identifying where on a landscape temperature extremes are exceeded now and
+                        where they may be exceeded in the future
+                        could help prioritize where to manage for different species.</p>
+                        <p class="link" onclick="ShowPopupDocu('Docu_SpottedOwlKristen')">Read more</p>
+                    </td>
+                    </table>
+                </div>
+            </div> 
+        </div><!--col-sm-12...-->
+    </div><!--row-->
+</div>
+
+{% endblock %}

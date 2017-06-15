@@ -31,51 +31,106 @@
 <div title="MODIS" class="docu" id="Docu_MODIS" style="display:none;">
     {% include 'includes/Docu_MODIS.html'%}
 </div>
+<div title="Projections" align="left" id="Docu_page_projections" style="display:none;">
+    {% include 'includes/Docu_page_projections.html'%}
+</div>
 <div title="Remote Sensing Data" align="left" id="Docu_page_remote_sensing_data" style="display:none;">
     {% include 'includes/Docu_page_remote_sensing_data.html'%}
 </div>
 <div title="Station Finder" class="docu" id="Docu_page_station_finder" style="display:none;">
     {% include 'includes/Docu_page_station_finder.html'%}
 </div>
-<div title="Single Point Products" class="docu" id="Docu_page_single_point_prods" style="display:none;">
-    {% include 'includes/Docu_page_single_point_prods.html'%}
+<div title="Single Point Products" class="docu" id="Docu_page_single_point_prod_station" style="display:none;">
+    {% include 'includes/Docu_page_single_point_prods_station.html'%}
 </div>
-<div title="Multi Point Products" class="docu" id="Docu_page_multi_point_prods" style="display:none;">
-    {% include 'includes/Docu_page_multi_point_prods.html'%}
+<div title="Multi Point Products" class="docu" id="Docu_page_multi_point_prods_station" style="display:none;">
+    {% include 'includes/Docu_page_multi_point_prods_station.html'%}
 </div>
+<div title="Single Point Products" class="docu" id="Docu_page_single_point_prod_grid" style="display:none;">
+    {% include 'includes/Docu_page_single_point_prods_grid.html'%}
+</div>
+<div title="Multi Point Products" class="docu" id="Docu_page_multi_point_prods_grid" style="display:none;">
+    {% include 'includes/Docu_page_multi_point_prods_grid.html'%}
+</div>
+
 
 <div class="row row-height">
     <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-height">
         <div class="bg-info main-col inside inside-full-height">
-            <h1 align="center">
-            Historic Weather<br />Station Data
-            </h1>
-            <a href="{{SCENIC_URL}}analysis/station_finder/">Station Finder</a>
-            <img alt="Click me!" title="More Info" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_page_station_finder')"><br />
-            <a href="{{SCENIC_URL}}analysis/single/">Single Point Products</a>
-            <img alt="Click me!" title="More Info" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_page_single_point_prods')"><br />
-            <a href="{{SCENIC_URL}}analysis/single/">Single Point Products</a>            
-            <img alt="Click me!" title="More Info" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_page_multi_point_prods')"><br />
+            <h1 align="center"><a href="{{DATA_URL}}station_data/">Historic Weather Station Data</a></h1><br />
+            <div style="padding-left:20%;" valign="center">
+                <div class="row">
+                    <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                        <a href="{{SCENIC_URL}}analysis/station_finder/">Station Finder</a>
+                    </div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                        <img alt="Click me!" title="More Info" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_page_station_finder')"><br /><br />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                        <a href="{{SCENIC_URL}}analysis/single/">Single Point Products</a>
+                    </div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                        <img alt="Click me!" title="More Info" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_page_single_point_prods_station')"><br /><br />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                        <a href="{{SCENIC_URL}}analysis/multi/">Single Point Products</a>
+                    </div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                        <img alt="Click me!" title="More Info" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_page_multi_point_prods_station')">
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-height">
         <div class="bg-info main-col inside inside-full-height">
-        <h1 align="center">
-            <a href="{{DATA_URL}}gridded_data/">Gridded/Modeled <br /> Data</a>
-            <img alt="Click me!" title="More Info" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_page_projections')">
-            <br />
-            <small align="left">{% include 'includes/Docu_popup_projections.html'%}</small>
-        </h1>
+            
+            <h1 align="center"><a href="{{DATA_URL}}gridded_data/">Gridded/Modeled Data</a></h1><br />
+            <div style="padding-left:20%;" valign="center">
+                <div class="row">
+                    <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                        <a href="{{SCENIC_URL}}data/projections/">LOCA Projections</a>
+                    </div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                        <img alt="Click me!" title="More Info" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_page_projections')"><br /><br />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                        <a href="{{SCENIC_URL}}analysis/single/?projection=true">Single Point Products</a>
+                    </div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                        <img alt="Click me!" title="More Info" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_page_single_point_prods_grid')"><br /><br />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                        <a href="{{SCENIC_URL}}analysis/multi/?projection=true">Single Point Products</a>            
+                    </div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                        <img alt="Click me!" title="More Info" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_page_multi_point_prods_grid')">
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-height">
         <div class="bg-info main-col inside inside-full-height">
-        <h1 align="center">
-            <a href="{{DATA_URL}}remote_sensing_data/">Remote Sensing<br />Data</a>
-            <img alt="Click me!" title="More Info" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_page_remote_sensing_data')">
-            <br />
-            <small align="left">{% include 'includes/Docu_popup_remote_sensing_data.html'%}</small>
-        </h1>
+            <h1 align="center"><a href="{{DATA_URL}}remote_sensing_data/">Remote Sensing<br /> Data</a></h1><br />
+            <div style="padding-left:20%;" valign="center">
+                <div class="row">
+                    <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                        <a href="{{DATA_URL}}remote_sensing_data/">Map/Time Series Tool</a>
+                    </div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                        <img alt="Click me!" title="More Info" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_page_remote_sensing_data')">
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

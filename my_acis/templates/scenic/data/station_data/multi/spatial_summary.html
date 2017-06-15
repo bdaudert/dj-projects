@@ -1,0 +1,298 @@
+{% extends "csc_base.html" %}
+<meta name="keywords" content="tools, application, gridded data, station data,time series, graph">
+<meta name="description" content="SCENIC Spatial Summary">
+
+{%load my_scenic_filters%}
+
+{% block content %} 
+<!--Hidden variables-->
+<input type="hidden" id="app_name" name="app_name" value="{{app_name}}">
+<input type="hidden" id="host" name="host" value="{{host}}">
+<input type="hidden" id="kml_file_path" name="kml_file_path" value="{{initial.kml_file_path}}">
+<input type="hidden" id="json_file" name="json_file" value="{{json_file}}">
+
+<!--Set up autofill-->
+
+<script type="text/javascript">set_autofill("{{initial.autofill_list}}");</script>
+
+
+<!--Documentation-->
+<div id="tool_info" style="display:none;">
+    {% include 'includes/Docu_app_spatial_summary.html'%}
+</div>
+<div id="how_to" style="display:none;">
+    <div id="Docu_area_of_interest">{% include 'includes/Docu_area_of_interest.html'%}</div>
+    <div id="Docu_data_type">{% include 'includes/Docu_data_type.html'%}</div>
+    <div id="Docu_grids">{% include 'includes/Docu_grids.html'%}</div>
+    <div id="Docu_start_end_date">{% include 'includes/Docu-start-end-date.html'%}</div>
+    <div id="Docu_variables">{% include 'includes/Docu_variables.html'%}</div>
+    <div id="Docu_units">{% include 'includes/Docu_units.html'%}</div>
+    <div id="Docu_add_degree_days">{% include 'includes/Docu_add_degree_days.html'%}</div>
+    <div id="Docu_degree_days">{% include 'includes/Docu_degree_days.html'%}</div>
+    <div id="Docu_spatial_summary">{% include 'includes/Docu-spatial-summary.html'%}</div>
+</div>
+
+<div class="docu" id="Docu_seasonal_summary_visualization" style="display:none;">
+    {% include 'includes/Docu_seasonal_summary_visualization.html'%}
+</div>
+
+
+<!--Button row-->
+{% include 'includes/button-row.html'%}
+
+
+ <!--FORM/MAP/ERRORS-->
+{% if not results.graph_data and not results.smry%}
+    <div id="top_of_page">
+{%else%}
+    <div id="top_of_page" style="display:none">
+{%endif%}
+
+    <div class="row" height="100%">
+        <!--Form-->
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"> 
+            <form method="post" class="main-form" id="DataForm" action="" onsubmit="show_loading()">{% csrf_token %}
+            <div class="form-group">
+                <button type="submit" class="main-form-button btn btn-large btn-primary pull-left" name="formData" style="width:100%">
+                Generate time series
+                </button>
+            </div>
+            <input type="hidden" name="app_name" value="spatial_summary">
+            <input type="hidden" class="overlay_state" name="overlay_state" value="{{initial.overlay_state}}">
+            <!--Hidden chart vars-->
+            <input type="hidden" class="chart_indices_string" id="chart_indices_string" value="{{initial.chart_indices_string}}" name="chart_indices_string">
+            <input type="hidden" value="{{initial.chart_type}}" name="chart_type" class="chart_type">
+            <input type="hidden" value="{{initial.show_running_mean}}" name="show_running_mean" class="show_running_mean">
+            <input type="hidden" value="{{initial.running_mean_days}}" name="running_mean_days" class="running_mean_days">
+            <input type="hidden" value="{{initial.show_average}}" name="show_average" class="show_average">
+            <div class="form-input-group form-group" align="center">
+                <label class="form-group-header">1. Define your region!</label> 
+                <div class="input-group">
+                    {% include 'includes/area-type.html'%}
+                    <span class="input-group-addon"></span>
+                    <span id="area" valign="bottom">{% include 'includes/area.html'%}</span>
+                </div>
+            </div>
+            <div class="form-input-group form-group" align="center">
+                <label class="form-group-header">2. Choose your datatype!</label>
+                <div class="input-group">
+                {% include 'includes/data_type.html'%}
+                {% if initial.data_type == "grid"%}
+                    <span class="grid" id="grid_type" style="display:block;">{% include 'includes/grids.html'%}</span>
+                {% else %}
+                    <span class="grid" id="grid_type" style="display:none;">{% include 'includes/grids.html'%}</span>
+                {% endif%}
+                </div>
+            </div>
+            <div class="form-input-group form-group" align="center">
+                <label class="form-group-header">3. Define your date ranges! </label>
+                {% include 'includes/valid_daterange.html'%}
+                <div class="input-group">
+                    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                    {% include 'includes/start-date.html'%}
+                    </div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                    <span class="input-group-addon"></span>
+                    </div>
+                    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                    {% include 'includes/end-date.html'%}
+                    </div>
+                </div>
+            </div>
+            <div class="form-input-group form-group" align="center">
+                <label class="form-group-header">2. Choose your dataset!</label>
+                <div class="input-group">
+                    <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8"> 
+                        {% include 'includes/variables.html'%}
+                        <span class="input-group-addon"></span>
+                    </div>
+                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                        {% include 'includes/units.html'%}
+                    </div>
+                </div>
+               <div class="input-group">
+                    <span  id="add">{% include 'includes/add_degree_days.html'%}</span>
+                    <span class="input-group-addon"></span>
+                    {%if initial.add_degree_days == "T"%}
+                    <span id="dd">{% include 'includes/degree_days.html'%}</span>
+                    {%else%}
+                    <span id="dd" style="display:none">{% include 'includes/degree_days.html'%}</span>
+                    {%endif%}
+                </div>
+                <div class="input-group">
+                    <span id="spat_summary">{% include 'includes/spatial-summary.html'%}</span>
+                    <span class="input-group-addon"></span>
+                </div>
+            </div>
+            <div class="form-input-group form-group" align="center" style="display:none;">
+                <label class="form-group-header">4. Output</label>
+                <div class="input-group">
+                    {% include 'includes/data_format.html'%}</span>
+                </div>
+                <div class="input-group">
+                    {% include 'includes/delimiter.html'%}</span>
+                    <span class="input-group-addon"></span> 
+                    {% include 'includes/out_file.html'%}
+                </div>
+                <div class="input-group">
+                    <span style="display:none;" class="un">{% include 'includes/user-name.html'%}</span>
+                    <span class="input-group-addon"></span>
+                    <span style="display:none;" class="ue">{% include 'includes/user-email.html'%}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="main-form-button btn btn-large btn-primary pull-left" name="formData" style="width:100%">
+                Generate time series
+                </button>
+            </div>        
+            </form>
+        </div><!--col-sm-4-->
+        <!--Main: Errors/maps-->
+        <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+        
+            <!--Large Request Form-->
+            <div id="largeRequestForm" style="display:none">
+                {% include 'includes/large_request_form.html'%}
+            </div>
+            <!--Shape file upload form-->
+            <div>{% include 'includes/upload_shape_file.html'%}</div>
+            <!--Offline message--> 
+            <div id="offlineMessage" style="display:none">{% include 'includes/offline_message.html'%}</div>
+            {%if large_request%}
+                <script type="text/javascript">ShowPopupDocu('largeRequestForm')</script>
+            {%endif%}
+            <!--Download form-->
+            <div id="formDownload" class="form" style="display:none;">{% include 'includes/download_form.html'%}</div>
+            <!--AJAX error-->
+            <div style="display:none" class="ajax_error"></div>
+            <!--Form errors and search parameter section-->
+            {%if form_error%}
+            <div class="results">
+                {% include 'includes/form_error.html'%}
+            </div>
+            {%endif%}
+            {%if results.error%}
+            <div class="results">
+                <p class="error">{{results.error}}</p>
+            </div>
+            {%endif%}
+            {%if  run_done and  not results.graph_data and not results.smry %}
+            <div class="results">
+                {% include 'includes/no_results.html'%}
+            </div>
+            {%endif%}
+            <!--Map section-->
+            <!--Overlay maps-->
+            {% include 'includes/map-overlay.html'%}
+            <!--Polygon map-->
+            {% include 'includes/map-polygon.html'%}
+        </div><!--col-sm-8-->
+    </div><!--row-->
+</div><!--top_of_page-->
+
+<!--Results-->
+<!--Main Results-->
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"> 
+        {%if results.data or results.smry %}
+        {%if not results.error%}
+        <div class="results">
+            <!--Buttons-->
+            <div class="row button-row">
+                <!--Buttons-->
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                        <img alt="Click me!" title="More Info" style="cursor: pointer;"
+                        src="{{ MEDIA_URL }}img/QMark.png" 
+                        onclick="ShowPopupDocu('Docu_seasonal_summary_visualization')">
+                    </div>
+                    <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
+                        <!--Paramaters and Data list-->
+                        <p>
+                        {%for key_val in params_display_list%}
+                        {%if key_val.0 == "Start Date"%}
+                        {{key_val.1}} <b>to</b>
+                        {%elif key_val.0 == "End Date"%}
+                        {{key_val.1}}<br />
+                        {%else%}
+                        <b>{{key_val.0}}</b>: {{key_val.1}};<br />
+                        {%endif%}
+                        {%endfor%}
+                        </p><br />
+                    </div>
+                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                        <input class="btn btn-primary" id="show_hide_graph" type='button' value='Hide Graph'>
+                    </div>
+                </div>
+            </div><br /><br />
+
+            {%if results.graph_data%}
+            <!--Plot-->
+            <div id="main-graph" align="center" width="98%">
+               <!--Chart Layers-->
+                <div class="row chart-layers">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                            {% include 'includes/chart-indices-spatial-summary.html'%}
+                        </div>
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                                {% include 'includes/chart-type.html'%}
+                        </div>
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                                {% include 'includes/chart-running-mean-days.html'%}
+                        </div>
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                            {% include 'includes/chart-average.html'%}
+                        </div>
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                            {% include 'includes/chart-show-hide-legend.html'%}
+                        </div>
+                    </div>
+                </div>
+                <!--Chart-->
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div id="hc-container"></div>
+                        <script type="text/javascript">
+                            var graph_data = {{results.graph_data | safe_json}};
+                            generateTS_individual();
+                        </script>
+                    </div>
+                </div>
+            </div><!--main-graph-->
+            {%endif%}<!--end if results.graph_data-->
+            <br /><br />
+            
+            <div class="row">
+                <input class="btn btn-primary" id="show_hide_data" type='button' value='Hide Data'>
+            </div>
+            <div id="main-table" align="center">
+                <!--Data List-->
+                <div class="dataTableInfo" id="dataTableInfo-0" style="display:none;">
+                {%for key_val in params_display_list%}
+                    {{key_val.0}} {{key_val.1}},
+                {%endfor%}
+                </div>
+                <table class="dataTable nowrap" id="dataTable-0" border=1>
+                {%for data in results.smry%}
+                {%if forloop.counter0 == 0%}
+                    <thead>
+                    <tr>{%for d in data%}<th>{{d}}</th>{%endfor%}</tr>
+                    </thead>
+                    <tfoot>
+                    <tr>{%for d in data%}<th>{{d}}</th>{%endfor%}</tr>
+                    </tfoot>
+                    <tbody>
+                {%else%}
+                    <tr>{%for d in data%}<td>{{d}}</td>{%endfor%}</tr>
+                {%endif%}
+                {%endfor%}
+                    </tbody>
+                </table>
+            </div><!--main-table-->
+        </div><!--results-->
+    {%endif%}<!--end if not results.error-->
+    {%endif%}<!--end if results.data or results.smry -->
+    </div><!--col-sm-12-->
+</div><!--row-->
+{%endblock%}
