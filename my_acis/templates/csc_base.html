@@ -104,11 +104,12 @@
                 <li class="dropdown">
                     <a href="{{SCENIC_URL}}analysis/" tabindex="0" data-toggle="dropdown" data-submenu>ANALYSIS<span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="{{SCENIC_URL}}">Overview</a></li>
+                        <li><a href="{{SCENIC_URL}}analysis/">Overview</a></li>
                         <li><a href="{{SCENIC_URL}}analysis/station_finder/">Station Finder</a></li>
                         <li class="dropdown-submenu">
                             <a tabindex="0" href="">Single Point Products</a>
                             <ul class="dropdown-menu">
+                                <li><a tabindex="0" href="{{SCENIC_URL}}analysis/single/">Overview</a></li>
                                 <li><a tabindex="0" href="{{SCENIC_URL}}analysis/single/lister/">Data Lister</a></li>
                                 <li><a tabindex="0" href="{{SCENIC_URL}}analysis/single/monthly_summary/">Monthly Summary</a></li>
                                 <li><a tabindex="0" href="{{SCENIC_URL}}analysis/single/seasonal_summary/">Seasonal Summary</a></li>
@@ -120,6 +121,7 @@
                         <li class="dropdown-submenu">
                             <a tabindex="-1" href="{{DATA_URL}}analysis/multi/">Multi Point Products </a>
                             <ul class="dropdown-menu">
+                              <li><a tabindex="0" href="{{SCENIC_URL}}analysis/multi/">Overview</a></li>
                               <li><a tabindex="0" href="{{DATA_URL}}analysis/multi/lister/">Data Lister</a></li>
                               <li><a href="{{SCENIC_URL}}analysis/multi/spatial_summary/">Spatial Summary</a></li>
                               <li><a href="{{SCENIC_URL}}analysis/multi/temporal_summary/">Temporal Summary</a></li>
@@ -165,11 +167,7 @@
         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" align="center">
             {%if title%}
             <h1 class="lead display-1">{{title}}</h1>
-            {%else%}
-            <h4 class="lead display-1">
-                {% include 'includes/SCENIC_mission_statement.html'%}
-            </h4>
-            {%endif%} 
+            {%endif%}
         </div>
         <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
             <h1 id="how_to_head" 

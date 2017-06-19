@@ -237,6 +237,7 @@ function DestroyPopupDocu(DivId){
 function ShowPopupDocu(DivId){
     var title = 'You can move and resize me!',
         wWidth = $(window).width(),
+        width = 'auto';
         max_height = $(window).height()*0.6,
         max_width = wWidth * 0.6;
     if ($('#' + DivId).attr('title')){
@@ -256,10 +257,14 @@ function ShowPopupDocu(DivId){
     }catch(e){};
     
     if (DivId == 'formDownload' || DivId == 'largeRequestForm'){
-        var max_width = wWidth * 0.3;
+        max_width = wWidth * 0.3;
+    }
+    if (DivId == 'Docu_howto_scenic_data' || DivId == 'Docu_howto_scenic_manual' || DivId == 'Docu_howto_climate_primer'){
+        max_width = wWidth * 0.9;
+        width = wWidth * 0.8;
     }
     if (DivId.inList('Docu_COOP,Docu_GHCN,Docu_ICAO,Docu_NWSLI,Docu_FAA,Docu_WMO,Docu_WBAN,Docu_CoCoRaHS,Docu_Threadex')){
-        var max_width = wWidth * 0.3;
+        max_width = wWidth * 0.3;
     }
     //Open the dialog
     $( '#' + DivId ).dialog({
@@ -271,7 +276,7 @@ function ShowPopupDocu(DivId){
         title:title,
         resizable: true,
         modal: false,
-        width:'auto',
+        width:width,
         height:'auto',
         create: function(){
             $(this).css("maxWidth", max_width);
