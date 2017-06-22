@@ -156,8 +156,8 @@ def help(request):
     context['param_urls'] = param_urls
     return render_to_response(url, context, context_instance=RequestContext(request))
 
-def projections(request):
-    app_name = 'projections'
+def loca(request):
+    app_name = 'loca'
     url = settings.APPLICATIONS[app_name][2]
     app_url = settings.APPLICATIONS[app_name][1]
     context = {
@@ -1128,18 +1128,7 @@ def spatial_summary(request):
             context['results'] = results
             '''
             return render_to_response(url, context, context_instance=RequestContext(request))
-        '''
-        try:
-            req = WRCCUtils.request_and_format_data(form_cleaned)
-            if 'smry' not in req.keys() or not req['smry']:
-                results['error'] = 'No data found for these parameters!'
-                context['results'] = results
-                return render_to_response(url, context, context_instance=RequestContext(request))
-        except Exception, e:
-            results['error'] = 'Data request error: %s' %str(e)
-            context['results'] = results
-            return render_to_response(url, context, context_instance=RequestContext(request))
-        '''
+        context['xx'] = form_cleaned
         if 'locations' in form_cleaned.keys():
             req = WRCCUtils.request_and_format_multiple_gridpoints(form_cleaned)
         else:

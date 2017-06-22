@@ -4,6 +4,12 @@ String.prototype.rsplit = function(sep, maxsplit) {
     return maxsplit ? [ split.slice(0, -maxsplit).join(sep) ].concat(split.slice(-maxsplit)) : split;
 }
 
+//Function to determine if variable is in list
+String.prototype.inList=function(list){
+   return ( list.indexOf(this.toString()) != -1)
+}
+
+
 function int_time_to_date_string(int_time_epoch){
     //int_time_epoch is seconds since 19700101
     var d = new Date(0); // The 0 there is the key, which sets the date to the epoch
@@ -213,7 +219,7 @@ function HighLight(node,DivClass,DivId) {
 function create_ajax_no_vd_response(station_id){
     var today = new Date(),
         today_string = convertDateToString(today,'-')
-    var station_finder_link = '/csc/scenic/data/climate_data/station_finder/?area_type=station_id';
+    var station_finder_link = '/csc/scenic/analysis/station_finder/?area_type=station_id';
     station_finder_link+='&station_id=' + station_id;
     station_finder_link+='&variables=maxt&variables=mint&variables=pcpn';
     station_finder_link+='&variables=snow&variables=snwd&variables=gdd&variables=hdd&variables=cdd';

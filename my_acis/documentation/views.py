@@ -10,12 +10,13 @@ from django.shortcuts import render_to_response
 from django.db.models.query import QuerySet
 from django.contrib.localflavor.us.forms import USStateField
 from django.core.mail import send_mail
+from django.conf import settings
 
-HOST = 'wrcc.dri.edu'
-STATIC_URL = '/www/apps/csc/dj-projects/my_acis/static/'
-MEDIA_URL = '/www/apps/csc/dj-projects/my_acis/media/'
-KML_URL = '/www/apps/csc/dj-projects/my_acis/media/kml/'
-TMP_URL = '/www/apps/csc/dj-projects/my_acis/media/tmp'
+HOST = settings.HOST
+STATIC_URL = settings.STATIC_URL
+MEDIA_URL = settings.MEDIA_URL
+KML_URL = settings.KML_URL
+TMP_URL = settings.TMP_URL
 
 def home(request):
     context = {

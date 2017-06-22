@@ -348,7 +348,7 @@ function generateTS_individual(chart_indices) {
             plotBorderWidth:1
         },
         credits: {
-            href: 'http://wrcc.dri.edu',
+            href: WRCC_URL,
             text: 'wrcc.dri.edu'
         },
         //------------------------
@@ -652,7 +652,7 @@ function generateTS_smry(chart_indices) {
             plotBorderWidth:1
         },
         credits: {
-            href: 'http://wrcc.dri.edu',
+            href: WRCC_URL,
             text: 'wrcc.dri.edu'
         },
        navigation: {

@@ -26,19 +26,6 @@ def home_view(request):
     }
     return render_to_response('wrcc_apps/home.html', context, context_instance=RequestContext(request))
 
-def cemp(request):
-    context = {
-    'title': 'Cemp Test Page'
-    }
-    return render_to_response('wrcc_apps/cemp.html', context, context_instance=RequestContext(request))
-
-
-def nevcan(request):
-    context = {
-        'title': 'nevcan Test Page'
-    }
-    return render_to_response('wrcc_apps/nevcan.html', context, context_instance=RequestContext(request))
-
 def sodlist(request, app_name):
     context = {
     'title': '%s' % app_name,

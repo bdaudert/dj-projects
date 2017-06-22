@@ -17,7 +17,7 @@ function initialize() {
   var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
   var ctaLayer = new google.maps.KmlLayer({
-    url: 'http://wrcc.dri.edu/csc/media/json/US_Test.kml'
+    url: '{{WRCC_URL}}/csc/media/json/US_Test.kml'
   });
   ctaLayer.setMap(map);
 }

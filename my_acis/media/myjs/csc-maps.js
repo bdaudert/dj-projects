@@ -527,7 +527,7 @@ function initialize_station_finder() {
                 'elev':String(c.elevation),
                 'valid_daterange':String(avbl_variables)
             }
-            var single_prod_href = '/csc/scenic/data/climate_data/single/';
+            var single_prod_href = '/csc/scenic/analysis/single/';
             var data_portal_href = single_prod_href + 'lister/' +
             '?area_type=station_id&station_id=' + encodeURIComponent(c.name) + ',' + c.sid; 
             var app_portal_href = single_prod_href +             

@@ -17,6 +17,7 @@
 
     <!--Django env variables from settings -->
     <!-- SCENIC DIRS-->
+    <input type="hidden" id="WRCC_URL" name="variable" value="{{ WRCC_URL }}">
     <input type="hidden" id="HOST" name="variable" value="{{ HOST }}">
     <input type="hidden" id="BASE_DIR" name="variable" value="{{ BASE_DIR }}">
     <input type="hidden" id="SRC_BASE" name="variable" value="{{ SRC_BASE }}">
@@ -60,7 +61,7 @@
                     <form target="_blank"  method="get" action="http://www.google.com/search" style="display: inline;">
                         <input type="text"   name="q" size="25" maxlength="255"/>
                         <input type="submit" value="Search" />
-                        <input type="radio" style="display:none;"  name="sitesearch" value="http://wrcc.dri.edu/csc/scenic/" checked />
+                        <input type="radio" style="display:none;"  name="sitesearch" value="{{WRCC_URL}}/csc/scenic/" checked />
                     </form>
                     <!--
                     <span style="display:inline;width:255px">
