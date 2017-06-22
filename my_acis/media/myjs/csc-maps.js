@@ -588,7 +588,7 @@ function initialize_station_finder() {
                     monthly_summary_portal_link + '<br /><br />' +
                     seasonal_summary_portal_link + '<br /><br />' +
                     single_year_portal_link + '<br /><br />' +
-                    data_comparison_portal_link + '<br /><br />' +
+                    //data_comparison_portal_link + '<br /><br />' +
                     climatology_portal_link + 
                 '</div>' + 
             '</div>'; 

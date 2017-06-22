@@ -4,36 +4,15 @@
     <ul>
         <li>General Information about climate projections</li>
         <li>Case studies that utilize LOCA data with emphasis on resource management</li>
-        <li>Access to LOCA and NARRCAP data and analysis tools
-            <ul>
-                <li><b>Data Listers</b></li>
-                <li><b>Data Analysis Tools</b>
-                <ul>
-                <li>Spatial Summaries (Time Series over area)
-                <ul>
-                <li>Maximum</li>
-                <li>Minimum</li>
-                <li>Mean</li>
-                <li>Sum</li>
-                </ul>
-                </li>
-                <li>Temporal Summaries (Maps)
-                <ul>
-                <li>Maximum</li>
-                <li>Minimum</li>
-                <li>Mean</li>
-                <li>Sum</li>
-                </ul>
-                </li>
-                </ul>
-                <b>Area options</b><br />
-                <ul>
-                <li>county, county warning area</li>
-                <li>climate division, drainage basin</li>
-                <li>custom polygon, circle or bounding box</li>
-                </ul>
-            </ul>
-        </li>
+        <li>Access to LOCA and NARRCAP data and analysis tools</li>
     </ul>
+    <div style="display:inline;padding-left:10%;">
+        <a href="{{SCENIC_URL}}analysis/single/?gridded_data=true">Single Point Products</a>
+        <img alt="Click me!" title="More Info" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_page_single_point_prods')">    </div><br />
+
+    <div style="display:inline;padding-left:10%;">
+        <a href="{{SCENIC_URL}}analysis/multi/?gridded_data=true">Multi Point Products</a>
+        <img alt="Click me!" title="More Info" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_page_multi_point_prods')">
+    </div>
 </div>
 

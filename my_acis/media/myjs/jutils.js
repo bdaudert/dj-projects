@@ -265,9 +265,9 @@ function ShowPopupDocu(DivId){
     if (DivId == 'formDownload' || DivId == 'largeRequestForm'){
         max_width = wWidth * 0.3;
     }
-    if (DivId == 'Docu_howto_scenic_data' || DivId == 'Docu_howto_scenic_manual' || DivId == 'Docu_howto_climate_primer'){
+    if (DivId.inList('Docu_howto_scenic_data,Docu_CCTAG_report,Docu_howto_scenic_manual,Docu_howto_climate_primer')){
         max_width = wWidth * 0.9;
-        width = wWidth * 0.8;
+        width = wWidth * 0.6;
     }
     if (DivId.inList('Docu_COOP,Docu_GHCN,Docu_ICAO,Docu_NWSLI,Docu_FAA,Docu_WMO,Docu_WBAN,Docu_CoCoRaHS,Docu_Threadex')){
         max_width = wWidth * 0.3;

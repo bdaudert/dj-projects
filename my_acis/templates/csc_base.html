@@ -58,7 +58,7 @@
                     <a class="btn btn-primary" href="mailto:scenic@dri.edu" target="_top">Send Feedback</a>
                     <a class="btn btn-primary" href="{{ABOUT_URL}}#contact_us">Contact Us</a>
                     <!--Search Box-->
-                    <form target="_blank"  method="get" action="http://www.google.com/search" style="display: inline;">
+                    <form target="_blank"  method="get" action="//www.google.com/search" style="display: inline;">
                         <input type="text"   name="q" size="25" maxlength="255"/>
                         <input type="submit" value="Search" />
                         <input type="radio" style="display:none;"  name="sitesearch" value="{{WRCC_URL}}/csc/scenic/" checked />
@@ -123,7 +123,7 @@
                             <a tabindex="-1" href="{{DATA_URL}}analysis/multi/">Multi Point Products </a>
                             <ul class="dropdown-menu">
                               <li><a tabindex="0" href="{{SCENIC_URL}}analysis/multi/">Overview</a></li>
-                              <li><a tabindex="0" href="{{DATA_URL}}analysis/multi/lister/">Data Lister</a></li>
+                              <li><a tabindex="0" href="{{SCENIC_URL}}analysis/multi/lister/">Data Lister</a></li>
                               <li><a href="{{SCENIC_URL}}analysis/multi/spatial_summary/">Spatial Summary</a></li>
                               <li><a href="{{SCENIC_URL}}analysis/multi/temporal_summary/">Temporal Summary</a></li>
                             </ul>
@@ -158,7 +158,7 @@
     <div class="row" align="center">
         <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
             <h1 id="tool_info_head" 
-            {%if app_name|is_in:'home,about,monitoring,help,data,projections,remote_sensing_data,climate_data,single_point_prods,multi_point_prods'%}
+            {%if app_name|is_in:'home,about,monitoring,help,data,gridded_data,station_data,analysis,projections,remote_sensing_data,single_point_prods,multi_point_prods'%}
                 style="display:none;"{%endif%}>
                 <button class="btn btn-primary docu" onclick="ShowPopupDocu('tool_info')">
                 About this tool
@@ -172,8 +172,9 @@
         </div>
         <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
             <h1 id="how_to_head" 
-                {%if app_name|is_in:'home,about,monitoring,help,data,projections,remote_sensing_data,climate_data,single_point_prods,multi_point_prods'%}
-                style="display:none;"{%endif%}>
+                {%if app_name|is_in:'home,about,monitoring,help,data,gridded_data,station_data,analysis,projections,remote_sensing_data,single_point_prods,multi_point_prods'%}
+                style="display:none;"
+                {%endif%}>
                 <button class="btn btn-primary docu" onclick="ShowPopupDocu('how_to')">
                 How to use this tool
                 </button>

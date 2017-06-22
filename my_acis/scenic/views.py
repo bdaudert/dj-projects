@@ -242,6 +242,10 @@ def single_point_prods(request):
         'app_name':app_name,
         'app_url': app_url
     }
+    #Link from gridded data
+    if request.method == 'GET' and 'gridded_data' in request.GET:
+        for app in ['single_lister', 'monthly_summary', 'climatology','data_comparison', 'seasonal_summary', 'single_year']:
+            context['url_params_' + app] = '?gridded_data=true'
     #Link from other apps
     if request.method == 'GET' and ('variables' in request.GET or 'variable' in request.GET):
         #set link params
@@ -270,6 +274,12 @@ def multi_point_prods(request):
         'app_name':app_name,
         'app_url': app_url
     }
+
+    #Link from gridded data
+    if request.method == 'GET' and 'gridded_data' in request.GET:
+        for app in ['multi_lister', 'spatial_summary', 'temporal_summary']:
+            context['url_params_' + app] = '?gridded_data=true'
+
     #Link from other apps
     if request.method == 'GET' and ('variables' in request.GET or 'variable' in request.GET):
         #set link params
@@ -331,9 +341,9 @@ def single_lister(request):
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
             return response
 
-    if request.method == 'GET' and 'projection' in request.GET:
+    if request.method == 'GET' and 'gridded_data' in request.GET:
         '''
-        Link from projection page
+        Link from gridded_data page
             override some options
         '''
         new_init = {
@@ -477,9 +487,9 @@ def single_year(request):
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
             return response
 
-    if request.method == 'GET' and 'projection' in request.GET:
+    if request.method == 'GET' and 'gridded_data' in request.GET:
         '''
-        Link from projection page
+        Link from gridded_data page
             override some options
         '''
         new_init = {
@@ -588,9 +598,9 @@ def seasonal_summary(request):
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
             return response
 
-    if request.method == 'GET' and 'projection' in request.GET:
+    if request.method == 'GET' and 'gridded_data' in request.GET:
         '''
-        Link from projection page
+        Link from gridded_data page
             override some options
         '''
         new_init = {
@@ -714,9 +724,9 @@ def multi_lister(request):
             response['Content-Disposition'] = 'attachment;filename=%s%s' % (file_name, file_extension)
             return response
 
-    if request.method == 'GET' and 'projection' in request.GET:
+    if request.method == 'GET' and 'gridded_data' in request.GET:
         '''
-        Link from projection page
+        Link from gridded_data page
             override some options
         '''
         new_init = {
@@ -1067,9 +1077,9 @@ def spatial_summary(request):
         response = set_ajax_response(response_data)
         return response
 
-    if request.method == 'GET' and 'projection' in request.GET:
+    if request.method == 'GET' and 'gridded_data' in request.GET:
         '''
-        Link from projection page
+        Link from gridded_data page
             override some options
         '''
         new_init = {
@@ -1423,9 +1433,9 @@ def data_comparison(request):
     context['initial'] = initial
     context['need_gridpoint_map'] = True
 
-    if request.method == 'GET' and 'projection' in request.GET:
+    if request.method == 'GET' and 'gridded_data' in request.GET:
         '''
-        Link from projection page
+        Link from gridded_data page
             override some options
         '''
         new_init = {
@@ -1480,9 +1490,9 @@ def monthly_summary(request):
         response = set_ajax_response(response_data)
         return response
 
-    if request.method == 'GET' and 'projection' in request.GET:
+    if request.method == 'GET' and 'gridded_data' in request.GET:
         '''
-        Link from projection page
+        Link from gridded_data page
             override some options
         '''
         new_init = {
@@ -1637,9 +1647,9 @@ def climatology(request):
         response = set_ajax_response(response_data)
         return response
 
-    if request.method == 'GET' and 'projection' in request.GET:
+    if request.method == 'GET' and 'gridded_data' in request.GET:
         '''
-        Link from projection page
+        Link from gridded_data page
             override some options
         '''
         new_init = {
