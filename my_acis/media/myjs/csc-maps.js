@@ -11,7 +11,7 @@ MAP_APP.Utils = {
         var mkr_ll = new google.maps.LatLng(parseFloat(lat),parseFloat(lon));
         window.marker.setPosition(mkr_ll);
         window.infowindow = new google.maps.InfoWindow({
-            content: '<div id="MarkerWindow" style="line-height:1.35;overflow:hidden;white-space:nowrap;">'+
+            content: '<div style="line-height:1.35;overflow:hidden;white-space:nowrap;">'+
             '<p><b>Lat: </b>' + lat + '<br/>'+
             '<b>Lon: </b>' + lon + '<br/>' +
             '</div>',
@@ -110,7 +110,7 @@ function initialize_grid_point_map(loc) {
     map = new google.maps.Map(document.getElementById("map-gridpoint"),mapOptions);
     window.map = map; 
     infowindow = new google.maps.InfoWindow({
-        content: '<div id="MarkerWindow" style="line-height:1.35;overflow:hidden;white-space:nowrap;">'+
+        content: '<div style="line-height:1.35;overflow:hidden;white-space:nowrap;">'+
             '<p><b>Lat: </b>' + lat + '<br/>'+
             '<b>Lon: </b>' + lon + '<br/>' +
             '</div>',
@@ -159,7 +159,7 @@ function initialize_grid_point_map(loc) {
         var new_lon = precise_round(event.latLng.lng(),2).toString();
         var loc = new_lon + ',' + new_lat
         document.getElementById("location").value = loc;
-        var contentString = '<div id="MarkerWindow" style="line-height:1.35;overflow:hidden;white-space:nowrap;">'+
+        var contentString = '<div style="line-height:1.35;overflow:hidden;white-space:nowrap;">'+
             '<p><b>Lat: </b>' + new_lat + '<br/>'+
             '<b>Lon: </b>' + new_lon + '<br/>' +
 
@@ -176,7 +176,7 @@ function initialize_grid_point_map(loc) {
         var new_lon = precise_round(event.latLng.lng(),2).toString();
         var loc = new_lon + ',' + new_lat
         document.getElementById("location").value = loc;
-        var contentString = '<div id="MarkerWindow" style="line-height:1.35;overflow:hidden;white-space:nowrap;">'+
+        var contentString = '<div style="line-height:1.35;overflow:hidden;white-space:nowrap;">'+
             '<p><b>Lat: </b>' + new_lat + '<br/>'+
             '<b>Lon: </b>' + new_lon + '<br/>' +
 
@@ -234,7 +234,7 @@ function initialize_grid_points_map(locs) {
             ll_list[(marker.id - 1)*2] = new_lon;
             ll_list[(marker.id - 1)*2 + 1] = new_lat;
             $("locations").val(ll_list.join());
-            var contentString = '<div id="MarkerWindow" style="line-height:1.35;overflow:hidden;white-space:nowrap;">'+
+            var contentString = '<div style="line-height:1.35;overflow:hidden;white-space:nowrap;">'+
             '<p><b>Lat: </b>' + new_lat + '<br/>'+
             '<b>Lon: </b>' + new_lon + '<br/>' +
             '</div>';
@@ -443,10 +443,6 @@ function initialize_station_finder() {
         //Adjust map bounds
         var map_bounds = new google.maps.LatLngBounds();
 
-        //Create info window
-        infowindow = new google.maps.InfoWindow({
-            content: 'oi'
-        });
         var markers = [], markers_showing = [];
         var tbl_rows = [];
         //tbl_rows_showing = [];
@@ -527,7 +523,7 @@ function initialize_station_finder() {
                 'elev':String(c.elevation),
                 'valid_daterange':String(avbl_variables)
             }
-            var single_prod_href = '/csc/scenic/analysis/single/';
+            var single_prod_href = SINGLE_PRODS_URL;
             var data_portal_href = single_prod_href + 'lister/' +
             '?area_type=station_id&station_id=' + encodeURIComponent(c.name) + ',' + c.sid; 
             var app_portal_href = single_prod_href +             
@@ -566,15 +562,23 @@ function initialize_station_finder() {
             single_year_href = single_year_href + '&end_date=' + end_date;
             data_comparison_href = data_comparison_href + '&end_date=' + end_date;
             climatology_href = climatology_href + '&end_date=' + end_date; 
-
-            
+            var data_portal_link = '<a target="_blank" href="' + data_portal_href + '">Get Data</a>';
+            var app_portal_link = '<a target="_blank" href="' + app_portal_href + '">Run Analysis</a>';
+            var monthly_summary_portal_link = '<a target="_blank" href="' + monthly_summary_href + '">Monthly Summary</a>';
+            var seasonal_summary_portal_link = '<a target="_blank" href="' + seasonal_summary_href + '">Seasonal_summary</a>';
+            var single_year_portal_link = '<a target="_blank" href="' + single_year_href + '">Single Year Time Series</a>';
+            var data_comparison_portal_link = '<a target="_blank" href="' + data_comparison_href + '">Grid/Station Data Comparison</a>';
+            var climatology_portal_link = '<a target="_blank" href="' + climatology_href + '">Climatology</a>';
+            /* 
             var data_portal_link = '<button style="width:80%" class="btn-primary" onclick="window.open(\'' + data_portal_href + '\')">Get Data</button>';
             var app_portal_link = '<button style="width:80%" class="btn-primary"onclick="window.open(\'' + app_portal_href + '\')">Run Analysis</button>';
             var monthly_summary_portal_link = '<button style="width:80%" class="btn-primary"onclick="window.open(\'' + monthly_summary_href + '\')">Monthly Summary</button>'; 
             var seasonal_summary_portal_link = '<button style="width:80%" class="btn-primary"onclick="window.open(\'' + seasonal_summary_href + '\')">Seasonal Summary</button>';
             var single_year_portal_link = '<button style="width:80%" class="btn-primary"onclick="window.open(\'' + single_year_href + '\')">Single Year Time Series</button>';
             var data_comparison_portal_link = '<button style="width:80%" class="btn-primary"onclick="window.open(\'' + data_comparison_href + '\')">Grid/Station Data Comparison</button>';
-            var climatology_portal_link = '<button style="width:80%" class="btn-primary"onclick="window.open(\'' + climatology_href + '\')">Climatology</button>'; 
+            var climatology_portal_link = '<button style="width:80%" class="btn-primary"onclick="window.open(\'' + climatology_href + '\')">Climatology</button>';
+            */
+
             var contentString = '<div id="MarkerWindow" class="row nopadding">'+
                 '<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 nopadding">' +
                     '<b>Name: </b><font color="#FF007F">' + c.name + '</font><br/>'+
@@ -583,7 +587,7 @@ function initialize_station_finder() {
                     '<b>State, Elev ft, Lon, Lat: </b>' + c.state + ', ' + c.elevation + ', ' + c.lon + ', ' +c.lat +'<br/>' +
                     '<b>Available variables with date range: </b>' + avbl_variables + '<br />' +
                 '</div>' + 
-                '<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 nopadding">' +
+                '<div align="left" class="col-xs-6 col-sm-6 col-md-6 col-lg-6 nopadding">' +
                     data_portal_link + '<br /><br />' +
                     monthly_summary_portal_link + '<br /><br />' +
                     seasonal_summary_portal_link + '<br /><br />' +
@@ -594,10 +598,13 @@ function initialize_station_finder() {
             '</div>'; 
                     
             marker.contentString = contentString;
-
+            //Create info window
+            infowindow = new google.maps.InfoWindow({
+                content: 'oi'
+            });
             //Open info window when user clicks on marker
             google.maps.event.addListener(marker, 'click', function() {
-                infowindow.close();
+                //infowindow.close();
                 infowindow.setContent(contentString);
                 infowindow.open(sf_map, marker);
             });

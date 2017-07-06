@@ -10,7 +10,8 @@ function convertDate(date, sep){
     }
     return yr + sep + mon + sep + day;
 }
-var WRCC_URL = 'https://wrcc.dri.edu'
+var WRCC_URL = 'https://wrcc.dri.edu';
+var SINGLE_PRODS_URL = '/csc/scenic/analysis/single/'; 
 var tdy = new Date();
 var tdy_string = convertDate(tdy,'-');
 var grid_vd = {
