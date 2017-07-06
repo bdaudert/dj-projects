@@ -7,85 +7,34 @@
     <li>Access to daily data for a weather station</li>
     <li>Access to data for a grid point (daily/monthly(PRISM only)/yearly(PRISM only))</li>
     </ul>
-    Available Data Formats: .xls, .dat, .txt, html(prints to screen).<br /><br />
+    
     <b>Data Analysis Tools</b>
-    <ul>
-    <li>Monthly Summaries<br />
-        &nbsp;&nbsp;&nbsp;&nbsp;Monthly Maximum, Monthly Minimum, Monthly Average, Standard Deviation,<br />
-        &nbsp;&nbsp;&nbsp;&nbsp;Number of Days (above/below/between thresholds), Range during Month, Monthly Sum
-    </li>
-    <li>Yearly Summaries<br />
-    &nbsp;&nbsp;&nbsp;&nbsp;Maximum, Minimum, Mean, Median, Sum,
-    </li>
-    <li>Inter-year Comparison</li>
-    <li>General Climatology</li>
-    <li>Data Comparison between gridded and station data</li>
-    </ul>
+    {% include 'includes/Docu_single_point_analyses.html'%}
+
     <p class="error">What datasets are available?</p>
-    <p class="bg-warning" style="width:10%;"><b>1. Station Data</b></p>
+
+    <p class="bg-warning" style="width:15%;"><b>1. Station Data</b></p>
     <b>Observed Quantities </b><br />
     Maximum Temperature (F/C), Minimum Temperature (F/C),<br />Observation Time Temperature (F/C)<br />
     Snowfall (in/mm), Snow Depth (in/mm)<br />
     <b>Derived Quantities </b><br />
     Average Temperature (F/C), Heating/Cooling/Growing Degree Days (F/C)<br /><br />
+    
     <b>Station Networks: </b><br />
-    <a class="link" target="_blank" href="http://www.ncdc.noaa.gov/homr/"><font color="#0000FF">WBAN</font></a>, 
-    <a class="link" target="_blank" href="http://www.nws.noaa.gov/om/coop/"><font color="#0000FF">COOP</font></a>, 
-    <a class="link" target="_blank" href="http://www.ncdc.noaa.gov/oa/climate/ghcn-daily/"><font color="#0000FF">GHCN</font></a>, 
-    <a class="link" target="_blank" href="http://www.icao.int/Pages/default.aspx"><font color="#0000FF">ICAO</font></a>, 
-    <a class="link" target="_blank" href="http://www.weather.gov/"><font color="#0000FF">NWSLI</font></a>, 
-    <a class="link" target="_blank" href="http://www.faa.gov/"><font color="#0000FF">FAA</font></a>, 
-    <a class="link" target="_blank" href="http://www.wmo.int/pages/index_en.html"><font color="#0000FF">WMO</font></a>, 
-    <a class="link" target="_blank" href="http://www.cocorahs.org/"><font color="#0000FF">CoCoRaHS</font></a>, 
-    <a class="link" target="_blank" href="http://threadex.rcc-acis.org/"><font color="#0000FF">ThreadEx</font></a><br />
+    {% include 'includes/Docu_popup_station_networks.html'%}
+    <br /><br />
+    <p>Read more about the networks: </p>
+    {% include 'includes/Docu_station_networks_links.html'%}
+    <br /> 
     All datassets are made available through the ACIS system.<br />
     <a class="link" target="_blank" href="http://www.rcc-acis.org/"><font color="#0000FF">ACIS Home Page</font></a></p>
+    
     <p class="bg-warning" style="width:15%;"><b>2. Gridded Data</b></p>
     <b>Observed Quantities </b><br />
     Maximum Temperature (F/C), Minimum Temperature (F/C)<br />
     <b>Derived Quantities </b><br />
     Heating/Cooling/Growing Degree Days (F/C)<br /><br />
 
-    <p><b>a) Gridded interpolated datasets</b></p>
-    <span class="link" onClick="ShowPopupDocu('Docu_NRCC_INT')"><u>NRCC Interpolated</u></span>, 
-        <div id="Docu_NRCC_INT" style="display:none;">{% include 'includes/Docu_NRCC_INT.html'%}</div>
-    <span class="link" onClick="ShowPopupDocu('Docu_NRCC_INT_HI')"><u>NRCC Interpolated Hi-Res</u></span>
-        <div id="Docu_NRCC_INT_HI" style="display:none;">{% include 'includes/Docu_NRCC_INT_HI_RES.html'%}</div>
-    <span class="link" onClick="ShowPopupDocu('Docu_PRISM')"><u>PRISM</u></span> 
-        <div id="Docu_PRISM" style="display:none;">{% include 'includes/Docu_PRISM.html'%}</div>
-    <br /><br />
-    <p><b>b) North American Regional Climate Change Assessment Program (NARCCAP) dynamically downscaled datasets</p></b>
-    <span class="link" onClick="ShowPopupDocu('Docu_CRCM')"><u>NARCCAP - CRCM</u></span>, 
-        <div id="Docu_CRCM" style="display:none;">{% include 'includes/Docu_CRCM.html'%}</div>
-    <span class="link" onClick="ShowPopupDocu('Docu_HRM3')"><u>NARCCAP - HRM3</u></span>, 
-        <div id="Docu_HRM3" style="display:none;">{% include 'includes/Docu_HRM3.html'%}</div>
-    <span class="link" onClick="ShowPopupDocu('Docu_MM5I')"><u>NARCCAP - MM5I</u></span>, 
-        <div id="Docu_MM5I" style="display:none;">{% include 'includes/Docu_MM5I.html'%}</div>
-    <span class="link" onClick="ShowPopupDocu('Docu_RCM3')"><u>NARCCAP - RCM3</u></span>, 
-        <div id="Docu_RCM3" style="display:none;">{% include 'includes/Docu_RCM3.html'%}</div>
-    <span class="link" onClick="ShowPopupDocu('Docu_WRFG')"><u>NARCCAP - WRFG</u></span>
-        <div id="Docu_WRFG" style="display:none;">{% include 'includes/Docu_WRFG.html'%}</div>
-    <br /><br />
-    <p><b>c) Localized Constructed Analogs (LOCA) statistically downscaled datasets</p></b>
-    <span class="link" onClick="ShowPopupDocu('Docu_GDFL-CM3')"><u>LOCA - GDFL-CM3</u></span>, 
-        <div id="Docu_GDFL-CM3" style="display:none;">{% include 'includes/Docu_GDFL-CM3.html'%}</div>
-    <span class="link" onClick="ShowPopupDocu('Docu_HadGEM2-CC')"><u>LOCA - HadGEM2-CC</u></span>, 
-        <div id="Docu_HadGEM2-CC" style="display:none;">{% include 'includes/Docu_HadGEM2-CC.html'%}</div>
-    <span class="link" onClick="ShowPopupDocu('Docu_HadGEM2-ES')"><u>LOCA - HadGEM2-ES</u></span>, 
-        <div id="Docu_HadGEM2-ES" style="display:none;">{% include 'includes/Docu_HadGEM2-ES.html'%}</div>
-    <span class="link" onClick="ShowPopupDocu('Docu_CCSM4')"><u>LOCA - CCSM4</u></span>,
-        <div id="Docu_CCSM4" style="display:none;">{% include 'includes/Docu_CCSM4.html'%}</div>
-    <span class="link" onClick="ShowPopupDocu('Docu_CanESM2')"><u>LOCA - CanESM2</u></span>,<br />
-        <div id="Docu_CanESM2" style="display:none;">{% include 'includes/Docu_CanESM2.html'%}</div>
-    <span class="link" onClick="ShowPopupDocu('Docu_CanESM2')"><u>LOCA - CanESM2</u></span>,
-        <div id="Docu_CESM1-BGC" style="display:none;">{% include 'includes/Docu_CESM1-BGC.html'%}</div>
-    <span class="link" onClick="ShowPopupDocu('Docu_CESM1-BGC')"><u>LOCA - CESM1-BGC</u></span>,
-        <div id="Docu_CMCC-CMS" style="display:none;">{% include 'includes/Docu_CMCC-CMS.html'%}</div>
-    <span class="link" onClick="ShowPopupDocu('Docu_CMCC-CMS')"><u>LOCA - CMCC-CMS</u></span>,
-        <div id="Docu_CNRM-CM5" style="display:none;">{% include 'includes/Docu_CNRM-CM5.html'%}</div>
-    <span class="link" onClick="ShowPopupDocu('Docu_CNRM-CM5')"><u>LOCA - CNRM-CM5</u></span>,
-        <div id="Docu_MICRO5" style="display:none;">{% include 'includes/Docu_MICRO5.html'%}</div>
-    <span class="link" onClick="ShowPopupDocu('Docu_MICRO5')"><u>LOCA - MICRO5</u></span>,
-        <div id="Docu_ACCESS1-0" style="display:none;">{% include 'includes/Docu_ACCESS1-0.html'%}</div>
+    {% include 'includes/Docu_popup_grids.html'%}
 </div>
 
