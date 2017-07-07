@@ -12,12 +12,14 @@
 <div title="Networks" class="docu" id="Docu_networks" style="display:none;">
     {% include 'includes/Docu_station_networks.html'%}
 </div>
-<div title="PRISM" class="docu" id="Docu_PRISM" style="display:none;">
-    {% include 'includes/Docu_PRISM.html'%}
-</div> 
-<div title="NRCC INT" class="docu" id="Docu_NRCC_INT" style="display:none;">
-    {% include 'includes/Docu_NRCC_INT.html'%}
-</div>  
+<div title="PRISM" class="docu" id="Docu_PRISM" style="display:none;"></div>
+<script type="text/javascript">
+    $("#Docu_PRISM").load("{{HTML_URL}}/Docu_all_grids.html #PRISM");
+</script>
+<div title="NRCC INT" class="docu" id="Docu_NRCC_INT" style="display:none;"></div>
+<script type="text/javascript">
+    $("#Docu_NRCC_INT").load("{{HTML_URL}}/Docu_all_grids.html #NRCC_INT");
+</script> 
 <div title="LOCA" class="docu" id="Docu_LOCA" style="display:none;">
     {% include 'includes/Docu_short_LOCA.html'%}
 </div>

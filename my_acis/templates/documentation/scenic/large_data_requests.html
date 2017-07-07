@@ -16,7 +16,7 @@
 Due to bandwidth and computer memory limitations, large data request implementations over the web are problematic. A common method to overcome these difficulties is to execute the data jobs in the background rather than on the fly. After completion of the background data job, the results will be posted on an ftp server to be picked up by the user at his/her convenience.
 </p>
 <h2>Main program components</h2>
-<!--<p onclick="ShowHide('LargeDataRequestGraphic')" title="Help"><u><font color="#0000FF">Show conceptual graphic of large data request</font></u></p>-->
+<!--<p onclick="ShowPopupDocu('LargeDataRequestGraphic')" title="Help"><u><font color="#0000FF">Show conceptual graphic of large data request</font></u></p>-->
 <p>
 <ol>
 <li> Scan content of the data directory at regular intervals (x minutes) to find new user input files containing the parameters of the data request. This is achieved via a background cron job running on the server. For each parameter file found:

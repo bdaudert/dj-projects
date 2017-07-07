@@ -10,6 +10,11 @@ function convertDate(date, sep){
     }
     return yr + sep + mon + sep + day;
 }
+var popup_no_destroy = 'formDownload,Docu_SpottedOwlKristen,'+
+    'Docu_SpottedOwlData35.2,Docu_SpottedOwlData34,Docu_SpottedOwlData30,'+
+    'Docu_page_station_finder,' +
+    'Docu_single_point_prods, Docu_single_point_prods_station, Docu_single_point_prods_grid,' +
+    'Docu_multi_point_prods, Docu_multi_point_prods_station, Docu_multi_point_prods_grid';
 var WRCC_URL = 'https://wrcc.dri.edu';
 var SINGLE_PRODS_URL = '/csc/scenic/analysis/single/'; 
 var tdy = new Date();

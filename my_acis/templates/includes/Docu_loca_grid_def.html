@@ -1,0 +1,51 @@
+<pre>
+grid_def_loca = {
+    'elems' : {
+        'tasmax':{
+            'var_name_long':'tasmax',
+            'long_name':'Maximum daily temperature near surface',
+            'vX':1,
+            'dtype':'i2',
+            'fillValue':-32768,
+            'units':'0.01 degC',
+            'base_interval':'dly'
+        },
+        'tasmin':{
+            'var_name_long':'tasmax_minus_tasmax_minus_tasmin',
+            'long_name':'Minimum daily temperature near surface',
+            'vX':2,
+            'dtype':'i2',
+            'fillValue':-32768,
+            'units':'0.01 degC',
+            'base_interval':'dly'
+        },
+        'pr':{
+            'var_name_long':'pr',
+            'long_name':'Average daily precipitation amount at surface',
+            'vX':4,
+            'dtype':'i2',
+            'fillValue':-32768,
+            'units':'0.1 mm', #Orig units: kg/m^2s ~ mm/s
+            'base_interval':'dly'
+        },
+        'DTR':{
+            'var_name_long':'tasmax_minus_tasmin',
+            'long_name':'Daily temperature range near surface',
+            'vX':48,
+            'dtype':'i2',
+            'fillValue':-32768,
+            'units':'0.01 degC',
+            'base_interval':'dly'
+        },
+    },
+    'vars': {
+        'tasmax':'maxt',
+        'tasmin':'mint',
+        'pr':'pcpn',
+        'DTR':'range',
+        'time':'time',
+        'lat':'lat',
+        'lon':'lon'
+    }
+}
+</pre>

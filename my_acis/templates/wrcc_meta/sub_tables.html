@@ -51,7 +51,7 @@
                     </div>
                 {%else%}
                     {%if table%}
-                    <a href="#" onClick="ShowHide('{{table.0.1}}_{{forloop.counter}}')">Click here to show/hide</a>
+                    <a href="#" onClick="ShowPopupDocu('{{table.0.1}}_{{forloop.counter}}')">Click here to show/hide</a>
                     {%endif%}
                     <div id="{{table.0.1}}_{{forloop.counter}}" style='display:block'>
                         <form method="post" action="">{% csrf_token %}

@@ -251,8 +251,13 @@ function ShowPopupDocu(DivId){
     }    
     //Close all dialogs that happen to be open
     $(':ui-dialog').each(function(){
+        var pop_id = $(this).attr('id');
         if ($(this).dialog('isOpen')){
-            if (!DivId.inList('formDownload,Docu_SpottedOwlKristen,Docu_SpottedOwlData35.2,Docu_SpottedOwlData34,Docu_SpottedOwlData30')){
+            console.log(pop_id);
+            console.log(popup_no_destroy);
+            console.log(pop_id.inList(popup_no_destroy));
+            if (!pop_id.inList(popup_no_destroy)){
+                //see dataStore.js
                 $(this).dialog('destroy');
             }
         }
@@ -281,6 +286,7 @@ function ShowPopupDocu(DivId){
         },
         title:title,
         resizable: true,
+        id: DivId,
         modal: false,
         width:width,
         height:'auto',

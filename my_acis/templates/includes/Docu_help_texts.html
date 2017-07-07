@@ -1,0 +1,664 @@
+<!--Help Texts-->
+<div id="ht_data_type">
+    <p>Weather station data or gridded data.</p>
+</div>
+
+<div id="ht_select_point">
+    <p>A weather station or a grid point (Lon,Lat).</p>
+</div>
+
+<div id="ht_select_points">
+    <p>Multiple weather stations or a grid points (Lon,Lat pairs).</p>
+</div>
+
+<div id="ht_select_area">
+    <p>Select the area of interest, draw a custom polygon 
+    on the map interface or upload a shape file.</p>
+</div>
+
+<div id="ht_area_reduce">
+    <p>Data will be summarized over these areas within the chosen state.</p>
+</div>
+
+<!--General-->
+<div id="ht_level_number">
+    <p>Number of contours of map.</p>
+</div>
+
+<div id="ht_units">
+    <p>Data can be obtained in metric or English units.<br />
+    <b color="red">Note: Degree day calculations are performed with base temperatures in Fahrenheit.
+    </b>
+    <b>English</b>:<br /> 
+    Temperatures in Fahrenheit<br />
+    Precipitation/Snow/Pan Evaporation in inches <br />
+    Wind Movements in miles<br />
+    <b>Metric</b>:<br /> 
+    <b color="red">Note: data values are converted from English and will be rounded!</b><br />
+    Temperatures in Celsius <br />
+    Precipitation/Snow/Pan Evaporation in millimeters <br />
+    Degree days: °C HDD = (5/9) x (°F HDD)<br />
+    Wind Movements in kilometers<br />
+    </p>
+</div>
+
+
+<div id="ht_temporal_summary">
+    <p>Temporal data summary.<br />At each grid point values are summarized over time using this statistic.</p>
+</div>
+
+<div id="ht_spatial_summary">
+    <p>Spatial data summary.<br />At each point in time values are summarized over the area using this statistic.</p>
+</div>
+
+<div id="ht_area_statistic">    
+<p>Values are summarized over the areas within the state using this statistic.</p>
+</div>
+
+
+<div id="ht_station_id">
+    <p>Station Identifier or Name.<br />You can type the name or ID of a station or use the station finder tool to find your station ID.</p>
+</div>
+
+<div id="ht_station_ids">
+    <p>Comma separated list of station IDs.</p>
+</div>
+
+<div id="ht_location">
+    <p>Enter Longitude, Latitude pair of a location or use the map interface to place the marker on a desired location.</p>
+</div>
+
+<div id="ht_county">
+    <p>US County code.<br />You can type the name or ID of a county or use the map interface to find your county ID.
+    County codes are 5 digit numbers.
+    </p>
+</div>
+
+<div id="ht_climate_division">
+    <p>US Climate Division.<br />You can type the name or ID of a climate division
+    or use the map interface to find your Climate Division ID.
+    Climate division codes are comprised of the two letter state abbreviation and a 2 digit number.
+    </p>
+</div>
+
+<div id="ht_county_warning_area">
+    <p>US County Warning Area.<br />You can type the name or ID of a county warning area 
+    or use the map interface to find your county Warning Area ID.
+    County Warning Areas are three letter codes.
+    </p>
+</div>
+
+<div id="ht_basin">
+    <p>US Drainage Basin Code.<br />You can type the name or ID of a basin
+    or use the map interface to find your Drainage Basin ID.
+    Basin codes are 8-digit numbers.
+    </p>
+</div>
+
+<div id="ht_state">
+    <p>US State abbreviation.</p>
+    <p>
+Alabama al<br />
+Alaska  ak<br />
+Arizona az<br />
+Arkansas    ar<br />
+California  ca<br />
+Colorado    co<br />
+Connecticut ct<br />
+Delaware    de<br />
+District of Columbia    dc<br />
+Florida fl<br />
+Georgia ga<br />
+Hawaii  hi<br />
+Idaho   id<br />
+Illinois    il<br />
+Indiana in<br />
+Iowa    ia<br />
+Kansas  ks<br />
+Kentucky  ky<br />
+Louisiana   la<br />
+Maine   me<br />
+Montana mt<br />
+Nebraska    ne<br />
+Nevada  nv<br />
+New Hampshire  nh<br />
+New Jersey  nj<br />
+New Mexico  nm<br />
+New York    ny<br />
+North Carolina  nc<br />
+North Dakota    nd<br />
+Ohio    oh<br />
+Oklahoma    ok<br />
+Oregon  or<br />
+Maryland    md<br />
+Massachusetts   ma<br />
+Michigan mi<br />
+Minnesota   mn<br />
+Mississippi ms<br />
+Missouri    mo<br />
+Pennsylvania    pa<br />
+Rhode Island    ri<br />
+South Carolina  sc<br />
+South Dakota    sd<br />
+Tennessee   tn<br />
+Texas   tx<br />
+Utah    ut<br />
+Vermont vt<br />
+Virginia    va<br />
+Washington  wa<br />
+West Virginia   wv<br />
+Wisconsin   wi<br />
+Wyoming wy<br />
+    </p>
+</div>
+
+<div id="ht_bounding_box">
+    <p>Bounding Box.<br />Please use the map interface to find your bounding box.</p>
+</div>
+
+<div id="ht_shape">
+    <p>Custom Shape.<br />Please use the map interface to define a custom shape.</p>
+</div>
+
+<div id="ht_shape_file">
+    <p>Custom Shape.<br />Upload a polygon shape file.</p>
+</div>
+
+<div id="ht_year_range">
+    <p>Start/End year. Format yyyy or POR (Period of record) for requests.</p>
+</div>
+
+<div id="ht_date">
+    <p>yyyymmdd, yyyy-mm-dd or yyyy/mm/dd</p>
+</div>
+
+<div id="ht_date_station">
+    <p>yyyymmdd, yyyy-mm-dd or yyyy/mm/dd.<br />For single station requests use POR for period of record.</p>
+</div>
+
+<div id="ht_year">
+    <p>Choose a year for the analysis. Format yyyy.</p>
+</div>
+
+<div id="ht_start_year">
+    <p>yyyy or POR (Period of record) for single station requests.</p>
+</div>
+
+<div id="ht_start_end_year">
+    <p>Start/End year.<br />Format yyyy or POR (Period of record) for requests.</p>
+</div>
+
+<!--
+<div id="ht_year_range">
+    <p>Start/End year. Format yyyy or POR (Period of record) for requests.</p>
+</div>
+-->
+<div id="ht_end_year">
+    <p>yyyy or POR (Period of record) for single station requests.</p>
+</div>
+
+<div id="ht_sampling_start_year">
+    <p>Start year of sampling period. Sampling start and end years must lie in past. Format: yyyy</p>
+</div>
+
+<div id="ht_sampling_end_year">
+    <p>End year of sampling period. Sampling start and end years must lie in past. Format: yyyy</p>
+</div>
+
+<div id="ht_start_date">
+    <p>yyyymmdd, yyyy/mm/dd or yyyy-mm-dd or POR (Period of record) for single station requests.</p>
+</div>
+
+<div id="ht_end_date">
+    <p>yyyymmdd, yyyy/mm/dd or yyyy-mm-dd or POR (Period of record) for single station requests.</p>
+</div>
+
+<div id="ht_start_month_day">
+    First month and day of analysis. 
+</div>
+
+<div id="ht_end_month_day">
+    Last month and day of analysis.
+</div>
+
+<div id="ht_season">
+    Month or season of analysis.
+</div>
+
+<div id="ht_start_window">
+    <p>mmdd, mm/dd or mm-dd</p>
+</div>
+
+<div id="ht_end_window">
+    <p>mmdd, mm/dd or mm-dd</p>
+</div>
+
+<div id="ht_dates_constraints">
+    Choose <em>All</em> if you are looking for stations that have data records for all dates between start and end date you selected.</p>
+    <p>Choose <em>Any</em> if you are looking for stations that have at least one data record between start and end date you selected.<br />
+</div>
+
+<div id="ht_variables">
+    <p>Choose one <b>or more</b> variables from the drop down menu.<br />
+    To select multiple variables: <br />
+    <b>On Mac</b>: Hold down the command (apple) button.<br />
+    <b>On PC</b>: Hold down the control (ctrl) button.<br />
+    <br />
+    <b>Degree Days:</b><br />
+    hdd -- Heating Degree Days (Base Temperature 65)<br />
+    cdd -- Cooling Degree Days (Base Temperature 65)<br />
+    cdd -- Growing Degree Days (Base Temperature 50)<br />
+    </p>
+</div>
+
+
+<div id="ht_variable">
+    <p>Choose a variable from the drop down menu.<br />
+    <b>Degree Days:</b><br />
+    hdd -- Heating Degree Days (Base Temperature 65)<br />
+    cdd -- Cooling Degree Days (Base Temperature 65)<br />
+    cdd -- Growing Degree Days (Base Temperature 50)<br />
+    </p>
+</div>
+
+<div id="ht_calculation">
+    <p>Present results cumulative or as values.</p>
+</div>
+
+<div id="ht_station_finder">
+    <p>Use the station finder tool to find a station.</p>
+</div>
+
+<div id="ht_add_degree_days">
+    <p>Choose yes if you are looking for degree days with different base temperatures.</p>
+</div>
+
+<div id="ht_degree_days">
+<b>Degree Days </b><br />
+<p>Enter a <b>comma separated list</b> of degree day <b>abbreviations</b> followed by base temperature.<br />
+<b>Degree Day Abbreviations:</b><br />
+    hdd -- Heating Degree Days<br />
+    cdd -- Cooling Degree Days<br />
+    cdd -- Growing Degree Days<br />
+<b>Base temperature should always be given in Fahrenheit!</b><br />
+<b>Examples</b>:<br />
+<b>gdd56</b>: Growing Degree Days with base temperature 56 Fahrenheit<br />
+<b>cdd70</b>: Cooling Degree Days with base temperature 70 Fahrenheit</br>
+<b>Enter</b>: gdd56,cdd70
+</p>
+</div>
+
+
+<div id="ht_variables_constraints">
+    <p>Choose <em>All</em> if you are looking for stations that have all of the variables you selected.</p>
+    <p>Choose <em>Any</em> if you are looking for stations that have one or more of the variables you slected.<br />
+</div>
+
+<div id="ht_temporal_resolution">
+    <p>Time step of data values. The monthly/yearly datasets are PRISM data. The rest of the datasets have daily resolution.</p>
+</div>
+
+<div id="ht_grid_historic">
+    <div id="NRCC_INT" align="left">
+    <font size="3"><b><a name="NRCC_INT">NRCC Interpolated</a></b><br />
+    <b>Source</b>: Northeast  Regional Climate Center (NRCC)<br />
+    <b>Domain</b>: Continental US</br>
+    <b>Temporal Resolution</b>: Daily<br />
+    <b>Date Range</b>: 1950 - Present<br />
+    <b>Spatial Resolution</b>: 5 km<br />
+    <b>Climate Variables</b>: Maximum/Minimum Temperature, Precipitation, Degree Days<br />
+    </div>
+    <br />
+    <div id="NRCC_INT_HI" align="left">
+    <font size="3"><b><a name="NRCC_INT_HI">NRCC Interpolated High Resolution</a></b></font><br />
+    <b>Source</b>: Northeast  Regional Climate Center (NRCC)<br />
+    <b>Domain</b>: East of Rockies</br>
+    <b>Date Range</b>: 2007 - Present<br />
+    <b>Temporal Resolution</b>: Daily<br />
+    <b>Spatial Resolution</b>: 5 km<br />
+    <b>Climate Variables</b>: Maximum/Minimum Temperature, Precipitation, Degree Days<br />
+    </div>
+    <br />
+    <div id="PRISM" align="left">
+    <font size="3"><b><a name="PRISM">PRISM</a></b></br >
+    <b>Source</b>: PRISM Climate Group<br />
+    <b>Domain</b>: Continental US</br>
+    <b>Temporal Resolution</b>:<br />Daily<br />
+    <b>Date Range</b>: 1981- Present<br />
+    <b>Spatial Resolution</b>: 4 km<br />
+    <b>Climate Variables</b>: <br />
+    Maximum/Minimum/Average Temperature, Precipitation, Degree Days<br />
+    <b>Version</b>: “4kmD1”<br />
+    </div>
+</div>
+
+<div id="ht_grid">
+    <div id="NRCC_INT" align="left">
+    <font size="3"><b><a name="NRCC_INT">NRCC Interpolated</a></b><br />
+    <b>Source</b>: Northeast  Regional Climate Center (NRCC)<br />
+    <b>Domain</b>: Continental US</br>
+    <b>Temporal Resolution</b>: Daily<br />
+    <b>Date Range</b>: 1950 - Present<br />
+    <b>Spatial Resolution</b>: 5 km<br />
+    <b>Climate Variables</b>: Maximum/Minimum Temperature, Precipitation, Degree Days<br />
+    </div>
+    <br />
+    <div id="NRCC_INT_HI" align="left">
+    <font size="3"><b><a name="NRCC_INT_HI">NRCC Interpolated High Resolution</a></b></font><br />
+    <b>Source</b>: Northeast  Regional Climate Center (NRCC)<br />
+    <b>Domain</b>: East of Rockies</br>
+    <b>Date Range</b>: 2007 - Present<br />
+    <b>Temporal Resolution</b>: Daily<br />
+    <b>Spatial Resolution</b>: 5 km<br />
+    <b>Climate Variables</b>: Maximum/Minimum Temperature, Precipitation, Degree Days<br />
+    </div>
+    <br />
+    <div id="PRISM" align="left">
+    <font size="3"><b><a name="PRISM">PRISM</a></b></br >
+    <b>Source</b>: PRISM Climate Group<br />
+    <b>Domain</b>: Continental US</br>
+    <b>Temporal Resolution</b>:<br />Daily, Monthly, Yearly<br />
+    <b>Date Range</b>: 1981- Present, 1895 - Present, 1895 - Present<br />
+    <b>Spatial Resolution</b>: 4 km<br />
+    <b>Climate Variables</b>: <br />
+    <b>Daily</b>: Maximum/Minimum/Average Temperature, Precipitation, Degree Days<br />
+    <b>Monthly/Yearly</b>: Maximum/Minimum Temperature, Precipitation<br />
+    <b>Version</b>: Monthly/Yearly “4kmM2”, Daily “4kmD1”<br />
+    </div>
+    <!--
+    <br />
+    <div>-------- <b>LOCA DOWNSCALED CMIP5 PROJECTIONS</b> --------</div>
+    <br />
+    <div id="GDFL-CM3" align="left">
+    <font size="3"><b><a name="GDFL-CM3">GDFL-CM3</a></b><br />
+    <b>Source</b>: Geophysical Fluid Dynamics Laboratory<br />
+    <b>Domain</b>: US, Canada, Mexico</br>
+    <b>Temporal Resolution</b>: Daily<br />
+    <b>Date Range</b>: 1950 - 2100<br />
+    <b>Spatial Resolution</b>: 6 km<br />
+    <b>Climate Variables</b>: Maximum/Minimum Temperature, Precipitation, Degree Days<br />
+    <b>Emission Scenarios</b>: rcp45, rcp85<br />
+    </div>
+    <br />
+    <div id="HadGEM2-CC" align="left">
+    <font size="3"><b><a name="HadGEM2-CC">HadGEM2-CC</a></b><br />
+    <b>Source</b>: Met Office Hadley Center<br />
+    <b>Domain</b>: US, Canada, Mexico</br>
+    <b>Temporal Resolution</b>: Daily<br />
+    <b>Date Range</b>: 1950 - 2100<br />
+    <b>Spatial Resolution</b>: 6 km<br />
+    <b>Climate Variables</b>: Maximum/Minimum Temperature, Precipitation, Degree Days<br />
+    <b>Emission Scenarios</b>: rcp45, rcp85<br />
+    </div>
+    <br />
+    <div id="HadGEM2-ES" align="left">
+    <font size="3"><b><a name="HadGEM2-CC">HadGEM2-CC</a></b><br />
+    <b>Source</b>: Met Office Hadley Center (additional HadGEM2-ES realizations contributed by Instituto Nacional de Pesquisas Espaciais)<br />
+    <b>Domain</b>: US, Canada, Mexico</br>
+    <b>Temporal Resolution</b>: Daily<br />
+    <b>Date Range</b>: 1950 - 2100<br />
+    <b>Spatial Resolution</b>: 6 km<br />
+    <b>Climate Variables</b>: Maximum/Minimum Temperature, Precipitation, Degree Days<br />
+    <b>Emission Scenarios</b>: rcp45, rcp85<br />
+    </div>
+    <br />
+    <div id="HadGEM2-ES" align="left">
+    <font size="3"><b><a name="HadGEM2-CC">HadGEM2-CC</a></b><br />
+    <b>Source</b>: Met Office Hadley Center (additional HadGEM2-ES realizations contributed by Instituto Nacional de Pesquisas Espaciais)<br />
+    <b>Domain</b>: US, Canada, Mexico</br>
+    <b>Temporal Resolution</b>: Daily<br />
+    <b>Date Range</b>: 1950 - 2100<br />
+    <b>Spatial Resolution</b>: 6 km<br />
+    <b>Climate Variables</b>: Maximum/Minimum Temperature, Precipitation, Degree Days<br />
+    <b>Emission Scenarios</b>: rcp45, rcp85<br />
+    </div>
+    -->
+    <br />
+    <div>-------- <b>NARRCAP PROJECTIONS</b> --------</div>
+    <br />
+    <div id="CRCM" align="left">
+    <font size="3"><b><a name="CRCM">CRCM -- Canadian Regional Climate Model</a></b><br />
+    <b>Source</b>: Ouranos Climate Simulation Team / UQAM via NARRCAP<br />
+    <b>Domain</b>: US</br>
+    <b>Temporal Resolution</b>: Daily<br />
+    <b>Date Range</b>: 1970 - 2000, 2040 - 2070<br />
+    <b>Spatial Resolution</b>: 50km<br />
+    <b>Climate Variables</b>: Maximum/Minimum Temperature, Precipitation<br />
+    </div>
+    <br />
+    <div id="HRM3" align="left">
+    <font size="3"><b><a name="HRM3">HRM3 -- Hadley Regional Model</a></b></br >
+    <b>Source</b>: Hadley Centre via NARCCAP<br />
+    <b>Domain</b>: US<br />
+    <b>Temporal Resolution</b>: Daily<br />
+    <b>Date Range</b>: 1970 - 2000, 2040 - 2070<br />
+    <b>Spatial Resolution</b>: 50km<br />
+    <b>Climate Variables</b>: Maximum/Minimum Temperature, Precipitation<br />
+    </div>
+    <br />
+    <div id="MM5I" align="left">
+    <font size="3"><b><a name="MM5I">MM5I -- PSU/NCAR mesoscale model</a></b><br />
+    <b>Source</b>: NCAR-Mesoscale Prediction Group/Penn State via NARCCAP<br />
+    <b>Domain</b>: US<br />
+    <b>Temporal Resolution</b>: Daily<br />
+    <b>Date Range</b>: 1970 - 2000, 2040 - 2070<br />
+    <b>Spatial Resolution</b>: 50km<br />
+    <b>Climate Variables</b>: Maximum/Minimum Temperature, Precipitation<br />
+    </div>
+    <br />
+    <div id="RCM3" align="left">
+    <font size="3"><b><a name="RCM3">RCM3 -- Regional Climate Model Version 3</a></b><br />
+    <b>Source: UC Santa Cruz via NARCCAP</b><br />
+    <b>Domain</b>: US<br />
+    <b>Temporal Resolution</b>: Daily<br />
+    <b>Date Range</b>: 1970 - 2000, 2040 - 2070<br />
+    <b>Spatial Resolution</b>: 50km<br />
+    <b>Climate Variables</b>: Maximum/Minimum Temperature, Precipitation<br />
+    </div>
+    <br />
+    <div id="WRFG" align="left">
+    <font size="3"><b><a name="WRFG">WRFG -- Weather Research Forecasting Model</a></b><br />
+    <b>Source</b>: Mesoscale and Microscale Meteorology Division of NCAR via NARCCAP<br />
+    <b>Domain</b>: US<br />
+    <b>Temporal Resolution</b>: Daily<br />
+    <b>Date Range</b>: 1970 - 2000, 2040 - 2070<br />
+    <b>Spatial Resolution</b>: 50km<br />
+    <b>Climate Variables</b>: Maximum/Minimum Temperature, Precipitation<br />
+    </div>
+</div>
+
+<!--
+<div id="ht_grid">
+    <p>Type of gridded datasets.</p>
+</div>
+-->
+
+<div id="ht_data_summary">
+<b>None</b>:<br />
+No data summary will be performed.<br />
+<b>Windowed Data</b>:<br />
+Returns data for seklect time windows within the date range you selected<br /> 
+<em>Example</em>:<br />
+Start Date: 2000-01-01, End Date: 2002-12-31, 
+Window Start: 05-15, Window end: 05-17<br />
+<em>Returns</em> data for:<br /> 
+2000-05-15, 2000-05-16, 2000-05-17<br />
+2001-05-15, 2001-05-16, 2001-05-17<br />
+2002-05-15, 2002-05-16, 2002-05-17<br />
+<b>Temporal</b>:<br />
+Data is summarized over time defined by Start Date and End Date at each data point.
+The result is a geospatial layer.<br />
+<em>Example</em>:<br />
+Temporal summary of sum of precipitation from  2000-01-01 to 2000-01-31 over all stations in Nevada<br />
+<em>Returns</em> the sum of January precipitaion at each station in Nevada.<br /> 
+<b>Spatial</b>:<br />
+Data is summarized over each point in the selected region.
+The result is a time series.<br />
+<em>Example</em>:<br />
+Spatial summary of daily precipitation from  2000-01-01 to 2000-01-31 averaged over all stations in Nevada<br />
+<em>Returns</em> mean daily precipitation of all stations in Nevada for each day in January 2000.
+<br />
+
+</div>
+
+<div id="ht_likelihood_threshold">
+    <p>Lower and upper threshold for variable.</p>
+</div>
+<div id="ht_show_flags">
+    <p>Show data flags.<br />M = Missing, A= Accumulated, S = Subsequent, T = Trace</p>
+</div>
+
+<div id="ht_show_observation_time">
+    <p>Show the time at which the observation was taken.</p>
+</div>
+
+<div id="ht_base_temperature">
+    <p>Base Temperature used to calculate degree days.
+    <ul>
+        <li>Heating Degree Days: Base Temperature - Average Temperature</li>
+        <li>Cooling/Growing Degree Days: Average Temperature - Base Temperature</li>
+    </ul>
+    </p>
+</div>
+
+<div id="ht_max_missing_days">
+    <p>Maximum number of missing days allowed. Months that are missing more than this number of data record will be excluded from the calculation</p>
+</div>
+
+<div id="ht_start_month">
+    <p>Start the analysis on this month. Default January.</p>
+</div>
+
+<div id="ht_data_format">
+    <p>File format in which data will be returned. Html displays to screen.</p>
+</div>
+
+<div id="ht_output_format">
+    <ul>
+        <li>Verbose: Contains metadata for each station or grid point.</li>
+        <li>Short: Only lists Station names and IDs or (lat, lon) for grid points.</li>
+    </ul>
+</div>
+
+<div id="ht_display">
+    <ul>
+        <li>Map: Display results on map (Table displays below map).</li>
+        <li>Table: Display results as table and download as csv/excel).</li>
+    </ul>
+</div>
+
+<div id="ht_metadata_keys">
+    <p>Choose relevant metadata for display.</p>
+</div>
+
+<div id="ht_delimiter">
+    <p>Delimiter used to separate data values. Not applicable for excel or html output.</p>
+</div>
+
+<div id="ht_output_file_name">
+    <p>Enter a name for your output file. Please do not use special characters (e.g. @,#,*).
+    A time stamp will be added to your file name.</p>
+</div>
+
+
+<!--Sodsumm-->
+<div id="ht_sodsumm_summary_type">
+<p>Only generate tables/graphs for these climate variables.</p>
+</div>
+
+<div id="ht_sodsumm_generate_graphics">
+<p>Also include bar charts with table output.</p>
+</div>
+<!--Sodxtrmts-->
+<div id="ht_monthly_statistic">
+    <p>Desired monthly statistic of the selected climate variable.</p>
+</div>
+
+<div id="ht_sx_statistic">
+    <p>Desired statistic of the selected climate variable.</p>
+</div>
+
+<div id="ht_statistic_period">
+    <p>Summarize data over this time period.</p>
+</div>
+
+<div id="ht_lgb">
+    <p>Choose the threshold:<br />
+    Number of days above/below a value  or between two values</p>
+</div>
+
+<div id="ht_l">
+    <p>Returns data values that are less than the threshold.</p>
+</div>
+
+<div id="ht_g">
+    <p>Returns data values that are greater than the threshold.</p>
+</div>
+
+<div id="ht_b">
+    <p>Returns data values that lie between a lower and an upper threshold.</p>
+</div>
+
+<div id="ht_departures_from_averages">
+    <p>Show results as values or departures from averages.</p>
+</div>
+
+<!--Graphing-->
+<div id="ht_graph_summary">
+    <p>For each analysis year, 
+    the data ranging over Start and End Month will be summarized according to this choice.</p>
+</div>
+
+<div id="ht_graph_start_month">
+    <p>Start Month for time series. Data will be summarized for months between Start and End Month.</p>
+</div>
+
+<div id="ht_graph_end_month">
+    <p>End Month for time series. Data will be summarized for months between Start and End Month.</p>
+</div>
+
+<div id="ht_graph_start_year">
+    <p>Start graph on this year.</p>
+</div>
+
+<div id="ht_graph_end_year">
+    <p>End graph on this year.</p>
+</div>
+
+
+
+<div id="ht_show_running_mean">
+    <p>Compute and plot running mean.</p>
+</div>
+
+<div id="ht_running_mean_years">
+    <p>Number of years over which to compute the running mean.</p>
+</div>
+
+
+<div id="ht_running_mean_days">
+    <p>Number of days over which to compute the running mean.</p>
+</div>
+
+
+<div id="ht_image_size">
+    <p>Select an image size.</p>
+</div>
+
+
+<div id="ht_cmap"> 
+    <p>Choose a color map from the list.</p>
+</div>
+
+<div id="ht_map_ol">
+    <p>Choose a map overlay from the drop down menu.</p>
+</div>
+
+<div id="ht_interpolation">
+    <p>Interpolation method.</p>
+</div>
+
+<div id="ht_projection">
+    <p>Choose a projection from the drop down menu.</p>
+</div>
+
