@@ -7,32 +7,6 @@
 {%block content %}
 
 <!--Documentation-->
-<div title="Station Data" class="docu" id="Docu_station_data" style="display:none;">
-    {% include 'includes/Docu_station_data.html'%}
-</div>
-<div title="Networks" class="docu" id="Docu_networks" style="display:none;">
-    {% include 'includes/Docu_station_networks.html'%}
-</div>
-<div title="PRISM" class="docu" id="Docu_PRISM" style="display:none;"></div>
-<script type="text/javascript">
-    $("#Docu_PRISM").load("{{HTML_URL}}/Docu_all_grids.html #PRISM");
-</script>
-<div title="NRCC INT" class="docu" id="Docu_NRCC_INT" style="display:none;"></div>
-<script type="text/javascript">
-    $("#Docu_NRCC_INT").load("{{HTML_URL}}/Docu_all_grids.html #NRCC_INT");
-</script>
-<div title="LOCA" class="docu" id="Docu_LOCA" style="display:none;">
-    {% include 'includes/Docu_short_LOCA.html'%}
-</div>
-<div title="NARCCAP" class="docu" id="Docu_NARCCAP" style="display:none;">
-    {% include 'includes/Docu_short_NARCCAP.html'%}
-</div>
-<div title="LANDSAT" class="docu" id="Docu_LANDSAT" style="display:none;">
-    {% include 'includes/Docu_LANDSAT.html'%}
-</div>
-<div title="MODIS" class="docu" id="Docu_MODIS" style="display:none;">
-    {% include 'includes/Docu_MODIS.html'%}
-</div>
 <div title="Projections" align="left" id="Docu_projections" style="display:none;">
     {% include 'includes/Docu_page_projections.html'%}
 </div>
