@@ -1,13 +1,24 @@
-<div title="Networks" class="docu" id="networks_D" style="display:none;">
-    {% include 'includes/Docu_station_networks.html'%}
-</div>
-<div id="STATION DATA" align="left">
+<!-- Documentation -->
+<div title="Station Data Info" class="docu" id="station_data_D" style="display:none;">
     <ul>
-        <li><b>Station <span class="link" onmouseover="ShowPopupDocu('networks_D')">networks</span></b></li>
         <li><b>Domain</b>: US</li>
         <li><b>Temporal Resolution</b>: Daily</li>
         <li><b>Date Range</b>: From 1845 - Present (varies by station)</li>
         <li><b>Climate Variables</b>: <br />
             Maximum/Minimum/Average Temperature, Precipitation, Snow, Degree Days</li>
+    </ul>
+</div>
+<div title="Networks" class="docu" id="networks_D" style="display:none;">
+    {% include 'includes/Docu_station_networks.html'%}
+</div>
+<!-- End Documentation -->
+<div id="STATION DATA" align="left">
+    <ul>
+        <li><span class="link" onmouseover="ShowPopupDocu('station_data_D')"
+        onmouseout="DestroyPopupDocu('station_data_D')" onclick="ShowPopupDocu('station_data_D')"
+        ><b>Station data information</b></span></li>
+        <li><span class="link" onmouseover="ShowPopupDocu('networks_D')"
+        onmouseout="DestroyPopupDocu('networks_D')" onclick="ShowPopupDocu('networks_D')"
+        ><b>Station network information</b></span></li>
     </ul>
 </div>

@@ -49,13 +49,13 @@
 
             <div class="collapse navbar-collapse">
                 <div class="header-banner nav-header">
-                    <img class="img-responsive" width="100%" height="5%" 
+                    <img class="img-responsive" alt="SCENIC Banner" width="100%" height="5%" 
                     style="padding-top:3%;cursor:pointer;cursor:hand;" src="{{ MEDIA_URL }}img/SCENIC_NEW.png" 
                     onclick="window.location='{{HOME_URL}}'">
                 </div>
                 <!--contact buttons-->
                 <!--contact buttons-->
-                <span style="float:right;padding:2px 0px">
+                <div style="float:right;padding:2px 0px">
                     <a class="btn btn-primary" href="mailto:scenic@dri.edu" target="_top">Send Feedback</a>
                     <a class="btn btn-primary" href="{{ABOUT_URL}}#contact_us">Contact Us</a>
                     <!--Search Box-->
@@ -81,12 +81,12 @@
                     </script>
                     <gcse:search></gcse:search>
                     </span>-->
-                </span> 
+                </div> 
                 
                 <ul class="nav navbar-nav">
                 <li><a href="{{HOME_URL}}">HOME</a></li>
                 <li class="dropdown">
-                    <a href="{{ABOUT_URL}}" tabindex="0" data-toggle="dropdown" data-submenu>ABOUT US <span class="caret"></span></i></a> 
+                    <a href="{{ABOUT_URL}}" tabindex="0" data-toggle="dropdown" data-submenu>ABOUT US <span class="caret"></span></a> 
                     <ul class="dropdown-menu">
                         <li><a href="{{ABOUT_URL}}#overview">Overview</a></li>
                         <li><a href="{{ABOUT_URL}}#data">Available Datasets</a></li>
@@ -144,7 +144,7 @@
                     </ul>
                 </li>
                 <li class="dropdown">
-                    <a href="{{SCENIC_URL}}help/" tabindex="0" data-toggle="dropdown" data-submenu>HELP <span class="caret"></span></i></a>
+                    <a href="{{SCENIC_URL}}help/" tabindex="0" data-toggle="dropdown" data-submenu>HELP <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="{{SCENIC_URL}}help#about_scenic">About SCENIC</a></li>
                         <li><a href="{{SCENIC_URL}}help#about_data">About the Data</a></li>
@@ -156,7 +156,7 @@
         </div><!--container-fluid-->
     </nav>
 
-    <div class="row" align="center">
+    <div class="row">
         <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
             <h1 id="tool_info_head" 
             {%if app_name|is_in:'home,about,monitoring,help,data,gridded_data,station_data,analysis,projections,remote_sensing_data,single_point_prods,multi_point_prods'%}
