@@ -253,8 +253,10 @@ function ShowPopupDocu(DivId){
     $(':ui-dialog').each(function(){
         var pop_id = $(this).attr('id');
         if ($(this).dialog('isOpen')){
+            //console.log(pop_id);
             if (!pop_id.inList(popup_no_destroy)){
                 //see dataStore.js
+                //console.log($(this).attr('id'));
                 $(this).dialog('destroy');
             }
         }

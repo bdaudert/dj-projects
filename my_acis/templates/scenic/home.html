@@ -5,43 +5,6 @@
 
 {%block content %}
 
-<!--Documentation-->
-<div title="Station Data" class="docu" id="Docu_station_data" style="display:none;">
-    {% include 'includes/Docu_station_data.html'%}
-</div>
-<div title="Networks" class="docu" id="Docu_networks" style="display:none;">
-    {% include 'includes/Docu_station_networks.html'%}
-</div>
-<div title="PRISM" class="docu" id="PRISM_Docu" style="display:none;"></div>
-<script type="text/javascript">
-    $("#PRISM_Docu").load("{{HTML_URL}}/Docu_all_grids.html #Docu_PRISM");
-</script>
-<div title="NRCC INT" class="docu" id="NRCC_INT_Docu" style="display:none;"></div>
-<script type="text/javascript">
-    $("#NRCC_INT_Docu").load("{{HTML_URL}}/Docu_all_grids.html #Docu_NRCC_INT");
-</script> 
-<div title="LOCA" class="docu" id="LOCA_Docu" style="display:none;">
-    {% include 'includes/Docu_short_LOCA.html'%}
-</div>
-<div title="NARCCAP" class="docu" id="Docu_NARCCAP" style="display:none;">
-    {% include 'includes/Docu_short_NARCCAP.html'%}
-</div>
-<div title="LANDSAT" class="docu" id="Docu_LANDSAT" style="display:none;">
-    {% include 'includes/Docu_LANDSAT.html'%}
-</div>
-<div title="MODIS" class="docu" id="Docu_MODIS" style="display:none;">
-    {% include 'includes/Docu_MODIS.html'%}
-</div>
-<div title="Station Finder" class="docu" id="Docu_popup_station_finder" style="display:none;">
-    {% include 'includes/Docu_popup_station_finder.html'%}
-</div>
-<div title="Single Point Products" class="docu" id="Docu_popup_single_point_prods" style="display:none;">
-    {% include 'includes/Docu_popup_single_point_prods.html'%}
-</div> 
-<div title="Multi Point Products" class="docu" id="Docu_popup_multi_point_prods" style="display:none;">
-    {% include 'includes/Docu_popup_multi_point_prods.html'%}
-</div>
-
 <div class="row row-height">
     <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-height">
         <div class="bg-info main-col inside inside-full-height">

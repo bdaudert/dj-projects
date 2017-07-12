@@ -7,22 +7,36 @@
 {%block content %}
 
 <!--Documentation-->
-<div title="Station Finder" align="left" id="Docu_station_finder" style="display:none;">
+<div title="Station Finder" align="left" id="Docu_sf" style="display:none;">
     {% include 'includes/Docu_page_station_finder.html'%}
 </div>
-<div title="Single Point Products" class="docu" id="Docu_single_point_prods" style="display:none;">
+<div title="Single Point Products" class="docu" id="Docu_spp" style="display:none;">
     {% include 'includes/Docu_page_single_point_prods.html'%}
 </div>
-<div title="Multi Point Products" class="docu" id="Docu_multi_point_prods" style="display:none;">
+<div title="Multi Point Products" class="docu" id="Docu_mpp" style="display:none;">
     {% include 'includes/Docu_page_multi_point_prods.html'%}
 </div>
+<div title="Short Description of Networks" align="left" id="Docu_nwks" style="display:none;">
+    {% include 'includes/Docu_station_networks.html'%}
+</div>
+<div title="Short Description of Networks" align="left" id="Docu_nwks" style="display:none;">
+    {% include 'includes/Docu_popup_station_networks.html'%}
+</div>
+<div title="Links to Networks" align="left" id="Docu_nwk_links" style="display:none;">
+    {% include 'includes/Docu_station_networks_links.html'%}
+</div>
+<div title="Short Description of Grids" align="left" id="Docu_ag" style="display:none;">
+    {% include 'includes/Docu_all_grids.html'%}
+</div>
+<!--End Documentation-->
+
 
 <div class="row row-height">
     <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-height">
         <div class="bg-info main-col inside inside-full-height">
         <h3 align="center">
             <a href="{{SCENIC_URL}}analysis/station_finder/">Station Finder</a>
-            <img alt="Click me!" title="More Info" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_station_finder')"><br /><br />
+            <img alt="Click me!" title="More Info" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_sf')"><br /><br />
             <small align="left">
                 <p class="lead">
                     <ul>
@@ -37,7 +51,7 @@
         <div class="bg-info main-col inside inside-full-height">
         <h3 align="center">
             <a href="{{SCENIC_URL}}analysis/single/">Single Point<br />Products</a>
-            <img alt="Click me!" title="More Info" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_single_point_prods')">
+            <img alt="Click me!" title="More Info" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_spp')">
             <br />
             <small align="left">
                 <p class="lead">
@@ -57,7 +71,7 @@
         <div class="bg-info main-col inside inside-full-height">
         <h3 align="center">
             <a href="{{SCENIC_URL}}analysis/multi/">Multi Point<br />Products</a>
-            <img alt="Click me!" title="More Info" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_multi_point_prods')">
+            <img alt="Click me!" title="More Info" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_mpp')">
             <br />
             <small align="left">
                 <p class="lead">

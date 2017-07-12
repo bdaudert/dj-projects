@@ -1,4 +1,27 @@
 <p class="lead"><small>
+    <!--Documenation-->
+    <div title="PRISM" class="docu" id="PRISM_D" style="display:none;"></div>
+    <script type="text/javascript">
+        $("#PRISM_D").load("{{HTML_URL}}/Docu_all_grids.html #Docu_PRISM");
+    </script>
+    <div title="NRCC INT" class="docu" id="NRCC_INT_D" style="display:none;"></div>
+    <script type="text/javascript">
+        $("#NRCC_INT_D").load("{{HTML_URL}}/Docu_all_grids.html #Docu_NRCC_INT");
+    </script>
+    <div title="LOCA" class="docu" id="LOCA_D" style="display:none;">
+        {% include 'includes/Docu_short_LOCA.html'%}
+    </div>
+    <div title="NARCCAP" class="docu" id="NARCCAP_D" style="display:none;">
+        {% include 'includes/Docu_short_NARCCAP.html'%}
+    </div>
+    <div title="LANDSAT" class="docu" id="LANDSAT_D" style="display:none;">
+        {% include 'includes/Docu_LANDSAT.html'%}
+    </div>
+    <div title="MODIS" class="docu" id="MODIS_D" style="display:none;">
+        {% include 'includes/Docu_MODIS.html'%}
+    </div>
+    <!--End Documenation-->
+    
     <ul style="list-style: none;">
         <li><a href="{{DATA_URL}}station_data/"><b>Station Data</b></a></li>
         <div title="Station Data" class="docu">
@@ -8,21 +31,21 @@
         <ul>
             <li><b>Historic Gridded Datasets (US)</b>
                 <ul>
-                    <li><span class="link" onclick="ShowPopupDocu('Docu_PRISM')" onmouseover="ShowPopupDocu('Docu_PRISM')" onmouseout="DestroyPopupDocu('Docu_PRISM')">PRISM</span></li>
-                    <li><span class="link" onclick="ShowPopupDocu('Docu_NRCC_INT')" onmouseover="ShowPopupDocu('Docu_NRCC_INT')" onmouseout="DestroyPopupDocu('Docu_NRCC_INT')">NRCC Interpolated</span></li>
+                    <li><span class="link" onclick="ShowPopupDocu('PRISM_D')" onmouseover="ShowPopupDocu('PRISM_D')" onmouseout="DestroyPopupDocu('PRISM_D')">PRISM</span></li>
+                    <li><span class="link" onclick="ShowPopupDocu('NRCC_INT_D')" onmouseover="ShowPopupDocu('NRCC_INT_D')" onmouseout="DestroyPopupDocu('NRCC_INT_D')">NRCC Interpolated</span></li>
                 </ul>
             </li>
             <li><b>Gridded Projection Datasets</b>
                 <ul>
-                    <li><span class="link" onclick="ShowPopupDocu('Docu_LOCA')" onmouseover="ShowPopupDocu('Docu_LOCA')" onmouseout="DestroyPopupDocu('Docu_LOCA')">LOCA (US/Canada/Mexico)</span></li>
-                    <li><span class="link" onclick="ShowPopupDocu('Docu_NARCCAP')" onmouseover="ShowPopupDocu('Docu_NARCCAP')" onmouseout="DestroyPopupDocu('Docu_NARCCAP')">NARCCAP (US)</span></li>
+                    <li><span class="link" onclick="ShowPopupDocu('LOCA_D')" onmouseover="ShowPopupDocu('LOCA_D')" onmouseout="DestroyPopupDocu('LOCA_D')">LOCA (US/Canada/Mexico)</span></li>
+                    <li><span class="link" onclick="ShowPopupDocu('NARCCAP_D')" onmouseover="ShowPopupDocu('NARCCAP_D')" onmouseout="DestroyPopupDocu('NARCCAP_D')">NARCCAP (US)</span></li>
                 </ul>
             </li>
         </ul></li>
         <li><a href="{{DATA_URL}}remote_sensing_data/"><b>Remote Sensing Datasets</b></a><br />
                 <ul>
-                <li><span class="link" onclick="ShowPopupDocu('Docu_LANDSAT')" onmouseover="ShowPopupDocu('Docu_LANDSAT')" onmouseout="DestroyPopupDocu('Docu_LANDSAT')">LANDSAT (Global)</span></li>
-                <li><span class="link" onclick="ShowPopupDocu('Docu_MODIS')" onmouseover="ShowPopupDocu('Docu_MODIS')" onmouseout="DestroyPopupDocu('Docu_MODIS')">MODIS (Global)</span></li>
+                <li><span class="link" onclick="ShowPopupDocu('LANDSAT_D')" onmouseover="ShowPopupDocu('LANDSAT_D')" onmouseout="DestroyPopupDocu('LANDSAT_D')">LANDSAT (Global)</span></li>
+                <li><span class="link" onclick="ShowPopupDocu('MODIS_D')" onmouseover="ShowPopupDocu('MODIS_D')" onmouseout="DestroyPopupDocu('MODIS_D')">MODIS (Global)</span></li>
             </ul>
         </li>
     </ul>
