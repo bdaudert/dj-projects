@@ -29,7 +29,7 @@
 	</form>
   </table>
 </div>
-</br>
+<br/>
 {%endif%}
 
 
@@ -37,22 +37,22 @@
 <div class="results">
 
 <p align="left" style="max-width:95%;word-wrap:break-word;">
-    <b>Cooling degree threshold</b>: 65.00; <b>Heating degree threshold</b>: 65.00</br>
-    <b>MON</b>: Month</br>
-    <b>DAY</b>: Day</br>
-    <b>AVGT</b>: Multi-year non-smoothed average of the indicated quantity</br>
-    <b>EXTRM</b>: Extreme value of indicated quantity for this day of year(<b>LO</b>W for mint, <b>HI</b>GH for all other variables)</br>
-    <b>YEAR</b>: Latest year of occurrence of the extreme value</br>
-    <b>NO</b>: Number of years with data for this day of year.</br>
-    <b>UNITS</b>: English (inches and degrees F)</br>
+    <b>Cooling degree threshold</b>: 65.00; <b>Heating degree threshold</b>: 65.00<br/>
+    <b>MON</b>: Month<br/>
+    <b>DAY</b>: Day<br/>
+    <b>AVGT</b>: Multi-year non-smoothed average of the indicated quantity<br/>
+    <b>EXTRM</b>: Extreme value of indicated quantity for this day of year(<b>LO</b>W for mint, <b>HI</b>GH for all other variables)<br/>
+    <b>YEAR</b>: Latest year of occurrence of the extreme value<br/>
+    <b>NO</b>: Number of years with data for this day of year.<br/>
+    <b>UNITS</b>: English (inches and degrees F)<br/>
 </p>
-</br>
-<br />
+<br/>
+<br/>
 
 {%for stn, stn_data in results.items %}
     <h3><b>Station</b>: {{station_names|lookup:stn|safe}} ({{station_ids|lookup:stn|safe}})</h3>
     {%if not stn_data%}
-    <p style="color:red">NO STATION DATA FOUND!</p></br>
+    <p style="color:red">NO STATION DATA FOUND!</p><br/>
     {%else%}
     {%for el, el_data in stn_data.items%}
         <div style="display:none" class="dataTableInfo" id="dataTableInfo-{{forloop.parentloop.counter0}}_{{forloop.counter0}}">

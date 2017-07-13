@@ -31,9 +31,9 @@
 
 
 {%if user_params %}
-<p class="message" align="center"><b>Your parameters</b>:<br />
+<p class="message" align="center"><b>Your parameters</b>:<br/>
 {%for key_val in user_params %}
-    <b>{{key_val.0}}</b>: {{key_val.1}}<br />
+    <b>{{key_val.0}}</b>: {{key_val.1}}<br/>
 {%endfor%}
 </p>
 {%endif%}
@@ -44,7 +44,7 @@
         <h3 align="center">
             <a target="_blank" href="{{SCENIC_URL}}analysis/single/lister/{{url_params_single_lister}}"><b>Data Lister</b></a>
             <img alt="Click me!" title="More Info" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_single_lister')">
-            <br />
+            <br/>
             <small align="left">{% include 'includes/Docu_popup_single_lister.html'%}</small>
         </h3>
         </div>
@@ -54,7 +54,7 @@
         <h3 align="center">
             <a target="_blank" href="{{SCENIC_URL}}analysis/single/monthly_summary/{{url_params_monthly_summary}}"><b>Monthly Summary</b></a>
             <img alt="Click me!" title="More Info" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_monthly_summary')">
-            <br />
+            <br/>
             <small align="left">{% include 'includes/Docu_popup_monthly_summary.html'%}</small>
         </h3>
         </div>
@@ -64,7 +64,7 @@
         <h3 align="center">
             <a target="_blank" href="{{SCENIC_URL}}analysis/single/seasonal_summary/{{url_params_seasonal_summary}}"><b>Seasonal Summary</b></a>
             <img alt="Click me!" title="More Info" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_seasonal_summary')">
-            <br />
+            <br/>
             <small align="left">{% include 'includes/Docu_popup_seasonal_summary.html'%}</small>
         </h3>
         </div>
@@ -74,20 +74,20 @@
         <h3 align="center">
             <a target="_blank" href="{{SCENIC_URL}}analysis/single/single_year/{{url_params_single_year}}"><b>Single-Year</b></a>
             <img alt="Click me!" title="More Info" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_single_year')">
-            <br />
+            <br/>
             <small align="left">{% include 'includes/Docu_popup_single_year.html'%}</small>
         </h3>
         </div>
     </div>
 </div><!--End row 1-->
-<br />
+<br/>
 <div class="row row-height" id="row2" >
     <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-height">
         <div class="bg-info main-col inside inside-full-height" height="100%">
         <h3 align="center">
             <a target="_blank" href="{{SCENIC_URL}}analysis/single/data_comparison/{{url_params_data_comparison}}"><b>Data comparison</b></a>
             <img alt="Click me!" title="More Info" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_data_comparison')">
-            <br />
+            <br/>
             <small align="left">{% include 'includes/Docu_popup_data_comparison.html'%}</small>
         </h3>        </div>
     </div>
@@ -96,7 +96,7 @@
         <h3 align="center">
             <a target="_blank" href="{{SCENIC_URL}}analysis/single/climatology/{{url_params_climatology}}"><b>Climatology</b></a>
             <img alt="Click me!" title="More Info" src="{{ MEDIA_URL }}img/QMark.png" onclick="ShowPopupDocu('Docu_app_climatology')">
-            <br />
+            <br/>
             <small align="left">{% include 'includes/Docu_popup_climatology.html'%}</small>
         </h3>
         </div>

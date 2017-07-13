@@ -11,7 +11,7 @@
 {%else%}
 <a href="/csc/wrcc_meta/station_tables/?{%for id in ucan_id_list%}&ucan_id={{id}}{%endfor%}{%for tbl in tbl_done_list%}&tbl_done={{tbl}}{%endfor%}">Back to Station Tables (I am NOT done!)</a>
 {%endif%}
-<br />
+<br/>
 <h3 align="center"><font color="red"><b>!!!Please remember to merge tables in order from top to bottom!!!</b></font></h3>
 </p>
 
@@ -23,7 +23,7 @@
         {%for table in instance%}
         <td align="right">
             {%if forloop.last%}
-                <br />
+                <br/>
                 <div id='form'>
                 <form method="post" action="">{% csrf_token %}
                 {%if merge_successful and forloop.parentloop.counter|l_e:form_id%}
@@ -47,18 +47,18 @@
                     <a href="/csc/wrcc_meta/station_tables/?{%for id in ucan_id_list%}&ucan_id={{id}}{%endfor%}{%for tbl in tbl_done_list%}&tbl_done={{tbl}}{%endfor%}&tbl_done={{tbl_name}}">Back to Station Tables (I AM DONE with {{tbl_name}}!)</a>
                 {%elif tbl_done%}
                     {%if forloop.parentloop.last%}
-                    <br />
+                    <br/>
                     <p><b>All tables already merged!</b></p>
                     {%endif%}
                 {%else%}
-                    <br />
+                    <br/>
                     <input type="submit" value="Merge" name="form_merge"/>
                 {%endif%}
                 </form>
                 </div>
             {%else%}
                 {%if table%}
-                    <a href="#" onClick="ShowPopupDocu('{{stn_id}}_{{forloop.counter}}')">Click here to show/hide</a><br />
+                    <a href="#" onClick="ShowPopupDocu('{{stn_id}}_{{forloop.counter}}')">Click here to show/hide</a><br/>
                 {%endif%}
 
                 <div id="{{stn_id}}_{{forloop.counter}}" style='display:block'>
@@ -72,13 +72,13 @@
 
                     {%if network_station_ids_dict%}
                     {%if table%}
-                    <br />
+                    <br/>
                     <a href="/csc/wrcc_meta/sub_tables/?tbl_name=Variable&ucan_id={{table.0.1}}{%for id in network_station_ids_dict|lookup:table.0.1%}&network_station_id={{id}}{%endfor%}">Go to Variable Tables</a>
-                    <br /><br />              
+                    <br/><br/>              
                     <a href="/csc/wrcc_meta/sub_tables/?tbl_name=StationDigital&ucan_id={{table.0.1}}{%for id in network_station_ids_dict|lookup:table.0.1%}&network_station_id={{id}}{%endfor%}">Go to StationDigital Tables</a>
                     {%endif%}
                     {%endif%}
-                    <br />
+                    <br/>
                 </div>
             {%endif%}
         </td>

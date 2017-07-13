@@ -71,13 +71,9 @@
                 <div class="form-input-group form-group" align="center">
                     <label class="form-group-header">1. Define your region!</label> 
                     <div class="input-group">
-                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                            {% include 'includes/area-type.html'%}
-                            <span class="input-group-addon"></span>
-                        </div>
-                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                            <span id="area">{% include 'includes/area.html'%}</span>
-                        </div>
+                        {% include 'includes/area-type.html'%}
+                        <span class="input-group-addon"></span>
+                        <span id="area">{% include 'includes/area.html'%}</span>
                     </div>
                     <span class="grid" id="grid_type"
                     {%if initial.area_type != "location"%}style="display:none"{%endif%}
@@ -148,7 +144,7 @@
                     </button>
                 </div>
             </form>
-        </div><!--col-sm-4--><br />
+        </div><!--col-sm-4--><br/>
         <!--Main: Errors/maps-->
         <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
              <!--Ajax Error-->
@@ -174,7 +170,7 @@
         <!--Gridpoint map-->
         {% include 'includes/map-gridpoint.html'%}
         </div><!--col-sm-8-->
-    </div><!--row--><br />
+    </div><!--row--><br/>
 </div><!--top_of_page-->
 <!--Main Results-->
 <div class="row">
@@ -189,11 +185,11 @@
             {%elif key_val.0 == "Start Year"%}
                 <b>{{key_val.1}}</b>
             {%elif key_val.0 == "End Year"%}
-                -- <b>{{key_val.1}}</b><br />
+                -- <b>{{key_val.1}}</b><br/>
             {%elif key_val.0 == "Units" or key_val.0 == "Base Temperature"%}
-                &nbsp;({{key_val.1}})<br />
+                &nbsp;({{key_val.1}})<br/>
             {%else%}
-                <b>{{key_val.0}}</b> {{key_val.1}}<br />
+                <b>{{key_val.0}}</b> {{key_val.1}}<br/>
             {%endif%}
             {%endfor%}
             </p>
@@ -248,7 +244,7 @@
                 {%endif%}
                 {%endfor%}
                 </tbody>
-            </table><!--end summary-table--><br />
+            </table><!--end summary-table--><br/>
         </div>
         <!--Main table -->
          <div class="row">
@@ -349,7 +345,7 @@
                     {%endif%}
                 </div><!--row-->
             </div><!--main-graph-->
-            <br />
+            <br/>
         {%endif%}<!--end if results.graph_data-->
 
         </div><!--results-->

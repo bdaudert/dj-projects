@@ -25,22 +25,22 @@
 	</form>
   </table>
 </div>
-</br>
-</br>
+<br/>
+<br/>
 {%endif%}
 
 {%if results %}
     <div class="results">
     {%for stn, stn_data in results.items %}
     <!--Header-->
-    <p><b>STATION</b>: ({{station_ids|lookup:stn|safe}})&nbsp;NAME:{{station_names|lookup:stn|safe}}</br>
-       <b>RUNS OF</b>: {{el}}&nbsp;{{op}}&nbsp;{{thresh}}</br>
-       <b>START YEAR - END YEAR</b>: {{start_year}} - {{end_year}}</br>
-       <b>MINIMUM DURATION</b>: {{dur}}<br />
+    <p><b>STATION</b>: ({{station_ids|lookup:stn|safe}})&nbsp;NAME:{{station_names|lookup:stn|safe}}<br/>
+       <b>RUNS OF</b>: {{el}}&nbsp;{{op}}&nbsp;{{thresh}}<br/>
+       <b>START YEAR - END YEAR</b>: {{start_year}} - {{end_year}}<br/>
+       <b>MINIMUM DURATION</b>: {{dur}}<br/>
        <b>SUMMARY</b>: {{summary|lookup:stn|safe}}
     </p>
     {%if not stn_data%}
-        <p style="color:red">NO STATION DATA FOUND!</p></br>
+        <p style="color:red">NO STATION DATA FOUND!</p><br/>
     {%else%}
          <div class="dataTableInfo" style="display:none" id="dataTableInfo-{{forloop.counter0}}">
             {{station_names|lookup:stn|safe}}({{station_ids|lookup:stn|safe}}),

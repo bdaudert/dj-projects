@@ -24,22 +24,22 @@
 	</form>
   </table>
 </div>
-</br>
-</br>
+<br/>
+<br/>
 {%endif %}
 
 {%if results %}
 <div class="results">
   {%for stn, stn_data in results.items %}
     {%if not stn_data%}
-        <p style="color:red">NO STATION DATA FOUND!</p></br>
+        <p style="color:red">NO STATION DATA FOUND!</p><br/>
     {%else%}
         {%for doy, doy_data in stn_data.items %}
             <p>
                 <b>PRECIPITATION-DURATION-FREQUENCY TABLES FOR STATION</b>:
-                {{station_names|lookup:stn|safe}} ({{station_ids|lookup:stn|safe}})</br>
-                <b>START YEAR - END YEAR</b>: {{start_year}}-{{end_year}}<br />
-                <b>NUMBER OF YEARS</b>: {{num_yrs}}</br>
+                {{station_names|lookup:stn|safe}} ({{station_ids|lookup:stn|safe}})<br/>
+                <b>START YEAR - END YEAR</b>: {{start_year}}-{{end_year}}<br/>
+                <b>NUMBER OF YEARS</b>: {{num_yrs}}<br/>
             </p>
             <div class="dataTableInfo" id="dataTableInfo-{{forloop.parentloop.counter0}}_{{forloop.counter0}}" style="display:none">
                 {{station_names|lookup:stn|safe}}({{station_ids|lookup:stn|safe}}),
@@ -67,7 +67,7 @@
                 {% endif %}
             {%endfor%}
             </tbody>
-            </table><br />
+            </table><br/>
         {%endfor%}
     {%endif%}
   {%endfor%}

@@ -3,7 +3,7 @@
 {% for var in results.variables%}
 <input type="checkbox" name="chart_indices"  class="chart_indices" value={{forloop.counter0}} 
     {% if 0|is_in:initial.chart_indices_string%} checked {% endif %}>{{var}}
-    {%if forloop.counter|divisibleby:2%}<br />{%endif%}
+    {%if forloop.counter|divisibleby:2%}<br/>{%endif%}
 {%endfor%}
 </div>
 <!--

@@ -24,15 +24,15 @@
 	</form>
   </table>
 </div>
-</br>
-</br>
+<br/>
+<br/>
 {%endif %}
 
 {%if results %}
 <div class="results">
 {%for stn, stn_data in results.items %}
 {%if not stn_data%}
-    <p style="color:red">NO STATION DATA FOUND!</p></br>
+    <p style="color:red">NO STATION DATA FOUND!</p><br/>
 {%else%}
     <h3><b>Station</b>: {{station_names|lookup:stn|safe}} ({{station_ids|lookup:stn|safe}})</h3>
     <div class="dataTableInfo" id="dataTableInfo-{{forloop.counter0}}" style="display:none;">

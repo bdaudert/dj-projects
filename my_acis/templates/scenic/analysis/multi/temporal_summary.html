@@ -53,13 +53,9 @@ w
             <div class="form-input-group form-group" align="center">
                 <label class="form-group-header">1. Define your region!</label>
                 <div class="input-group">
-                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                        {% include 'includes/area-type.html'%}
-                        <span class="input-group-addon"></span>
-                    </div>
-                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                        <span id="area">{% include 'includes/area.html'%}</span>
-                    </div>
+                    {% include 'includes/area-type.html'%}
+                    <span class="input-group-addon"></span>
+                    <span id="area">{% include 'includes/area.html'%}</span>
                 </div>
                 <span class="grid" id="grid_type">{% include 'includes/grids.html'%}</span>
             </div>
@@ -100,13 +96,6 @@ w
                 </div>
                 <div class="input-group">
                     <span id="temp_summary">{% include 'includes/temporal-summary.html'%}</span>
-                    <!--<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
-                    </div>
-                    <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-                        <span class="input-group-addon"></span>
-                    </div>
-                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                    </div>-->
                 </div>
             </div>
             <hr>
@@ -177,7 +166,7 @@ w
         </div><!--col-sm-8-->
     </div><!--row-->
 </div><!--top_of_page-->
-<br />
+<br/>
 <!--Results-->
 <!--Main Results-->
 <div class="row">
@@ -185,14 +174,14 @@ w
     {%if figure_files%}
     <div class="results" align="center"> 
         <p class="message" align="center" style="text-align:center;">
-            <b>PARAMETERS</b>:<br />
+            <b>PARAMETERS</b>:<br/>
             {%for key_val in params_display_list%}
-            <b>{{key_val.0}}</b>: {{key_val.1}}<br /> 
+            <b>{{key_val.0}}</b>: {{key_val.1}}<br/> 
             {%endfor%}
         </p>
 
         {%for fig in figure_files%}
-            <img alt="FigureFile" title="FigureFile" src="{{JSON_URL}}/{{fig}}"><br /><br /><br /><br /><br />
+            <img alt="FigureFile" title="FigureFile" src="{{JSON_URL}}/{{fig}}"><br/><br/><br/><br/><br/>
         {%endfor%}
         </div><!--results-->
     {%endif%}<!--end if figure_files-->

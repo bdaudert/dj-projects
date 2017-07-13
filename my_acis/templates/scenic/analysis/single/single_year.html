@@ -59,13 +59,9 @@
                 <div class="form-input-group form-group" align="center">
                     <label class="form-group-header">1. Define your region!</label> 
                     <div class="input-group">
-                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                            {% include 'includes/area-type.html'%}
-                            <span class="input-group-addon"></span>
-                        </div>
-                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                            <span id="area">{% include 'includes/area.html'%}</span>
-                        </div>
+                        {% include 'includes/area-type.html'%}
+                        <span class="input-group-addon"></span>
+                        <span id="area">{% include 'includes/area.html'%}</span>
                     </div>
                     {%if initial.area_type == "location"%}
                     <span class="grid" id="grid_type">{% include 'includes/grids.html'%}</span>
@@ -133,7 +129,7 @@
             {% include 'includes/map-gridpoint.html'%}
         </div><!--col-sm-8-->
     </div><!--row-->
-    <br />
+    <br/>
 </div><!--top_of_page-->
 <!--Results-->
 <!--Main Results-->
@@ -170,7 +166,7 @@
                 src="{{ MEDIA_URL }}img/QMark.png" 
                 onclick="ShowPopupDocu('Docu_single_year_visualization')">
                 {%for key_val in params_display_list%}
-                    <b>{{key_val.0}}</b>: {{key_val.1}};<br />
+                    <b>{{key_val.0}}</b>: {{key_val.1}};<br/>
                 {%endfor%}
                 </p>
                 <!--CHART-->
@@ -184,7 +180,7 @@
                         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                             <div class="row">
                                 {% include 'includes/chart-target-year.html'%}
-                            </div><br />
+                            </div><br/>
                             <div class="row">
                                 {% include 'includes/chart-type.html'%}
                             </div>

@@ -23,8 +23,8 @@
 	</form>
   </table>
 </div>
-</br>
-</br>
+<br/>
+<br/>
 {%endif%}
 
 
@@ -32,22 +32,22 @@
 <div class="results">
 {%for stn, stn_data in results.items %}
     <p>
-        <b>STATION</b>:{{station_names|lookup:stn|safe}} ({{station_ids|lookup:stn|safe}})</br>
-        <b>ELEMENT</b>: {{variable}} ({{units}})</br>
-        <b>STATISTIC</b>: {{statistic}}<br />
-        {%if departure_from_averages == "Yes"%}<br />
-        <b>DEPARTURES FROM AVERAGES</b>{%endif%}</br>
+        <b>STATION</b>:{{station_names|lookup:stn|safe}} ({{station_ids|lookup:stn|safe}})<br/>
+        <b>ELEMENT</b>: {{variable}} ({{units}})<br/>
+        <b>STATISTIC</b>: {{statistic}}<br/>
+        {%if departure_from_averages == "Yes"%}<br/>
+        <b>DEPARTURES FROM AVERAGES</b>{%endif%}<br/>
         <b>MAXIMUM NUMBER OF DAYS ALLOWED MISSING</b> {{max_missing_days}}
     </p>
     {%if not stn_data%}
-        <p style="color:red">NO STATION DATA FOUND!</p></br>
+        <p style="color:red">NO STATION DATA FOUND!</p><br/>
     {%else%}
     <p>
-        a = 1 day missing, b = 2 days missing, c = 3 days, ..etc..,</br> 
-        z = 26 or more days missing, A = Accumulations present </br>
-        Long-term means based on columns; thus, the monthly row may not</br> 
-        sum (or average) to the long-term annual value.</br>
-    </p></br>
+        a = 1 day missing, b = 2 days missing, c = 3 days, ..etc..,<br/> 
+        z = 26 or more days missing, A = Accumulations present <br/>
+        Long-term means based on columns; thus, the monthly row may not<br/> 
+        sum (or average) to the long-term annual value.<br/>
+    </p><br/>
     <div class="stronger dataTableInfo" id="dataTableInfo-{{forloop.counter0}}" style="display:none;">
         {{station_names|lookup:stn|safe}} ({{station_ids|lookup:stn|safe}}),
         {{variable}} ({{units}}),
@@ -78,10 +78,10 @@
 
        {%if fa_results|lookup:stn|safe %}
        <p class="stronger" style="color:darkblue; font-size:large">
-       FREQUENCY ANALYSIS</br>
-       Probability of non-exceedance, confined between  -999.00 and   999.00.</br>
-       Distribution Type: p-PearsonIII, g-GenExtVal, b-BetaP, c-Censored Gamma.</br>
-       <p></br>
+       FREQUENCY ANALYSIS<br/>
+       Probability of non-exceedance, confined between  -999.00 and   999.00.<br/>
+       Distribution Type: p-PearsonIII, g-GenExtVal, b-BetaP, c-Censored Gamma.<br/>
+       <p><br/>
        <table>
         <tr>
         <td />Pnoexc</td>{%for mon in month_list%}<td>{{mon}}</td>{%endfor%}
@@ -97,7 +97,7 @@
 
        {%endif%}
     {%endif%}
-    </br>
+    <br/>
   {%endfor%}
 </div><!--results-->
 {%endif%}<!--end if results-->

@@ -60,13 +60,9 @@
                 <div class="form-input-group form-group" align="center">
                     <label class="form-group-header">1. Define your region!</label> 
                     <div class="input-group">
-                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                            {% include 'includes/area-type.html'%}
-                            <span class="input-group-addon"></span>
-                        </div>
-                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                            <span id="area">{% include 'includes/area.html'%}</span>
-                        </div>
+                        {% include 'includes/area-type.html'%}
+                        <span class="input-group-addon"></span>
+                        <span id="area">{% include 'includes/area.html'%}</span>
                     </div>
                     {%if initial.area_type == "location"%}
                     <span class="grid" id="grid_type">{% include 'includes/grids.html'%}</span>
@@ -121,7 +117,7 @@
                     </button>
                 </div>
             </form>
-        </div><br /><!--col-sm-4-->
+        </div><br/><!--col-sm-4-->
         <!--Main: Errors/maps-->
         <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
             <!--Ajax Error-->
@@ -148,7 +144,7 @@
             {% include 'includes/map-gridpoint.html'%}
         </div><!--col-sm-8-->
     </div><!--row-->
-    <br />
+    <br/>
 </div><!--top_of_page-->
 <!--Results-->
 <!--Main Results-->
@@ -184,9 +180,9 @@
                 src="{{ MEDIA_URL }}img/QMark.png" 
                 onclick="ShowPopupDocu('Docu_seasonal_summary_visualization')">
                 {%for key_val in params_display_list%}
-                    <b>{{key_val.0}}</b>: {{key_val.1}};<br />
+                    <b>{{key_val.0}}</b>: {{key_val.1}};<br/>
                 {%endfor%}
-                </p><br />
+                </p><br/>
                 <!--CHART-->
                 <div id="main-graph">
                     <!--Chart Layers-->

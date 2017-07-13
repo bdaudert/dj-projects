@@ -59,13 +59,9 @@
             <div class="form-input-group form-group" align="center">
                 <label class="form-group-header">1. Define your region!</label> 
                 <div class="input-group">
-                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                        {% include 'includes/area-type.html'%}
-                        <span class="input-group-addon"></span>
-                    </div>
-                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                        <span id="area">{% include 'includes/area.html'%}</span>
-                    </div>
+                    {% include 'includes/area-type.html'%}
+                    <span class="input-group-addon"></span>
+                    <span id="area">{% include 'includes/area.html'%}</span>
                 </div>
             </div>
             <div class="form-input-group form-group" align="center">
@@ -109,7 +105,7 @@
                     <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                         {% include 'includes/units.html'%}
                     </div>
-                </div><br />
+                </div><br/>
                 <div class="input-group">
                     <span  id="add">{% include 'includes/add_degree_days.html'%}</span>
                     <span class="input-group-addon"></span>
@@ -251,7 +247,7 @@
             {% include 'includes/map-polygon.html'%}
         </div><!--col-sm-8-->
     </div><!--row-->
-    <br />
+    <br/>
 </div><!--top_of_page-->
 <!--Results-->
 <!--Main Results-->
@@ -262,26 +258,26 @@
             <!--Data-->
             <p align="center">
             {%for key_val in params_display_list%}
-                <b>{{key_val.0}}</b>: {{key_val.1}};<br /> 
+                <b>{{key_val.0}}</b>: {{key_val.1}};<br/> 
             {%endfor%}
-            </p><br />
+            </p><br/>
             {% if not results.error and results.data  and not results.smry%}
             {% if initial.data_type == "station" %}
             <p class="message" align="center">
                 ACIS Data Flags: M,-9999 = Missing, T = Trace, S = Subsequent, A = Accumulated
-            </p><br />
+            </p><br/>
             {% endif%}
             <!--lOOP over results-->
             {% for point_data in results.data %}
-            <p><b>Metadata</b>:<br />
+            <p><b>Metadata</b>:<br/>
                 {% for meta_list in results.meta|lookup:forloop.counter0 %}
-                <b>{{meta_list.0}}</b>: {{meta_list.1}};<br />
+                <b>{{meta_list.0}}</b>: {{meta_list.1}};<br/>
                 {%endfor%}
             </p>
             <div class="dataTableInfo" id="dataTableInfo-{{forloop.counter0}}" style="display:none;">
             {%for key_val in params_display_list%}
             {%if key_val.0 != "Data Summary"%}
-                <b>{{key_val.0}}</b>: {{key_val.1}};<br />
+                <b>{{key_val.0}}</b>: {{key_val.1}};<br/>
             {%endif%}
             {%endfor%} 
             {% for meta_list in results.meta|lookup:forloop.counter0 %}

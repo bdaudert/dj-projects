@@ -5,7 +5,7 @@
 <td valign="top" width="40%">
     <!--
     <form action="" enctype="multipart/form-data" method="post">{% csrf_token %}  
-        Select shape file components(.shp, .dbf, .shx,...):<br />
+        Select shape file components(.shp, .dbf, .shx,...):<br/>
         <table class="form" style="width:200px; height:100%; background-color:#CCE0E0"
         class="sortable">{{ form|safe }}</table>
         &nbsp;<input type="submit" name="upload" value="Upload"/>
@@ -27,9 +27,9 @@
 </td>
 <td valign="top" width="60%">
 {%if error%}
-{{error}}<br />
+{{error}}<br/>
 {%endif%}
-SHAPE FILE: {{shp_file}}<br />
+SHAPE FILE: {{shp_file}}<br/>
 POLY: {{poly_ll}}
 </td>
 </table>

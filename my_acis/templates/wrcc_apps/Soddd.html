@@ -24,8 +24,8 @@
 	</form>
   </table>
 </div>
-</br>
-</br>
+<br/>
+<br/>
 {% endif %}
 
 
@@ -33,23 +33,23 @@
 {%if results %}
     <div class="results">
     <p>
-        <b>DEGREE DAYS</b>: {{a_b}} <b>BASE TEMPERATURE</b>: {{base_temp}}</br>
-        <b>SKIP DAYS WITH MAXIMUM ABOVE</b>: {{skip_max_above}}</br>
-        <b>SKIP DAYS MINIMUM BELOW</b>:{{skip_min_below}}</br>
-        <b>TRUNCATES MAXIMUMS ABOVE</b>: {{trunc_high}}</br>
-        <b>TRUNCATES MINIMUMS BELOW</b>: {{trunc_low}}</br>
-        <b>UP TO {{max_miss}} DAYS MAY BE ESTIMATED FROM MEAN DAILY NORMALS</b></br>
-        <b>NCDC ROUND-OFF PROCEDURE IS {%if not ncdc_round%}NOT{%endif%} SIMULATED{%if not ncdc_round%}, EXACT ROUND-OFF USED{%endif%}</b></br>
-        <b>START YEAR - END YEAR</b>: {{start_year}} - {{end_year}}</br>
+        <b>DEGREE DAYS</b>: {{a_b}} <b>BASE TEMPERATURE</b>: {{base_temp}}<br/>
+        <b>SKIP DAYS WITH MAXIMUM ABOVE</b>: {{skip_max_above}}<br/>
+        <b>SKIP DAYS MINIMUM BELOW</b>:{{skip_min_below}}<br/>
+        <b>TRUNCATES MAXIMUMS ABOVE</b>: {{trunc_high}}<br/>
+        <b>TRUNCATES MINIMUMS BELOW</b>: {{trunc_low}}<br/>
+        <b>UP TO {{max_miss}} DAYS MAY BE ESTIMATED FROM MEAN DAILY NORMALS</b><br/>
+        <b>NCDC ROUND-OFF PROCEDURE IS {%if not ncdc_round%}NOT{%endif%} SIMULATED{%if not ncdc_round%}, EXACT ROUND-OFF USED{%endif%}</b><br/>
+        <b>START YEAR - END YEAR</b>: {{start_year}} - {{end_year}}<br/>
     </p>
     {%if monthly%}
-        <p><b>FLAG FOLLOWING VALUE GIVES NUMBER OF MISSING DAYS</b>:</br> 
-        a = 1 DAY, b = 2 DAYS, ..., z = 26+ DAYS MISSING</br>
+        <p><b>FLAG FOLLOWING VALUE GIVES NUMBER OF MISSING DAYS</b>:<br/> 
+        a = 1 DAY, b = 2 DAYS, ..., z = 26+ DAYS MISSING<br/>
         </p>
     {%else%}
         <p>
-        <b>-99 = MISSING DATA OR NON-EXISTENT DAYS </br>
-        AV = DAILY AVERAGE.  YR = NUMBER OF YEARS FOR THIS DAY.</b></br>
+        <b>-99 = MISSING DATA OR NON-EXISTENT DAYS <br/>
+        AV = DAILY AVERAGE.  YR = NUMBER OF YEARS FOR THIS DAY.</b><br/>
         </p>
     {%endif%}
     

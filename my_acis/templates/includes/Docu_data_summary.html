@@ -1,43 +1,43 @@
-<b>Data Summary </b><br />
-<b>None</b>:<br />
-No data summary will be performed.<br />
-<b>Windowed Data</b>:<br />
-Returns data for seklect time windows within the date range you selected<br /> 
-<em>Example</em>:<br />
+<b>Data Summary </b><br/>
+<b>None</b>:<br/>
+No data summary will be performed.<br/>
+<b>Windowed Data</b>:<br/>
+Returns data for seklect time windows within the date range you selected<br/> 
+<em>Example</em>:<br/>
 Start Date: 2000-01-01, End Date: 2002-12-31,                   
-Window Start: 05-15, Window end: 05-17<br />
-<em>Returns</em> data for:<br />     
-2000-05-15, 2000-05-16, 2000-05-17<br />
-2001-05-15, 2001-05-16, 2001-05-17<br />
-2002-05-15, 2002-05-16, 2002-05-17<br />
-<b>Temporal</b>:<br />
-Data is summarized over time defined by Start Date and End Date at each data point.
-The result is a geospatial layer.<br />
-<em>Example</em>:<br />Temporal summary of sum of precipitation from  2000-01-01 to 2000-01-31 over all stations in Nevada<br />
-<em>Returns</em> the sum of January precipitaion at each station in Nevada.<br />
-<b>Spatial</b>:<br />
+Window Start: 05-15, Window end: 05-17<br/>
+<em>Returns</em> data for:<br/>     
+2000-05-15, 2000-05-16, 2000-05-17<br/>
+2001-05-15, 2001-05-16, 2001-05-17<br/>
+2002-05-15, 2002-05-16, 2002-05-17<br/>
+<b>Temporal</b>:<br/>
+Data is summarized over time defined by Start Date and End Date at each data point.<br/>
+The result is a geospatial layer.<br/>
+<em>Example</em>:<br/>Temporal summary of sum of precipitation from  2000-01-01 to 2000-01-31 over all stations in Nevada<br/>
+<em>Returns</em> the sum of January precipitaion at each station in Nevada.<br/>
+<b>Spatial</b>:<br/>
 Data is summarized over each point in the selected region.
-The result is a time series.<br />
-<em>Example</em>:<br />Spatial summary of daily precipitation from  2000-01-01 to 2000-01-31 averaged over all stations in Nevada<br />
+The result is a time series.<br/>
+<em>Example</em>:<br/>Spatial summary of daily precipitation from  2000-01-01 to 2000-01-31 averaged over all stations in Nevada<br/>
 <em>Returns</em> mean daily precipitation of all stations in Nevada for each day in January 2000.
-<br />
+<br/>
 
 <!--
 <ul>
 <li>
-<b>Windowed data</b>:<br />
-&nbsp;&nbsp;Get subsets of the period covered by start/end date.<br />
-&nbsp;&nbsp;For example, if you don't want to get all data from 2000 but just<br />
-&nbsp;&nbsp;want to get all January values from 2000 to 2010,set:<br />
-&nbsp;&nbsp;Start Date 2000-01-01<br />
-&nbsp;&nbsp;End Date 2009-12-31<br />
-&nbsp;&nbsp;Start Window 01-01<br />
-&nbsp;&nbsp;End Window 02-31<br />
+<b>Windowed data</b>:<br/>
+&nbsp;&nbsp;Get subsets of the period covered by start/end date.<br/>
+&nbsp;&nbsp;For example, if you don't want to get all data from 2000 but just<br/>
+&nbsp;&nbsp;want to get all January values from 2000 to 2010,set:<br/>
+&nbsp;&nbsp;Start Date 2000-01-01<br/>
+&nbsp;&nbsp;End Date 2009-12-31<br/>
+&nbsp;&nbsp;Start Window 01-01<br/>
+&nbsp;&nbsp;End Window 02-31<br/>
 </li><li>
-<b>Temporal/Spatial Summaries</b>:<br />
-&nbsp;&nbsp;Summarize the data over space or time.<br />
-&nbsp;&nbsp;A summary over space results in time series.<br />
-&nbsp;&nbsp;A summary over a time range results in one value at each grid point.<br />
+<b>Temporal/Spatial Summaries</b>:<br/>
+&nbsp;&nbsp;Summarize the data over space or time.<br/>
+&nbsp;&nbsp;A summary over space results in time series.<br/>
+&nbsp;&nbsp;A summary over a time range results in one value at each grid point.<br/>
 &nbsp;&nbsp;Summary options are
 <ul>
 <li><b>Maximum: </b>Finds the maximum value over an area or time range.</li>

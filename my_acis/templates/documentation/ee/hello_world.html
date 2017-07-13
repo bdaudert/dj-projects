@@ -9,48 +9,48 @@
 <td valign="top" width="90%" align="left">
     <p width="450px">
     <h3>Hello World (Hard)</h3>
-    This is the example we are going to implement here.<br />
-    <a target="_blank" href="https://code.google.com/p/earthengine-api/source/browse/python/examples/AppEngine/hello_world/?r=c66a3384c26e983c2dad7bc6b0a0d00c5c41620f">Hello World (Hard)</a><br />
-    If you are intimidated by "Hard", try this easy version first, <br />
+    This is the example we are going to implement here.<br/>
+    <a target="_blank" href="https://code.google.com/p/earthengine-api/source/browse/python/examples/AppEngine/hello_world/?r=c66a3384c26e983c2dad7bc6b0a0d00c5c41620f">Hello World (Hard)</a><br/>
+    If you are intimidated by "Hard", try this easy version first, <br/>
     <a target="_blank" href="https://cloud.google.com/appengine/docs/python/gettingstartedpython27/helloworld">Hello World (Easy)</a>
-    then come back to here when you feel ready<br />
+    then come back to here when you feel ready<br/>
     <h3>1. Get the code</h3>
-    <a target="_blank" href="https://code.google.com/p/earthengine-api/source/browse/python/examples/AppEngine/hello_world/?r=c66a3384c26e983c2dad7bc6b0a0d00c5c41620f">Hello World (Hard)</a><br />
+    <a target="_blank" href="https://code.google.com/p/earthengine-api/source/browse/python/examples/AppEngine/hello_world/?r=c66a3384c26e983c2dad7bc6b0a0d00c5c41620f">Hello World (Hard)</a><br/>
     <h3>2. Find and read the README.txt file CAREFULLY!</h3>
     Read everything carefully BEFORE you start doing anything!
-    NOTE: the dependencies are listed at the bottom of the README file.<br />
+    NOTE: the dependencies are listed at the bottom of the README file.<br/>
     You need to take care of those first! (That tripped me up!)
     <pre class="code"><code>
     cd ~/Downloads/earthengine-api-c66a3384c26e/python/examples/AppEngine/hello_world
     vi README.txt
     </code></pre>
     Let's deal with the dependencies together:
-    <br />
-    <h3>Installation of Dependencies</h3><br /></br />
-    <b>oauth2client</b><br />
+    <br/>
+    <h3>Installation of Dependencies</h3><br/><br/>
+    <b>oauth2client</b><br/>
     <pre class="code"><code>
     hg clone https://code.google.com/p/google-api-python-client/
     cp -r google-api-python-client/oauth2client ~/Downloads/earthengine-api-c66a3384c26e/python/examples/AppEngine/hello_world/</code></pre>
-    <br /><br />
+    <br/><br/>
     <b>Earth Engine API (if not already installed)</b><br >
-     * follow the instructions at:<br />
+     * follow the instructions at:<br/>
 
-     <a target="_blank" href="https://code.google.com/p/earthengine-api/source/checkout">Earth Engine API</a><br />
+     <a target="_blank" href="https://code.google.com/p/earthengine-api/source/checkout">Earth Engine API</a><br/>
      <pre class="code"><code>
      cp -r ee ~/Downloads/earthengine-api-c66a3384c26e/python/examples/AppEngine/hello_world/</code></pre>
-     <br /><br />
-     <b>httplib2</b><br />
+     <br/><br/>
+     <b>httplib2</b><br/>
      <pre class="code"><code>
      hg clone https://code.google.com/p/httplib2/
      cp -r httplib2/python2/httplib2 ~/Downloads/earthengine-api-c66a3384c26e/python/examples/AppEngine/hello_world/</code></pre>
-     <br /><br />
-     <b>pycrypto (even if already installed installed)</b><br />
-     * download from https://www.dlitz.net/software/pycrypto/<br />
+     <br/><br/>
+     <b>pycrypto (even if already installed installed)</b><br/>
+     * download from https://www.dlitz.net/software/pycrypto/<br/>
      <pre class="code"><code>
      cd pycryopto
      python setup.py build
      sudo python setup.py install</code></pre>
-     <br /><br />
+     <br/><br/>
 
       <h3>3. Download the Google App Engine SDK (this will also download the appcfg.py file)</h3>
 
@@ -65,27 +65,27 @@
       <pre class="code"><code>source ~/.bashrc</code></pre> 
 
      <h3>5. Create a project at the console</h3> 
-     <a target="_blank" href="https://console.developers.google.com/project">Console</a><br />
+     <a target="_blank" href="https://console.developers.google.com/project">Console</a><br/>
      The id generated is the one you need to add to the app.yaml file as  “application” 
 
      <h3>6A. Launching with SDK in local environment</h3>
-     Make sure the correct python version is used by Launcher<br />
+     Make sure the correct python version is used by Launcher<br/>
      Go to Launcher preferences 
      Set python path to the desired python version (>=2.7). 
      In my case it is /opt/local/bin/python2.7
      <pre class="code"><code>/opt/local/bin/python2.7</code></pre>
-    !!!!PRESS ENTER -- otherwise the choice will be ignored, this is a bug in the GUI!!<br />
-    Now  upload your app into the launcher:<br />
-    <b>File --> Add Existing Application</b><br />
-    Press the green <b>Run</b> button (piciture here)<br />
-    Check the Logs for errors and if none encountered<br />
+    !!!!PRESS ENTER -- otherwise the choice will be ignored, this is a bug in the GUI!!<br/>
+    Now  upload your app into the launcher:<br/>
+    <b>File --> Add Existing Application</b><br/>
+    Press the green <b>Run</b> button (piciture here)<br/>
+    Check the Logs for errors and if none encountered<br/>
     Press the <b>Browse</b> button
-    <br /><br />
+    <br/><br/>
     <h3>OR</h3>
 
     <h3>6B. Launching from command-line in local environment</h3>
     <p>Run the appfcg.py command like this. The appcfg.py script is part of google_appengine so can be found under the google_appengine install directory (in my case: /usr/local/google_appengine/appcfg.py)</p>
-    Add the path to appfcg.py to your PYTHONPATH<br />
+    Add the path to appfcg.py to your PYTHONPATH<br/>
     <pre class="code"><code>
     export PYTHONPATH=[your-old-python-path]:/usr/local/google_appengine:$PYTHONPATH
     </code></pre>
@@ -93,9 +93,9 @@
     cd ~/Downloads/earthengine-api-c66a3384c26e/python/examples/AppEngine
     python appcfg.py update hello_world/</code></pre> 
 
-    NOTE: user your google mail address (not your EE account email!) and the this email addresses password on prompt.<br />
-    <br />
-    <b>OR</b><br /><br /> 
+    NOTE: user your google mail address (not your EE account email!) and the this email addresses password on prompt.<br/>
+    <br/>
+    <b>OR</b><br/><br/> 
     pre-assign your email address like this:
     <pre class="code"><code>
     python appcfg.py —email=bdaudert@gmail.com  update hello_world/
@@ -104,23 +104,23 @@
     </p>
     <h3>7A. Deploying on appspot.com with SDK</h3>
     <p>
-    In your config file, modified the last 4 lines:<br />
+    In your config file, modified the last 4 lines:<br/>
     <pre class="code"><code>
     #EE_CREDENTIALS = AppAssertionCredentials(ee.OAUTH2_SCOPE)
     # Change the above line to the below to use your private credentials in
     # an App Engine instance.
     EE_CREDENTIALS = ee.ServiceAccountCredentials(EE_ACCOUNT, EE_PRIVATE_KEY_FILE)
     </code></pre>
-    Click on the "Deploy" button in the top right corner of the SDK GUI<br />
+    Click on the "Deploy" button in the top right corner of the SDK GUI<br/>
     Go to <your-app-id>.appspot.com to view and run your application.
     </p>
-    <br /><br />
-    <b>OR</b><br /><br />
+    <br/><br/>
+    <b>OR</b><br/><br/>
     <h3>7B. Deploying on appspot.com from command line</h3>
     <pre class="code"><code>
     appcfg.py update hello_world/
     </code></pre>
-    View your app at<br />
+    View your app at<br/>
     http://your-app-id.appspot.com
 </td>
 </table>

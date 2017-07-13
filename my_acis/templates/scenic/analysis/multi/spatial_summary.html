@@ -213,18 +213,18 @@
                         {%if key_val.0 == "Start Date"%}
                         {{key_val.1}} <b>to</b>
                         {%elif key_val.0 == "End Date"%}
-                        {{key_val.1}}<br />
+                        {{key_val.1}}<br/>
                         {%else%}
-                        <b>{{key_val.0}}</b>: {{key_val.1}};<br />
+                        <b>{{key_val.0}}</b>: {{key_val.1}};<br/>
                         {%endif%}
                         {%endfor%}
-                        </p><br />
+                        </p><br/>
                     </div>
                     <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
                         <input class="btn btn-primary" id="show_hide_graph" type='button' value='Hide Graph'>
                     </div>
                 </div>
-            </div><br /><br />
+            </div><br/><br/>
 
             {%if results.graph_data%}
             <!--Plot-->
@@ -261,7 +261,7 @@
                 </div>
             </div><!--main-graph-->
             {%endif%}<!--end if results.graph_data-->
-            <br /><br />
+            <br/><br/>
             
             <div class="row">
                 <input class="btn btn-primary" id="show_hide_data" type='button' value='Hide Data'>

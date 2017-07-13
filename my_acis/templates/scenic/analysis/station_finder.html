@@ -173,7 +173,7 @@ $("#Threadex_Doc").load("{{HTML_URL}}/Docu_station_networks.html #Docu_Threadex"
             {%endif%}
         </div><!--end col...-9-->
     </div><!--end row FORM/MAP-->
-    <br />
+    <br/>
 </div><!--end top_of_page-->
 
 <!--Main Results-->
@@ -184,9 +184,9 @@ $("#Threadex_Doc").load("{{HTML_URL}}/Docu_station_networks.html #Docu_Threadex"
         <div class="results">
             <p align="center" style="max-width:95%;">
             {%for key_val in params_display_list%}
-                <b>{{key_val.0}}</b>: {{key_val.1}};<br />
+                <b>{{key_val.0}}</b>: {{key_val.1}};<br/>
             {%endfor%}
-            </p><br />
+            </p><br/>
             {% include 'includes/station-finder-map.html'%}
         </div><!--results-->
         {%endif%} 
