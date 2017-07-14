@@ -158,6 +158,7 @@ table.smallFont td, th{
     color:#337ab7;
     font-weight: bold;
     cursor:pointer;
+    /*font-size:xx-small;*/
 }
 
 .link:hover { color:#800080;}

@@ -47,12 +47,6 @@ def home(request):
     url = settings.APPLICATIONS['home'][2]
     return render_to_response(url, context, context_instance=RequestContext(request))
 
-def swcke_home(request):
-    context = {
-        'title': 'Page Redirect',
-    }
-    return render_to_response('scenic/swcke_home.html', context, context_instance=RequestContext(request))
-
 def about(request):
     app_name = 'about'
     context = {
