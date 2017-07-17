@@ -12,20 +12,27 @@ $(document).ready(function () {
     }
     
     //Bootstrap nav menu
-    /*
-    $(function($) {
-        $('.navbar .dropdown').hover(function() {
-            $(this).find('.dropdown-menu').first().stop(true, true).delay(250).slideDown();
-        }, function() {
-        $(this).find('.dropdown-menu').first().stop(true, true).delay(100).slideUp();
-
+    $(function(){
+        $('.dropdown').hover(function() {
+            $(this).addClass('open');
+        },
+        function() {
+            $(this).removeClass('open');
         });
-
-        $('.navbar .dropdown > a').click(function(){
-            location.href = this.href;
+        
+        $('.clickable-menu-item').click(function() {
+            console.log('YO');
+            var href = $(this).attr('href')
+            window.location.href = href;
+        });
+        $('.dropdown-submenu').hover(function() {
+            $(this).addClass('open');
+        },
+        function() {
+            $(this).removeClass('open');
         });
     });
-    */ 
+
     $('[data-submenu]').submenupicker();
 
     //activate dataTables
