@@ -3,30 +3,93 @@
 {% block content %}
 
 <div align="center" id="overview">
-<iframe src="/csc/media/img/SCENIC_Overview.pdf" width="800px" height="1090px"></iframe>
+    <!--<iframe src="/csc/media/img/SCENIC_Overview.pdf" width="800px" height="1090px"></iframe>-->
+    <p>
+    SCENIC  is  a   web page    under   development 
+    at  the Western Regional    Climate Center  
+    (WRCC)  as  part    of  WRCC’s  contribution    to  
+    the Southwest   Climate Science Center  
+    (SWCSC).    The purpose of  SCENIC  is  to  
+    support the research    and decision    making  
+    efforts of  the SW-CSC, the Landscape   
+    Conservation    Cooperatives    (LCC),  and 
+    other   stakeholders. SCENIC    serves as   an  access  point   for 
+    climate data    and analysis    tools   for the 
+    Southwest   as  well    as  the rest    of  the 
+    contiguous  U.S.
+    </p>
+    <p>
+    SCENIC  delivers    daily   data    from    weather 
+    stations    across  the U.S.    from    1890-
+    present.    It  also    provides    access  to  
+    statistically   downscaled  climate 
+    projections (LOCA) developed at SCRIPPS
+    and dynamically downscaled  data    and 
+    model   outputs from    NARCCAP. SCENIC 
+    also    provides    access  to  historic    gridded 
+    datasets    like    daily,  monthly,    and annual  
+    data    at  4   km  resolution  from    PRISM.  
+    The complete    MODIS   and LANDSAT
+    archives    can be  access  through SCENIC  via 
+    Google’s    cloud   computing   platform    Earth   
+    Engine. Users   can download    subsets of  
+    the data    and requests    can be  customized  
+    by  spatial and temporal    extent.
+    </p>
+    <p>
+    Several analysis    and visualization   tools   are 
+    available   to  help    resource    scientists in   the 
+    decision-making process.    Among   these   
+    are tools   to  summarize   data,   identify    
+    extremes,   generate    custom  time    series  
+    graphs, and to  generate    climate summary 
+    tables. The Monitoring page  allows  
+    users   to  monitor current climate and 
+    weather conditions  across  the U.S.    The 
+    dashboard   provides    access  to  numerous    
+    climate anomaly maps,   water,  snow    and 
+    drought information,    ENSO,   AO, NAO,    
+    MJO updates,    and climate outlooks
+    </p>
 </div>
 
-<table cellpadding="20" align="center">
+<table cellpadding="20" align="left" width="100%">
 <td valign="top">
     <h2 class="bg-primary" align="center" id="data">DATASETS</h2>
-    <img width="900px"align="center" src="/csc/media/img/SCENIC_Data_Redesign.png">
+    <img width="90%" alt="SCENIC data" align="center" id="scenic_data_img"
+    src="/csc/media/img/SCENIC_Data.png">
+    <br/>
+    <h3 class="bg-info" align="center">How to cite the data</h3>
+    <div align="center">
+    <div align="left">
+    <h4>Remote Sensing Data (MODIS, LANDSAT)</h4>
+    "On-Demand Cloud Computing and Visualization of Climate and Remote Sensing Data."
+    Climate Engine.
+    Desert Research Institute, University of Idaho, Google,[date accessed].
+     </div>
+     <div align="left">
+     <h4>All other datasets</h4>
+     "Applied Climate Information System."
+    RCC-ACIS.
+    NOAA Regional Climate Centers, [date accessed].
+    </div>
+    </div>
 </td>
 </table>
 
-<table cellpadding="20" align="center">
-<td valign="top" width="80%">
+<table cellpadding="20" width="100%">
+<td valign="top">
     <h2 class="bg-primary" align="center" id="analysis">Analysis Tools</h2>
-    <!--<div style="max-width:80%;word-wrap:break-word;">-->
-    <!--
-    <p align="center">
-    <b>Daily, Seasonal and Yearly Time Series</b><br/>
-    <b>Averages, Records, Normals</b><br/>
-    <b>Spatial (Time Series) and Temporal Summaries (Maps)</b>
-    </p>-->
-    <h3 class="bg-info">Single Point Products for a weather station or a grid point</h3>
+    <table border="1">
+    <td valign="top" style="padding:1%">
+    <h3 class="bg-info">Single weather station or grid point</h3>
     <div>{% include 'includes/Docu_page_single_point_prods.html'%}</div><br/>
-    <h3 class="bg-info" >Multi Point Products for multiple weather station or grid points</h3>
+    </td>
+    <td valign="top" style="padding:1%">
+    <h3 class="bg-info" >Multiple weather stations or grid points</h3>
     <div>{% include 'includes/Docu_page_multi_point_prods.html'%}</div>
+    </td>
+    </table>
 
     <h2 class="bg-primary" align="center" id="publications">Publications</h2>
     <p align="center">
