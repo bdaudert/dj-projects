@@ -21,6 +21,9 @@
     
     <p class="error">What datasets are available?</p>
     
+    All datassets are made available through the <a class="link" target="_blank" href="http://www.rcc-acis.org/"><font color="#0000FF">ACIS</font></a> system.
+    <br/><br/>
+
     <p class="bg-warning"><b>1. Station Data</b></p>
     <b>Observed Quantities </b><br/>
     Maximum Temperature (F/C), Minimum Temperature (F/C),<br/>Observation Time Temperature (F/C)<br/>
@@ -28,15 +31,11 @@
     <b>Derived Quantities </b><br/>
     Average Temperature (F/C), Heating/Cooling/Growing Degree Days (F/C)<br/><br/>
 
-    <b>Station Networks </b><br/>
-    {% include 'includes/Docu_popup_station_networks.html'%}
+    <span class="link" onClick="ShowPopupDocu('Docu_nwks')"><u><b>Short description of station networks</b></u></span>
     <br/><br/>
-    <p>Read more about the networks: </p>
-    {% include 'includes/Docu_station_networks_links.html'%}
-    <br/> 
+    <span class="link" onClick="ShowPopupDocu('Docu_nwk_links')"><u><b>Read more about the networks</b></u></span>
+    <br/><br/>
  
-    All datassets are made available through the ACIS system.<br/> 
-    
     <p class="bg-warning"><b>2. Gridded Data</b></p>
     
     <b>Observed Quantities </b><br/>
@@ -44,6 +43,6 @@
     <b>Derived Quantities </b><br/>
     Heating/Cooling/Growing Degree Days (F/C)<br/><br/>
     
-    {% include 'includes/Docu_popup_grids.html'%}<br/>
+    <span class="link" onClick="ShowPopupDocu('Docu_ag')"><u><b>Short description of grids</b></u></span>
 </div>
 
