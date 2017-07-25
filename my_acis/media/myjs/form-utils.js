@@ -14,6 +14,42 @@ String.prototype.inList=function(list){
 }
 
 
+function set_vd_variables(no_vd_els){
+    /*Disables all variables that are
+    in the list no_vd_els*/
+    var el_list = all_vd_elements; //dataStore.js
+    var var_el_name, opt, i, user_vars;
+    if ($('#variables').length){
+        user_vars = $('#variables').val();
+        var_el_name = 'variables';
+    }
+    if ($('#variable').length){
+        user_vars = [$('#variable').val()];
+        var_el_name = 'variable';
+    }
+    for (i = 0; i < el_list.length; i++){
+        if (el_list[i] == 'dtr'){
+
+            $(opt).attr('disabled',true);   
+        }
+        else if (el_list[i] == 'pet' && $('#app_name').val() != 'monthly_summary'){
+            $(opt).attr('disabled',true);
+        }
+        else{
+            opt = '#' + var_el_name + ' option[value="' + el_list[i] + '"]';
+            if (el_list[i].inList(no_vd_els)){
+                $(opt).attr('disabled',true);
+                if (el_list[i].inList(user_vars)){
+                    $(opt).prop("selected", false);
+                }
+            }
+            else{
+                $(opt).attr('disabled',false);
+            }
+        }
+    }
+}
+
 
 function set_max_min_dates(vd,vd_fut=['9999-99-99','9999-99-99']){
     var max_date = '9999-99-99', min_date = '9999-99-99',
@@ -130,18 +166,22 @@ function ajax_set_station_vd(){
     var vd = ['9999-99-99','9999-99-99'];
     if (window.vd_stations.indexOf($('#station_id').val()) != -1){
         //vd was already computed
-        var idx =  window.vd_stations.indexOf($('#station_id').val());
-        vd = window.vd_stations_vds[idx];
+        var idx =  window.vd_stations.indexOf($('#station_id').val()),
+            vd = window.vd_stations_vds[idx],
+            no_vd_vars = window.no_vd_vars[idx]
         set_max_min_dates(vd);
         set_vd(vd);
+        set_vd_variables(no_vd_vars)
         check_form_dates();
         return;
     }
     var vd = ['9999-99-99','9999-99-99']
     $('.ajax_error').html();
-    waitingDialog.show('Finding date range for station', {dialogSize: 'sm', progressType: 'warning'});
-    var el_list = [], el_tupe = null; 
-    var response, station_id, station_finder_link; 
+    var msg = 'Finding date range and variables for station';
+    waitingDialog.show(msg, {dialogSize: 'sm', progressType: 'warning'});
+    var el_list = [], el_tupe = null, 
+        response, station_id, station_finder_link; 
+    /*
     if ($('#variables').length){
         el_list = $('#variables').val();
         el_tuple = el_list + "";
@@ -154,11 +194,15 @@ function ajax_set_station_vd(){
         el_list = ['maxt','mint','pcpn'];
         el_tuple = el_list + "";
     } 
+    */
+    el_list = all_vd_elements
+    el_tuple = el_list + ""
     var form_data = 'station_id_change=True';
     form_data+='&csrfmiddlewaretoken=' + $("[name=csrfmiddlewaretoken]").val();
     form_data+='&station_id=' + $('#station_id').val();
     form_data+='&el_tuple=' + el_tuple;
-    form_data+='&max_or_min=min';
+    form_data+='&max_or_min=max';
+   
     var new_url = window.location.href.split('?')[0] + form_data;
     $.ajax({
         url:'',
@@ -170,6 +214,7 @@ function ajax_set_station_vd(){
         station_id = response['station_id'];
         set_max_min_dates(response['vd']);
         set_vd(response['vd']);
+        set_vd_variables(response['no_vd_els'])
         if ($('#start_year').length && $('#end_year').length){
             set_year_range();
         }

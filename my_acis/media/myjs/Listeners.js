@@ -1,6 +1,7 @@
 $(document).ready(function () {
     //Save validf dateranges of stations the user asks for
     window.vd_stations = [], window.vd_stations_vds = [];
+    window.no_vd_vars = [];
     if ($('#data_type').val() == 'station' && $('#area_type').val() == 'station_id'){
         window.vd_stations.push($('#station_id').val());
         if ($('#min_date').length && $('#max_date').length){
@@ -9,6 +10,22 @@ $(document).ready(function () {
         if ($('#min_year').length && $('#max_year').length){
             window.vd_stations_vds.push([$('#min_year').val() + '-01-01',$('#max_year').val() + '-01-01']);
         }
+        var vars = all_vd_elements, v, no_var =[], opt;
+        if ($('#variables').length){
+            //vars = $('#variables').val();
+            v = 'variables';
+        }
+        if ($('#variable').length){
+            //vars = [$('#variable').val()];
+            v = 'variable';
+        } 
+        $.each(vars, function(index, val) {
+            opt = '#' + v + ' option[value="' + val + '"]';
+            if ($(opt).is(':disabled')){
+                no_var.push(val);
+            }
+        });
+        window.no_vd_vars.push(no_var);
     }
     
     //Bootstrap nav menu
@@ -21,7 +38,6 @@ $(document).ready(function () {
         });
         
         $('.clickable-menu-item').click(function() {
-            console.log('YO');
             var href = $(this).attr('href')
             window.location.href = href;
         });

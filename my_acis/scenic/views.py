@@ -1798,12 +1798,15 @@ def find_station_vd(request):
     '''
     station_id = request.POST.get('station_id')
     sid, stn_name = WRCCUtils.find_id_and_name(station_id,settings.MEDIA_DIR +'json/US_station_id.json')
-    element_list = request.POST.get('el_tuple','maxt,mint,pcpn').replace(', ',',').split(',')
+    #element_list = request.POST.get('el_tuple', WRCCData.all_vd_elements).replace(', ',',').split(',')
+    element_list = WRCCData.all_vd_elements
     mx_or_mn = request.POST.get('max_or_min','max')
-    vd = WRCCUtils.find_valid_daterange(sid,el_list=element_list, max_or_min=mx_or_mn)
+    #mx_or_min = 'max'
+    vd, no_vd_els = WRCCUtils.find_valid_daterange(sid, el_list=element_list, max_or_min=mx_or_mn)
     r =  {
-        'vd':vd,
-        'station_id':station_id
+        'vd': vd,
+        'station_id': station_id,
+        'no_vd_els': no_vd_els
     }
     response_data = json.dumps(r)
     return response_data

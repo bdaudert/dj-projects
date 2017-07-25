@@ -10,6 +10,8 @@ function convertDate(date, sep){
     }
     return yr + sep + mon + sep + day;
 }
+
+var all_vd_elements = ['maxt','mint','pcpn','snow','snwd','gdd','hdd','cdd','evap','pet','dtr'];
 var popup_no_destroy = 'formDownload,Docu_SpottedOwlKristen,'+
     'Docu_SpottedOwlData35.2,Docu_SpottedOwlData34,Docu_SpottedOwlData30,'+
     'Docu_page_station_finder,Docu_page_projections,' +
