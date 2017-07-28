@@ -207,6 +207,7 @@ $(document).ready(function () {
     });//end each
     //Prevent misalignment of header/footer on  show/hide
     //$('.dataTable').wrap('<div class="dataTables_scroll" />');
+    
     /*
     FORM HELP TEXTS
     */

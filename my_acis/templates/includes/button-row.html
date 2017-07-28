@@ -5,7 +5,7 @@
             Start Over
         </button>
         {%if results and not form_error%}
-        <button type="submit" class="btn btn-primary" onclick="ShowPopupDocuTopOfPage()" 
+        <button type="submit" class="btn btn-primary" onclick="ShowHide('top_of_page');" 
         {%if app_name == "station_finder" and not run_done%}style="display:none;"{%endif%}>
             Change Options
         </button>

@@ -371,11 +371,12 @@ function popup_window(mylink, windowname)
 
 // [client side code for showing/hiding content]
 function ShowHide(divId){
-    if ($(this).css('display') == 'none'){
-        $(this).css('display','block');
+    var div = $('#' + divId);
+    if (div.css('display') == 'none'){
+        div.css('display','block');
     }
     else{
-        $(this).css('display','none');
+        div.css('display','none');
     }
 }
 

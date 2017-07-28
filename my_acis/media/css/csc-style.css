@@ -312,6 +312,29 @@ table.smallFont td, th{
     transform-origin: 0 0;
 }
 
+/*Google Search Box */
+#___gcse_0 {
+    max-width: 35%;
+    height: 1%;
+}
+.gsc-control-cse .gsc-table-result {
+    font-family : inherit;
+}
+
+.gsc-control-cse .gsc-input-box {
+    height : inherit;
+}
+
+input.gsc-input,
+.gsc-input-box,
+.gsc-input-box-hover,
+.gsc-input-box-focus,
+.gsc-search-button, input.gsc-search-button-v2 {
+    box-sizing  : content-box;
+    line-height : normal;
+    margin-top  : 0px;
+}
+
 /*bootstrap overrides
 /* USAGE
 <div class="row">
@@ -466,4 +489,5 @@ table.smallFont td, th{
     vertical-align: bottom;
   }
 }
+
 
