@@ -569,15 +569,6 @@ function initialize_station_finder() {
             var single_year_portal_link = '<a target="_blank" href="' + single_year_href + '">Single Year Time Series</a>';
             var data_comparison_portal_link = '<a target="_blank" href="' + data_comparison_href + '">Grid/Station Data Comparison</a>';
             var climatology_portal_link = '<a target="_blank" href="' + climatology_href + '">Climatology</a>';
-            /* 
-            var data_portal_link = '<button style="width:80%" class="btn-primary" onclick="window.open(\'' + data_portal_href + '\')">Get Data</button>';
-            var app_portal_link = '<button style="width:80%" class="btn-primary"onclick="window.open(\'' + app_portal_href + '\')">Run Analysis</button>';
-            var monthly_summary_portal_link = '<button style="width:80%" class="btn-primary"onclick="window.open(\'' + monthly_summary_href + '\')">Monthly Summary</button>'; 
-            var seasonal_summary_portal_link = '<button style="width:80%" class="btn-primary"onclick="window.open(\'' + seasonal_summary_href + '\')">Seasonal Summary</button>';
-            var single_year_portal_link = '<button style="width:80%" class="btn-primary"onclick="window.open(\'' + single_year_href + '\')">Single Year Time Series</button>';
-            var data_comparison_portal_link = '<button style="width:80%" class="btn-primary"onclick="window.open(\'' + data_comparison_href + '\')">Grid/Station Data Comparison</button>';
-            var climatology_portal_link = '<button style="width:80%" class="btn-primary"onclick="window.open(\'' + climatology_href + '\')">Climatology</button>';
-            */
 
             var contentString = '<div id="MarkerWindow" class="row nopadding">'+
                 '<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 nopadding">' +
