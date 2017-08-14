@@ -822,10 +822,12 @@ $(document).ready(function () {
         if ($('.plOpts:first').css('display') == 'none'){
             $('#form-image-size').css('display','inline');
             $('#form-colormap').css('display','inline');
+            //$('#form-num-levels').css('display','inline');
         }
         else {   
            $('#form-image-size').css('display','none');
-           $('#form-colormap').css('display','none'); 
+           $('#form-colormap').css('display','none');
+           //$('#form-num-levels').css('display','none');
         }
     });
 
