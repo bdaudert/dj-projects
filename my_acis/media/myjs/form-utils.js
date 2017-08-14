@@ -467,7 +467,7 @@ function set_area_defaults(area_type, kml_file_path){
     */
     lv.label = area_defaults[area_type][0]
     lv.value = area_defaults[area_type][1]
-    return lv;
+    return lv
 }
 
 function set_autofill(datalist){
@@ -515,7 +515,6 @@ function set_area(area_type_node){
     $('#area-form-input').empty();
     var lv, html_text, area_type = area_type_node.val(),i, pop_id,
         st, state, is_selected = '', kml_file_path = null;
-
     if (area_type.inList(['basin','county','county_warning_area','climate_division'])) {
         TMP_URL = $('#TMP_URL').val();
         state = $('#overlay_state').val();
@@ -739,6 +738,7 @@ function set_map(){
     var area_type, TMP_URL,state,kml_file_path;
     //Get TMP env variable (defined in templates/csc_base.html)
     area_type = node.val();
+    console.log(area_type);
     //Update hidden variables
     if (area_type.inList(['basin','county','county_warning_area','climate_division'])) {
         TMP_URL = $('#TMP_URL').val();
