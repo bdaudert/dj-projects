@@ -738,7 +738,6 @@ function set_map(){
     var area_type, TMP_URL,state,kml_file_path;
     //Get TMP env variable (defined in templates/csc_base.html)
     area_type = node.val();
-    console.log(area_type);
     //Update hidden variables
     if (area_type.inList(['basin','county','county_warning_area','climate_division'])) {
         TMP_URL = $('#TMP_URL').val();

@@ -53,10 +53,14 @@ function advance_date(date, num_days, back_or_forward){
 function zoomToLocation() {
     var address = document.getElementById('address').value;
     var geocoder = new google.maps.Geocoder();
+    var map = window.map;
+    if ($('#app_name').val() == 'station_finder'){
+        map = window.sf_map;
+    }
     geocoder.geocode( { 'address': address}, function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
-           window.map.setCenter(results[0].geometry.location);
-           window.map.setZoom(7);
+           map.setCenter(results[0].geometry.location);
+           map.setZoom(7);
            if (window.marker){
                 window.marker.setPosition(results[0].geometry.location);
                 var lat = results[0].geometry.location.lat();

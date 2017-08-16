@@ -287,11 +287,12 @@ $(document).ready(function () {
     Zoom To Location on map
     */
     $('#zoombutton').on('click', function(){
+        //console.log('YOOOO')
         zoomToLocation();
     });
 
     $("#address").focus(function(){
-        if ($(this).val() == 'Place/Location'){
+        if ($(this).val() == 'City/State/Location(Lat, Lon)'){
             $(this).val('');
         }
     });
