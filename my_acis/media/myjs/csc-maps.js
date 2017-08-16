@@ -412,7 +412,7 @@ function initialize_station_finder() {
         for (var key in data.network_codes) {
             count = count + 1;
             var name = data.network_codes[key];
-            var icon = 'http://maps.google.com/mapfiles/ms/icons/' + data.network_icons[key] + '.png';
+            var icon = '//maps.google.com/mapfiles/ms/icons/' + data.network_icons[key] + '.png';
             td = $('<td>');
             //Omit RCC/Misc/Threadex
             if (['RCC','Misc'].indexOf(data.network_codes[key]) >= 0){
@@ -430,7 +430,7 @@ function initialize_station_finder() {
             tr.append(td);
             if (count == 11){
                 name = 'All';
-                icon = 'http://thydzik.com/thydzikGoogleMap/markerlink.php?text=A&color=FC6355';
+                icon = '//thydzik.com/thydzikGoogleMap/markerlink.php?text=A&color=FC6355';
                 td = $('<td>');
                 html_text = '<input type="checkbox" id="all" onclick="my_boxclick(this,\'all\')" checked />' + 
                 '<img alt="Icon" title="Icon" src="' + icon  + '"><br />' + name;
@@ -475,8 +475,8 @@ function initialize_station_finder() {
                 position: latlon,
                 title:'Name:'+c.name,
                 icon: new google.maps.MarkerImage(
-                //'http://maps.gstatic.com/mapfiles/ridefinder-images/mm_20_' + c.marker_icon + '.png'
-                'http://maps.google.com/mapfiles/ms/icons/' + c.marker_icon + '.png',
+                //'//maps.gstatic.com/mapfiles/ridefinder-images/mm_20_' + c.marker_icon + '.png'
+                '//maps.google.com/mapfiles/ms/icons/' + c.marker_icon + '.png',
                 null,
                 null, 
                 null,
