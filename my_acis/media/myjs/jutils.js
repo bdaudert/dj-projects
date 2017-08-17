@@ -72,7 +72,7 @@ function zoomToLocation() {
                 });
                 infowindow.open(window.map, window.marker);
                 if ($('#location').length) {
-                    $('#location').val(String(lon) + ',' + String(lat));
+                    $('#location').val(String(lon.toFixed(4)) + ',' + String(lat.toFixed(4)));
                 }
             }
             if (window.polygon){

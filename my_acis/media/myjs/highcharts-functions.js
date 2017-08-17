@@ -834,7 +834,7 @@ function generateTS_smry(chart_indices) {
 function generateSodsummChart(index){
     var downloadMenu = $.extend(true,[],Highcharts.getOptions().exporting.buttons.contextButton.menuItems.splice(2));
     var HOST = document.getElementById('HOST').value;
-    var HOST_URL = 'http://' + HOST + '/';
+    var HOST_URL = '//' + HOST + '/';
     var json_file = document.getElementById("json_file").value;
     var TMP_URL = document.getElementById("TMP_URL").value;
     var json_file_path = TMP_URL + json_file;

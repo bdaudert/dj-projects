@@ -21,7 +21,7 @@ var popup_no_destroy = 'formDownload,Docu_SpottedOwlKristen,'+
     'Docu_multi_point_prods,Docu_multi_point_prods_station,Docu_multi_point_prods_grid';
     'Docu_page_single_point_prods,Docu_page_single_point_prods_station,Docu_page_single_point_prods_grid,' +
     'Docu_page_multi_point_prods,Docu_page_multi_point_prods_station,Docu_page_multi_point_prods_grid';
-var WRCC_URL = 'https://wrcc.dri.edu';
+var WRCC_URL = '//wrcc.dri.edu';
 var SINGLE_PRODS_URL = '/csc/scenic/analysis/single/'; 
 var tdy = new Date();
 var tdy_string = convertDate(tdy,'-');

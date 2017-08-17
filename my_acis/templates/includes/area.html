@@ -27,10 +27,20 @@
     <input class="btn btn-primary" type='button' id="set_map-button" size="30"
     {%if initial.area_type|is_in:"basin,county,climate_division,county_warning_area"%}style="display:block"{%else%}style="display:none"{%endif%}
     value='Update map' onclick="set_map();">
-    <!--<p class="message">Update map</p>-->
-    
-    <input class="btn btn-primary" type='button' id="set_station_vd-button" size="30"
-    {%if initial.area_type|is_in:"station_id"%}style="display:block"{%else%}style="display:none"{%endif%}
-    value='Update date range/variables' onclick="ajax_set_station_vd();">
-    <!--<p class="message">Update date range</p>-->
+    <div class="row">
+        <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+    <input class="btn btn-primary" type='button' id="set_station_vd-button"
+    {%if initial.area_type|is_in:"station_id"%}style="display:block;"{%else%}style="display:none"{%endif%}
+    value='Update form' onclick="ajax_set_station_vd();">
+    </div>
+    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+        <img class="qmark" id="qmark-variable" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
+        <div title="Update date ranges and variables" class="pop-up">
+            <div id="ht_update_form"></div>
+            <script type="text/javascript">                        
+            $("#ht_update_form").load("{{HTML_URL}}Docu_help_texts.html #ht_update_form");
+            </script>
+        </div> 
+    </div>
+    </div>
 </div>

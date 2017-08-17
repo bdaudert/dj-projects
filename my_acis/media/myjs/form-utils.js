@@ -421,8 +421,8 @@ function set_year_range(){
     }
     if ($('#area_type').val() == 'station_id'){
         opt = '<option value="POR">POR</option>';
-            $('#start_year').append(opt);
-            $('#end_year').append(opt);
+        $('#start_year').prepend(opt);
+        $('#end_year').append(opt);
     }
     $('#start_year').val(start_year_val); 
     $('#end_year').val(end_year_val); 
