@@ -27,6 +27,9 @@
         {%endfor%}
         {%endif%}
         <!--Past dates-->
+        {% if initial.station_id%}
+        <option value="POR">POR</option>
+        {% endif %}
         {%for yr in initial.min_year|make_range:initial.max_year%}
             <option value="{{yr}}" {% if initial.start_year == yr|to_string %}selected{%endif%}>{{yr}}</option>
         {%endfor%}
@@ -51,6 +54,9 @@
         {%for yr in initial.min_year|make_range:initial.max_year%}  
             <option value="{{yr}}" {% if initial.end_year == yr|to_string %}selected{%endif%}>{{yr}}</option>
         {%endfor%}
+        {% if initial.station_id%}
+        <option value="POR">POR</option>
+        {% endif %}
         </select>
     </div><!--input-group-->
 </div><!--form-group-->

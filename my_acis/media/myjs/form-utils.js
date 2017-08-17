@@ -181,20 +181,6 @@ function ajax_set_station_vd(){
     waitingDialog.show(msg, {dialogSize: 'sm', progressType: 'warning'});
     var el_list = [], el_tupe = null, 
         response, station_id, station_finder_link; 
-    /*
-    if ($('#variables').length){
-        el_list = $('#variables').val();
-        el_tuple = el_list + "";
-    }   
-    if ($('#variable').length){
-        el_list = [$('#variable').val()];
-        el_tuple = $('#variable').val();
-    }
-    if ($('#summary_type').length){
-        el_list = ['maxt','mint','pcpn'];
-        el_tuple = el_list + "";
-    } 
-    */
     el_list = all_vd_elements
     el_tuple = el_list + ""
     var form_data = 'station_id_change=True';
@@ -396,17 +382,23 @@ function set_year_range(){
         min_year_fut = $('#min_year_fut').val(), max_year_fut = $('#max_year_fut').val();
     var start_year_val = $('#start_year').val(), end_year_val = $('#end_year').val(); 
     //Sanity check on selected values
-    if (parseInt(start_year_val) < parseInt(min_year) || parseInt(start_year_val) > parseInt(max_year)){
+    if (start_year_val.toLowerCase() == 'por'){
         start_year_val = min_year;
-    } 
+    }
+    else{
+        if (parseInt(start_year_val) < parseInt(min_year) || parseInt(start_year_val) > parseInt(max_year)){
+            start_year_val = min_year;
+        }
+    }
     end_year_val = String(parseInt(start_year_val) + 10);
     if (parseInt(end_year_val) > parseInt(max_year) || parseInt(end_year_val) < parseInt(min_year)){
         end_year_val = max_year;
-    } 
+    }
     //Set new year dropdowns
     $('#start_year > option').remove();
     $('#end_year > option').remove();
     var opt, i;
+
     for (i=parseInt(min_year);i<=parseInt(max_year);i++){
         opt = '<option value="' + String(i) + '">' + String(i) + '</option>';
         $('#start_year').append(opt);
