@@ -1122,15 +1122,18 @@ $(document).ready(function () {
         //Show or Hide the update buttons for maps and station valid daterange
         if ($(this).val().inList(['station_id'])){
             $('#set_station_vd-button').css('display','block');
+            $('#qmark-update').css('display','block');
             $('#set_map-button').css('display','none');
         }
         else if ($(this).val().inList(['basin','county_warning_area', 'county','climate_division'])){
             $('#set_station_vd-button').css('display','none');
+            $('#qmark-update').css('display','none');
             $('#set_map-button').css('display','block'); 
         }
         else {
             $('#set_station_vd-button').css('display','none');
             $('#set_map-button').css('display','none');
+            $('#qmark-update').css('display','none');
         }
         //Set the date form fields
         //Single Apps, if area_type changes, data_type changes
