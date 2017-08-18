@@ -19,6 +19,6 @@
     <div id="map-overlay" {%if not need_overlay_map %} style="display:none;"{%endif%}></div>
     <div id="content-window" {%if not need_overlay_map %} style="display:none;"{%endif%}></div>
     {%if need_overlay_map %}
-        <script type="text/javascript">initialize_map_overlays()</script>
+        <script type="text/javascript">update_overlay_map()</script>
     {%endif%}
 </div>

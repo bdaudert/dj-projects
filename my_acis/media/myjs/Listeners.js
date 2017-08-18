@@ -287,7 +287,6 @@ $(document).ready(function () {
     Zoom To Location on map
     */
     $('#zoombutton').on('click', function(){
-        //console.log('YOOOO')
         zoomToLocation();
     });
 
@@ -1117,28 +1116,31 @@ $(document).ready(function () {
         //Set area, variables and maps form field
         set_area($(this)); //form_utils function
         set_variables();
+        /*
         if ($('#overlay_state').length && $('#overlay_state').val().toLowerCase() != 'nv'){
             update_maps();//user already played around
         }
         else{
             set_map(); //form_utils function
-        }   
+        } 
+        */
+        set_map();
         update_value($(this).val()); //form_utils function
         //Show or Hide the update buttons for maps and station valid daterange
         if ($(this).val().inList(['station_id'])){
             $('#set_station_vd-button').css('display','block');
-            $('#qmark-update').css('display','block');
+            $('#qmark-update_form').css('display','block');
             $('#set_map-button').css('display','none');
         }
         else if ($(this).val().inList(['basin','county_warning_area', 'county','climate_division'])){
             $('#set_station_vd-button').css('display','none');
-            $('#qmark-update').css('display','none');
+            $('#qmark-update_form').css('display','none');
             $('#set_map-button').css('display','block'); 
         }
         else {
             $('#set_station_vd-button').css('display','none');
             $('#set_map-button').css('display','none');
-            $('#qmark-update').css('display','none');
+            $('#qmark-update_form').css('display','none');
         }
         //Set the date form fields
         //Single Apps, if area_type changes, data_type changes
@@ -1515,7 +1517,6 @@ $(document).ready(function () {
     ****************/
     //OVERLAY_STATES
     $('#overlay_state').on('change', function(){
-        console.log('YOOOO');
         waitingDialog.show('Loading layers', {dialogSize: 'sm', progressType: 'warning'});
         $('.overlay_state').val($(this).val());
         var form_data = $("#overlayForm").serialize();
@@ -1532,7 +1533,7 @@ $(document).ready(function () {
             }
             else{
                 $('#kml_file_path').val(response['kml_file_path']);
-                initialize_map_overlays();
+                update_overlay_map();
             }
             waitingDialog.hide();
         })

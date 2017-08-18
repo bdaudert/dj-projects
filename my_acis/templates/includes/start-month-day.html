@@ -1,13 +1,6 @@
 {%load my_scenic_filters%}
 <div class="form-group">
-    <span><b>Start Month/Day</b></span>&nbsp;&nbsp;
-    <img class="qmark" id="qmark-start_month_day" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
-    <div title="Start Month/Day" class="pop-up">
-        <div id="ht_start_month_day"></div>
-        <script type="text/javascript">                        
-            $("#ht_start_month_day").load("{{HTML_URL}}/Docu_help_texts.html #ht_start_month_day");
-        </script>
-    </div>   
+    <span><b>Start</b></span>&nbsp;&nbsp;
     <select id="start_month" name="start_month" class="month">
     {% for opt, name in initial.form_options.start_month%}
         <option value="{{opt}}" {%if initial.start_month == opt%} selected{%endif%}>{{name}}</option>
@@ -21,4 +14,11 @@
         >{{name}}</option>
     {%endfor%}
     <select>
+    <img class="qmark" id="qmark-start_month_day" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
+    <div title="Start Month/Day" class="pop-up">
+        <div id="ht_start_month_day"></div>
+        <script type="text/javascript">                        
+            $("#ht_start_month_day").load("{{HTML_URL}}/Docu_help_texts.html #ht_start_month_day");
+        </script>
+    </div>
 </div>

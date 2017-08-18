@@ -1270,9 +1270,11 @@ function initialize_polygon_map(poly) {
     window.resizeTo($(window).width(), $(window).height());
 }
 
-function initialize_map_overlay(map_id,poly) {
-    //Initializes map with polygon overlay poly
-    //Used in form_utils.update maps
+function set_single_overlay(map_id,poly) {
+    /*
+    puts a single overlay (county, basin, etc) on the map
+    poly defines the overlay
+    */
     var center = poly.coords[Math.floor(poly.coords.length / 2)];
     var mapOptions = {
         zoom: 7,
@@ -1305,12 +1307,12 @@ function initialize_map_overlay(map_id,poly) {
 }
 
 
-function initialize_map_overlays() {
+function update_overlay_map() {
     var area_type = $('#area_type').val();
     var host = $('#HOST').val();
     var kml_file_path = $('#kml_file_path').val();
     //Display map related divs
-    $('#OverlayMap').css('display','block');
+    $('#PolyMap').css('display','block');
     $('#map-overlay').css('display','block');
     $('#content-window').css('display','block');
     //type is one of: basin, cwa, climdiv, county

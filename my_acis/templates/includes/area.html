@@ -34,7 +34,9 @@
     value='Update form' onclick="ajax_set_station_vd();">
     </div>
     <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-        <img class="qmark" id="qmark-variable" alt="Help" title="Help" src="{{MEDIA_URL}}img/QMark.png">
+        <img class="qmark" id="qmark-update_form" alt="Help"
+        {%if initial.area_type|is_in:"station_id"%}style="display:block;"{%else%}style="display:none"{%endif%}
+        title="Help" src="{{MEDIA_URL}}img/QMark.png">
         <div title="Update date ranges and variables" class="pop-up">
             <div id="ht_update_form"></div>
             <script type="text/javascript">                        

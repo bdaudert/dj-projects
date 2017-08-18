@@ -235,29 +235,17 @@ function ShowHideTopOfPage(){
     If div is shown and contains map, 
     the map needs to be re-initialized
     */
-    if ($('#top_of_page').is(':hidden')){
-        if ($('#shape').length){
-            update_maps(document.getElementById('shape'));
-        }
-        if ($('#location').length ){
-            update_maps(document.getElementById('location'));
-        }
-        if ($('#basin').length ){
-            update_maps(document.getElementById('basin'));
-        }
-        if ($('#county_warning_area').length ){
-            update_maps(document.getElementById('county_warning_area'));
-        }
-        if ($('#county').length ){
-            update_maps(document.getElementById('county'));
-        }
-        if ($('#climate_division').length ){
-            update_maps(document.getElementById('climate_division'));
-        }
-        if ($('#bounding_box').length ){
-            update_maps(document.getElementById('bounding_box'));
-        }
+
+    var no_results = false;
+    if ($('#no_results').length && $('#no_results').css('display') != 'none'){
+        var no_results = true;
+    }
+    if ($('#top_of_page').is(':hidden') || no_results){
+        update_maps();
         $(window).resize();
+    }
+    if (no_results){
+        $('#no_results').css('display','none');
     }
     $('#top_of_page').toggle();
 }
@@ -525,13 +513,13 @@ function set_area(area_type_node){
         if (lv.autofill_list != '') {
             html_text+=' list="' + lv.autofill_list + '"';
         }
-        html_text+=' onchange="update_value(this.value) & update_maps(this)" >';
+        html_text+=' onchange="update_value(this.value) & update_maps()" >';
         $('#area-form-input').html(html_text);
     }
     else{
         var select, opt;
         html_text = '<select id="' + area_type + '" name="'+ area_type + '" class="area form-control">';
-        html_text+=' onchange="update_value(this.value) & update_maps(this)" />';
+        html_text+=' onchange="update_value(this.value) & update_maps()" />';
         select = $(html_text);
         for (i=0;i< state_choices.length;i++){  
             st = state_choices[i];
@@ -696,7 +684,7 @@ function show_overlay_map(){
     $('#map-overlay').css('display','block');
     $('#zoom-to-map-overlay').css('display','block');
     $('#content-window').css('display','block');
-    initialize_map_overlays();
+    update_overlay_map();
 }
 
 function hide_polygon_map(){
@@ -1029,33 +1017,51 @@ function update_maps(){
     var id = area_field.id;
     var val = area_field.value;
     */
+    //Hide all maps
+    $('.zoom-to').css('display','none');
+    if ($('#GridpointMap').length){
+        $('#GridpointMap').css('display','none');
+    }
+    if ($('#GridpointsMap').length){
+        $('#GridpointsMap').css('display','none');
+    }
+    if ($('#PolyMap').length){
+        $('#PolyMap').css('display','none');
+        $('#map-polygon').css('display','none');
+    }
+    if ($('#OverlayMap').length){
+        $('#OverlayMap').css('display','none');
+        $('#map-overlay').css('display','none');
+        $('#content-window').css('display','none');
+
+    }
+    if ($('#BBoxMap').length && $('#BBoxMap').css('display')!='none'){
+        $('#BBoxMap').css('display','none');
+    }
+    //Now show the appropriate map
     if (area_type == 'shape'){
-        $('.zoom-to').css('display','none');
         $('#zoom-to-map-polygon').css('display','block');
         $('#PolyMap').css('display','block');
+        $('#map-polygon').css('display','block');
         setTimeout(function(){initialize_polygon_map(val);},500);
     }
     else if (area_type == 'location'){
-        $('.zoom-to').css('display','none');
         $('#zoom-to-map-gridpoint').css('display','block');
         $('#GridointMap').css('display','block');
         initialize_grid_point_map(val);
     }
     else if (area_type == 'locations'){
-        $('.zoom-to').css('display','none');
         $('#zoom-to-map-gridpoints').css('display','block');
         $('#GridointsMap').css('display','block');
         initialize_grid_point_map(val);
     }
     else if (area_type == 'bounding_box'){
-        $('.zoom-to').css('display','none');
         $('#zoom-to-map-bbox').css('display','block');
         $('#BBoxMap').css('display','block');
         $('#map-bbox').css('display','block');
         initialize_bbox_map(val);
     }
     else if (area_type.inList(['county', 'county_warning_area', 'climate_division', 'basin'])){ 
-        $('.zoom-to').css('display','none');
         $('#zoom-to-map-overlay').css('display','block');
         $('#OverlayMap').css('display','block');
         $('#map-overlay').css('display','block');
@@ -1136,7 +1142,7 @@ function update_maps(){
                     }
                     */
                     //Update new map
-                    initialize_map_overlay('map-overlay', poly); 
+                    set_single_overlay('map-overlay', poly); 
                     break
                 }
             }
@@ -1158,7 +1164,7 @@ function update_maps(){
             $('#GridpointsMap').css('display','none');
         }
         if ($('#PolyMap').length){
-            $('#PolytMap').css('display','none');
+            $('#PolyMap').css('display','none');
             $('#map-polygon').css('display','none');
         }
         if ($('#OverlayMap').length){
