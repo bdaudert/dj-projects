@@ -11,7 +11,7 @@
     <span id="area-form-input"> 
     {%if initial.area_type == "state"%}
         <select class="area form-control" name="{{initial.area_type}}" id="{{initial.area_type}}" 
-        onchange="update_value(this.value) &update_maps(this)">
+        onchange="update_value(this.value) &update_maps()">
         {%for st, name in initial.form_options.state%}
             <option value="{{st}}" {%if initial.state == st%} selected{%endif%}>
             {{name}}</option>
@@ -20,13 +20,13 @@
     {%else%}
         <input type="text" class="area form-control" size="30" id="{{initial.area_type}}" name="{{initial.area_type}}"
             value="{{initial.area_type_value}}" list="{{initial.autofill_list}}" 
-            onchange="update_value(this.value) &update_maps(this)">
+            onchange="update_value(this.value) &update_maps()">
     {%endif%}
     </span> 
     <!--Update buttons for maps and station valid daterange -->
     <input class="btn btn-primary" type='button' id="set_map-button" size="30"
     {%if initial.area_type|is_in:"basin,county,climate_division,county_warning_area"%}style="display:block"{%else%}style="display:none"{%endif%}
-    value='Update map' onclick="set_map();">
+    value='Update map' onclick="$('.area').trigger('change');">
     <div class="row">
         <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
     <input class="btn btn-primary" type='button' id="set_station_vd-button"

@@ -154,7 +154,6 @@ function set_grid_dates(){
     check_form_dates();
 }
 
-
 function ajax_set_station_vd(){
     /*
     Sets dates for single station requests
@@ -582,7 +581,7 @@ function set_variables(){
             //Check if prism data, disable degree days
             if ($('#data_type').val() == 'station' || $('#area_type').val().inList['station_id','station_ids']){
                 if ($(this).val() == 'pet'  || $(this).val() == 'dtr'){
-                    if ($('#app_name').val().inList(['monthly_summary','station_finder'])){
+                    if ($('#app_name').val().inList(['monthly_summary'])){
                          $(this).attr('disabled',false);
                     }
                     else{
@@ -1019,60 +1018,64 @@ function show_div_if_true(node, divId){
 Map updates on user changing 
 area_input field via autofill or typing
 */
-function update_maps(area_field){
+function update_maps(){
     /*
     Updates maps if user uses autofill or 
     or types in area_input field
     */
+    var area_type = $('#area_type').val(),
+        val = $('#' + area_type).val();
+    /*
     var id = area_field.id;
     var val = area_field.value;
-    if (id == 'shape'){
+    */
+    if (area_type == 'shape'){
         $('.zoom-to').css('display','none');
         $('#zoom-to-map-polygon').css('display','block');
         $('#PolyMap').css('display','block');
         setTimeout(function(){initialize_polygon_map(val);},500);
     }
-    else if (id == 'location'){
+    else if (area_type == 'location'){
         $('.zoom-to').css('display','none');
         $('#zoom-to-map-gridpoint').css('display','block');
         $('#GridointMap').css('display','block');
         initialize_grid_point_map(val);
     }
-    else if (id == 'locations'){
+    else if (area_type == 'locations'){
         $('.zoom-to').css('display','none');
         $('#zoom-to-map-gridpoints').css('display','block');
         $('#GridointsMap').css('display','block');
         initialize_grid_point_map(val);
     }
-    else if (id == 'bounding_box'){
+    else if (area_type == 'bounding_box'){
         $('.zoom-to').css('display','none');
         $('#zoom-to-map-bbox').css('display','block');
         $('#BBoxMap').css('display','block');
         $('#map-bbox').css('display','block');
         initialize_bbox_map(val);
     }
-    else if (id == 'county' || id == 'county_warning_area' || id == 'climate_division' || id == 'basin'){ 
+    else if (area_type.inList(['county', 'county_warning_area', 'climate_division', 'basin'])){ 
         $('.zoom-to').css('display','none');
         $('#zoom-to-map-overlay').css('display','block');
         $('#OverlayMap').css('display','block');
         $('#map-overlay').css('display','block');
         $('#content-window').css('display','block');
-        var json_file = '/csc/media/json/US_' + id + '.json';
+        var json_file = '/csc/media/json/US_' + area_type + '.json';
         //remove id to just get the name
         var val_list = val.split(', ');
         if (val_list.length == 1){val_list = val.split(',');}
         var name, idx =  1;
-        if (id == 'county_warning_area' && val_list.length == "3"){
+        if (area_type == 'county_warning_area' && val_list.length == "3"){
             idx = 2;
             name = val_list[0] + ', ' + val_list[1]
         }
-        else if (id == 'county_warning_area' && val_list.length == "2"){
+        else if (area_type == 'county_warning_area' && val_list.length == "2"){
             idx = 1;
             var vl = val_list[0].split(' ')
             name = vl.slice(0,vl.length - 1).join(' ') +  ', ' +vl.slice(vl.length - 1,vl.length);
             //name = val_list[0].split(' ').join(', ');
         }
-        else if (id == 'county'){
+        else if (area_type == 'county'){
             name = val_list[0].replace(' County','');
             idx = 1;
         }
@@ -1103,16 +1106,16 @@ function update_maps(area_field){
                         strokeOpacity: 0.8,
                         strokeWeight: 3,
                         coords:poly_path,
-                        area_type: id,
+                        area_type: area_type,
                         name: name,
-                        id: area_field.value
+                        id: val
                     });
                     //Find state from name and update overlay state
                     var state = 'none';
-                    if (id.inList(['county','climate_division'])){
+                    if (area_type.inList(['county','climate_division'])){
                         state = item.state.toLowerCase();
                     }
-                    if (id == 'county_warning_area'){
+                    if (area_type == 'county_warning_area'){
                         //var state = val.split(', ')[0].split(' ')[1].slice(0,2).toLowerCase();
                         state = item.name.split(', ')[1].toLowerCase();
                     }

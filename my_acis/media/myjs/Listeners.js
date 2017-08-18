@@ -1117,7 +1117,12 @@ $(document).ready(function () {
         //Set area, variables and maps form field
         set_area($(this)); //form_utils function
         set_variables();
-        set_map(); //form_utils function
+        if ($('#overlay_state').length && $('#overlay_state').val().toLowerCase() != 'nv'){
+            update_maps();//user already played around
+        }
+        else{
+            set_map(); //form_utils function
+        }   
         update_value($(this).val()); //form_utils function
         //Show or Hide the update buttons for maps and station valid daterange
         if ($(this).val().inList(['station_id'])){
@@ -1382,8 +1387,8 @@ $(document).ready(function () {
         //Set plot vars
         $('.target_year').val(String(year));
         //Clear old tab data
-        var data_table = $('#textData');
-        $('#textData tr').remove();
+        var data_table = $('#dataTable-0');
+        $('#dataTable-0 tr').remove();
         var x_min, x_max;
         var p_indices = [], c_indices = [];
         for (var i = 0; i < myChart.series.length; i++) {
@@ -1508,19 +1513,9 @@ $(document).ready(function () {
     /***************
     AJAX CALLS
     ****************/
-    //STATION_ID Change --> Find POR of station
-    //$('#station_id').on('change',function(){
-    /*
-    $('span#area-form-input').on('change','input:text', function () {
-        if ($(this).attr('id') == 'station_id'){
-            //AJAX call to find station vd, set max_min_dates and show valid daterange
-            ajax_set_station_vd();
-        }
-    });
-    */
-
     //OVERLAY_STATES
     $('#overlay_state').on('change', function(){
+        console.log('YOOOO');
         waitingDialog.show('Loading layers', {dialogSize: 'sm', progressType: 'warning'});
         $('.overlay_state').val($(this).val());
         var form_data = $("#overlayForm").serialize();
