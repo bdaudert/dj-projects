@@ -347,6 +347,7 @@ def single_lister(request):
         }
         initial = DJANGOUtils.set_initial(new_init, app_name)
         context['initial'] = initial
+        context['need_gridpoint_map'] = True
         return render_to_response(url, context, context_instance=RequestContext(request))
 
     #MAIN APP
@@ -493,6 +494,7 @@ def single_year(request):
         }
         initial = DJANGOUtils.set_initial(new_init, app_name)
         context['initial'] = initial
+        context['need_gridpoint_map'] = True
         return render_to_response(url, context, context_instance=RequestContext(request))
 
     #MAIN APP
@@ -604,6 +606,7 @@ def seasonal_summary(request):
         }
         initial = DJANGOUtils.set_initial(new_init, app_name)
         context['initial'] = initial
+        context['need_gridpoint_map'] = True
         return render_to_response(url, context, context_instance=RequestContext(request))
 
     #MAIN APP
@@ -729,6 +732,7 @@ def multi_lister(request):
         }
         initial = DJANGOUtils.set_initial(new_init, app_name)
         context['initial'] = initial
+        context['need_gridpoint_map'] = True
         return render_to_response(url, context, context_instance=RequestContext(request))
 
     #MAIN APP
@@ -1082,6 +1086,7 @@ def spatial_summary(request):
         }
         initial = DJANGOUtils.set_initial(new_init, app_name)
         context['initial'] = initial
+        context['need_gridpoint_map'] = True
         return render_to_response(url, context, context_instance=RequestContext(request))
 
     #MAIN APP
@@ -1439,6 +1444,7 @@ def data_comparison(request):
         }
         initial = DJANGOUtils.set_initial(new_init, app_name)
         context['initial'] = initial
+        context['need_gridpoint_map'] = True
         return render_to_response(url, context, context_instance=RequestContext(request))
 
     if 'formData' in request.POST or (request.method == 'GET' and ('station_id' in request.GET or 'location' in request.GET)):
@@ -1496,6 +1502,7 @@ def monthly_summary(request):
         }
         initial = DJANGOUtils.set_initial(new_init, app_name)
         context['initial'] = initial
+        context['need_gridpoint_map'] = True
         return render_to_response(url, context, context_instance=RequestContext(request))
 
     if 'formData' in request.POST or (request.method == 'GET' and 'variable' in request.GET):
@@ -1654,6 +1661,7 @@ def climatology(request):
         }
         initial = DJANGOUtils.set_initial(new_init, app_name)
         context['initial'] = initial
+        context['need_gridpoint_map'] = True
         return render_to_response(url, context, context_instance=RequestContext(request))
 
     if 'formData' in request.POST or (request.method == 'GET' and ('station_id' in request.GET or 'location' in request.GET)):
