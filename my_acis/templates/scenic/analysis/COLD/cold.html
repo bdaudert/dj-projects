@@ -53,10 +53,8 @@
         data_file = data_dir + 'PCA_COMPONENT_3_TS.json';
         pca_ts(data_file, 'container-14', '3')
         //OTHER
-        /*
         data_file = data_dir + 'box_plots_num_days_all_years_and_locs.json';
         box_plot_num_days(data_file, 'container-11');
-        */
     });
     </script>
 </head>
@@ -69,14 +67,18 @@
     <div class="col-md-12">
         <h2>Intoduction</h2>
         <p style="max-width: 90%">
-        We identified cold outbreaks from temperature data in the
+        We identified cold outbreaks by analyzing minimum temperature data in the
         <a target="_blank" href="https://www.esrl.noaa.gov/psd/data/gridded/data.livneh.html">linveh dataset</a> 
-        by computing a cold index each location (grid point). 
+        by computing a cold index each location (lon, lat coordinate). 
         The cold index at lon, lat coordinate on a day is defined as the number of degrees below the 5th percentile 
         observed at that location. The time period over which the percentiles were computed is 1951 - 2005. 
         This analysis is run on the livneh grid, BBOX: -125, 31, -102, 49.1 (103968 locations).
         </p>
-    
+
+        <p style="max-width: 100%" align="center">
+            <img src="/csc/media/img/COLD/SpatialDomain.png">   
+        </p>
+
         <!--Figures--> 
         <h2 align="center">Index sums</h2>
         <div class="row">
@@ -162,7 +164,7 @@
             <div class="col-md-4">
                 <h4>Spatial patterns</h4>
                 <div class="col-md-11">
-                    <img height="100%" src="/csc/media/img/COLD/PC_1.png">
+                    <img height="80%" src="/csc/media/img/COLD/PC_1.png">
                 </div>
                 <div class="col-md-1">
                     <img src="/csc/media/img/COLD/PC_1_legend.png">
@@ -205,14 +207,13 @@
                 </div>
             </div>
         </div>
-        <!--
         <h2 align="center">Other plots</h2>
         <div class="row">
-            <h3 align="center">Number of winter days below 5th percentile by year</h3>
+            <h3 align="center">Number of winter days below 5th percentile by year (all locations)</h3>
             <div class="col-md-12">
                 <div id="container-11"></div>
             </div>
-        </div>--> 
+        </div>
    </div><!--col-md-12-->
 </div><!--End row main-->
 
