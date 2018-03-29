@@ -56,6 +56,15 @@ def cold(request):
     url = settings.APPLICATIONS[app_name][2]
     return render_to_response(url, context, context_instance=RequestContext(request))
 
+def doy_cold(request):
+    app_name = 'DOY_COLD'
+    context = {
+        'title': settings.APPLICATIONS[app_name][0],
+        'app_name':app_name,
+    }
+    url = settings.APPLICATIONS[app_name][2]
+    return render_to_response(url, context, context_instance=RequestContext(request))
+
 def about(request):
     app_name = 'about'
     context = {

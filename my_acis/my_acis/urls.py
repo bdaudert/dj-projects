@@ -66,6 +66,7 @@ urlpatterns = patterns('',
     (r'^scenic/analysis/multi/monthly_spatial_summary/$', 'scenic.views.monthly_spatial_summary'),
     (r'^scenic/analysis/multi/temporal_summary/$', 'scenic.views.temporal_summary'),
     (r'^scenic/analysis/COLD/$', 'scenic.views.cold'),
+    (r'^scenic/analysis/DOY_COLD/$', 'scenic.views.doy_cold'),
     (r'^scenic/data/(?P<stn_id>\d+)/$', 'scenic.views.data'),
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

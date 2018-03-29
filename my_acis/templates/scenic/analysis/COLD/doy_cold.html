@@ -1,0 +1,246 @@
+{% extends "csc_base.html" %}
+
+<meta name="keywords" content="tools, climate product, climate applications, visualization, time series, risk maps, composite maps">
+<meta name="description" content="SW-CKN Station Data Applications">
+
+{% block content %}
+    <script type="text/javascript">
+    $(document).ready(function () {
+        var data_dir = '/csc/media/json/COLD/';
+        //SUMS
+        var data_file = data_dir + 'tmin_ind_sums_years.json';
+        var temp_data = data_dir + 'tmin_ts_years.json'
+        index_sums_years(data_file, temp_data, 'Minimum', 'container-1');
+        data_file = data_dir + 'tmax_ind_sums_years.json';
+        temp_data = data_dir + 'tmax_ts_years.json'
+        index_sums_years(data_file, temp_data, 'Maximum', 'container-2');
+        //PCA
+        data_file = data_dir + 'tmin_pca_component_1_ts.json'
+        pca_ts(data_file, 'container-3', '1')
+        data_file = data_dir + 'tmax_pca_component_1_ts.json'
+        pca_ts(data_file, 'container-4', '1')
+        data_file = data_dir + 'tmin_pca_component_1_ts.json'
+        pca_ts(data_file, 'container-5', '2')
+        data_file = data_dir + 'tmax_pca_component_1_ts.json'
+        pca_ts(data_file, 'container-6', '2')
+        data_file = data_dir + 'tmin_pca_component_1_ts.json'
+        pca_ts(data_file, 'container-7', '3')
+        data_file = data_dir + 'tmax_pca_component_1_ts.json'
+        pca_ts(data_file, 'container-8', '3')
+        
+    });
+    </script>
+</head>
+
+<body>
+
+<!-- Content will go here -->
+<h1 align="center">Cold Extremes in the Southwest</h1>
+<div class="row main">
+    <div class="col-md-12">
+        <h2>Intoduction</h2>
+        <p class="large" style="max-width: 90%">
+        We identified cold outbreaks by analyzing minimum and maximum temperature data in the
+        <a target="_blank" href="https://www.esrl.noaa.gov/psd/data/gridded/data.livneh.html">linveh dataset</a> 
+        by computing a cold index each location (lon, lat coordinate). 
+        The cold index at lon, lat coordinate on is defined as the number of degrees below the 5th percentile 
+        observed at that location. The percentiles were computed over the winter season (DJF) and year range 1951 - 2005. 
+        This analysis is run on the livneh grid, BBOX: -125, 31, -102, 49.1 (103968 locations).
+        </p>
+        <h2 align="left">Spatial Domain</h2>
+        <p style="max-width: 100%" align="left">
+            <img src="/csc/media/img/COLD/SpatialDomain.png">   
+        </p>
+
+        <!--RESULTS--> 
+        <h2 align="left">Min and Max Temperature 5th Percentiles means over season</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Minimum Temperature</h3>
+                 <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/COLD/DOY/tmin_percentiles_aves.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/COLD/DOY/tmin_percentiles_aves_legend.png">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature</h3>
+                 <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/COLD/DOY/tmax_percentiles_aves.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/COLD/DOY/tmax_percentiles_aves_legend.png">
+                </div>
+            </div>
+        </div> 
+        
+        <h2 align="left">Min and Max Temperature Cold Index time series</h2>
+        <p class="large">Cold Indices are summed over the winter season (DJF) and averaged over all gridpoints.</p>
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Minimum Temperature</h3>
+                <div width="100%" id="container-1"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Maximum Temperature</h3>
+                <div id="container-2"></div>
+            </div>
+        </div>
+
+        
+        <h2 align="left">Min and Max Temperature Cold Index maps</h2>
+        <!--        
+        <h3>Index sums</h3>
+        <p class="large">Cold Indices are summed over the winter season and averaged over all years.</p>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Minimum Temperature</h3>
+                 <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/COLD/DOY/tmin_index_sums.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/COLD/DOY/tmin_index_sums_legend.png">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature</h3>
+                 <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/COLD/DOY/tmax_index_sums.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/COLD/DOY/tmax_index_sums_legend.png">
+                </div>
+            </div>
+        </div>
+        -->
+        <h3>Index Means</h3>
+         <p class="large">Cold Indices are averaged over the winter season and averaged over all years.</p>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Minimum Temperature</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/COLD/DOY/tmin_index_aves.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/COLD/DOY/tmin_index_aves_legend.png">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/COLD/DOY/tmax_index_aves.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/COLD/DOY/tmax_index_aves_legend.png">
+                </div>
+            </div>
+        </div>
+        <!--PCA-->
+        <h2 align="left">PCA Analysis</h2>
+        <div class="row">
+            <h3>Component 1 Temporal Patterns</h3>
+            <div class="col-md-6">
+                <h3>Minimum Temperature</h3>
+                <div id="container-3"></div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature</h3>
+                <div id="container-4"></div>
+            </div>
+        </div> 
+        <div class="row">
+            <h3>Component 1Spatial Patterns</h3>
+            <div class="col-md-6">
+                <h3>Minimum Temperature</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/COLD/DOY/tmin_pca_component_1.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/COLD/DOY/tmin_pca_component_1_legend.png">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/COLD/DOY/tmax_pca_component_1.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/COLD/DOY/tmax_pca_component_1_legend.png">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <h3>Component 2 Temporal Patterns</h3>
+            <div class="col-md-6">
+                <h3>Minimum Temperature</h3>
+                <div id="container-5"></div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature</h3>
+                <div id="container-6"></div>
+            </div>
+        </div>
+        <div class="row">
+            <h3>Component 2 Spatial Patterns</h3>
+            <div class="col-md-6">
+                <h3>Minimum Temperature</h3>
+            <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/COLD/DOY/tmin_pca_component_2.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/COLD/DOY/tmin_pca_component_2_legend.png">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/COLD/DOY/tmax_pca_component_2.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/COLD/DOY/tmax_pca_component_2_legend.png">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <h3>Component 3 Temporal Patterns</h3>
+            <div class="col-md-6">
+                <h3>Minimum Temperature</h3>
+                <div id="container-7"></div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature</h3>
+                <div id="container-8"></div>
+            </div>
+        </div>
+        <div class="row">
+            <h3>Component 3 Spatial Patterns</h3>
+            <div class="col-md-6">
+                <h3>Minimum Temperature</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/COLD/DOY/tmin_pca_component_3.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/COLD/DOY/tmin_pca_component_3_legend.png">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/COLD/DOY/tmax_pca_component_3.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/COLD/DOY/tmax_pca_component_3_legend.png">
+                </div>
+            </div>
+        </div>
+
+        
+
+
+   </div><!--col-md-12-->
+</div><!--End row main-->
+
+{%endblock%}
