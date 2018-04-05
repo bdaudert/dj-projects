@@ -9,6 +9,7 @@ function index_sums_years(index_sums, temp_data, temp_type, container) {
             }
             pearson_coeff = 0.0181;
             p_value = 0.8899;
+            var reg_title = 'Regression, pearson_coeff: ' + String(pearson_coeff) + ', p_value: ' + String(p_value)  + ', slope/intercept: ' + '0.00165/-7.9401';  
         }
         else{
             for (var i=0; i<index_ts.length; i++){
@@ -16,16 +17,17 @@ function index_sums_years(index_sums, temp_data, temp_type, container) {
             }
             pearson_coeff = 0.0727;
             p_value = 0.5776; 
+            var reg_title = 'Regression, pearson_coeff: ' + String(pearson_coeff) + ', p_value: ' + String(p_value) + ', slope/intercept: ' + '0.00763/5.09158';
         }
         var temps_ts;
         $.getJSON(temp_data, function(t_data) {
             temp_ts = t_data;
             Highcharts.chart(container, {
                 title: {
-                    text: 'Sum of indices over season (DJF) for each year, averaged over all gridpoints'
+                    text: 'Index Sums and Mean Temperatures over domain'
                 },
                 subtitle: {
-                    text: 'Index = number of Deg C below 5th percentile'
+                    text: reg_title
                 },
                 yAxis: [{
                     title: {
@@ -69,7 +71,7 @@ function index_sums_years(index_sums, temp_data, temp_type, container) {
                     },
                     {
                         type: 'line',
-                        name: 'Regression, pearson_coeff: ' + pearson_coeff + ', p_value: ' + p_value,
+                        name: 'Regression',
                         data: reg_ts,
                         color: '#FF0000'
                     }

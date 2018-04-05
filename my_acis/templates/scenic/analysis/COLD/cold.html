@@ -17,17 +17,28 @@
         //PCA
         data_file = data_dir + 'tmin_pca_component_1_ts.json'
         pca_ts(data_file, 'container-3', '1')
-        data_file = data_dir + 'tmax_pca_component_2_ts.json'
-        pca_ts(data_file, 'container-4', '1')
-        data_file = data_dir + 'tmin_pca_component_3_ts.json'
-        pca_ts(data_file, 'container-5', '2')
         data_file = data_dir + 'tmax_pca_component_1_ts.json'
-        pca_ts(data_file, 'container-6', '2')
+        pca_ts(data_file, 'container-4', '1')
         data_file = data_dir + 'tmin_pca_component_2_ts.json'
+        pca_ts(data_file, 'container-5', '2')
+        data_file = data_dir + 'tmax_pca_component_2_ts.json'
+        pca_ts(data_file, 'container-6', '2')
+        data_file = data_dir + 'tmin_pca_component_3_ts.json'
         pca_ts(data_file, 'container-7', '3')
         data_file = data_dir + 'tmax_pca_component_3_ts.json'
         pca_ts(data_file, 'container-8', '3')
-        
+        data_file = data_dir + 'tmin_pca_correlation_1_ts.json'
+        pca_ts(data_file, 'container-9', '1')
+        data_file = data_dir + 'tmax_pca_correlation_1_ts.json'
+        pca_ts(data_file, 'container-10', '1')
+        data_file = data_dir + 'tmin_pca_correlation_2_ts.json'
+        pca_ts(data_file, 'container-11', '2')
+        data_file = data_dir + 'tmax_pca_correlation_2_ts.json'
+        pca_ts(data_file, 'container-12', '2')
+        data_file = data_dir + 'tmin_pca_correlation_3_ts.json'
+        pca_ts(data_file, 'container-13', '3')
+        data_file = data_dir + 'tmax_pca_correlation_3_ts.json'
+        pca_ts(data_file, 'container-14', '3')     
     });
     </script>
 </head>
@@ -141,8 +152,6 @@
             </div>
         </div>
         <!--PCA-->
-        
-        
         <div class="row">
              <h2 align="center"> PCA Analysis Component 1 </h2>
              <div class="col-md-6">
@@ -154,14 +163,14 @@
         </div>
         <div class="row">
             <div class="col-md-6">
-                <h3>Minimum Temperature</h3>
-                <div id="container-3"></div>
+                <h3>Minimum Temperature Correlations</h3>
+                <div id="container-9" width="100%"></div>
             </div>
             <div class="col-md-6">
-                <h3>Maximum Temperature</h3>
-                <div id="container-4"></div>
+                <h3>Maximum Temperature Correlations</h3>
+                <div id="container-10" width="100%"></div>
             </div>
-        </div> 
+        </div>
         <div class="row">
             <div class="col-md-6">
                 <h3>Minimum Temperature Correlations</h3>
@@ -181,6 +190,18 @@
                     <img src="{{MEDIA_URL}}/img/COLD/tmax_pca_correlation_1_legend.png">
                 </div>
             </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Minimum Temperature PC</h3>
+                <div id="container-3" width="100%"></div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature PC</h3>
+                <div id="container-4" width="100%"></div>
+            </div>
+        </div> 
+        <div class="row">
             <div class="col-md-6">
                 <h3>Minimum Temperature Loadings</h3>
                 <div class="col-md-11">
@@ -211,12 +232,12 @@
         </div>
         <div class="row">
             <div class="col-md-6">
-                <h3>Minimum Temperature</h3>
-                <div id="container-5"></div>
+                <h3>Minimum Temperature Correlations</h3>
+                <div id="container-11" width="100%"></div>
             </div>
             <div class="col-md-6">
-                <h3>Maximum Temperature</h3>
-                <div id="container-6"></div>
+                <h3>Maximum Temperature Correlations</h3>
+                <div id="container-12" width="100%"></div>
             </div>
         </div>
         <div class="row">
@@ -238,6 +259,17 @@
                     <img src="{{MEDIA_URL}}/img/COLD/tmax_pca_correlation_2_legend.png">
                 </div>
             </div>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Minimum Temperature PC</h3>
+                <div id="container-5" width="100%"></div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature PC</h3>
+                <div id="container-6" width="100%"></div>
+            </div>
+        </div>
+         <div class="row">
             <div class="col-md-6">
                 <h3>Minimum Temperature Loadings</h3>
             <div class="col-md-11">
@@ -268,12 +300,12 @@
         </div>
         <div class="row">
             <div class="col-md-6">
-                <h3>Minimum Temperature</h3>
-                <div id="container-7"></div>
+                <h3>Minimum Temperature Correlations</h3>
+                <div id="container-13" width="100%"></div>
             </div>
             <div class="col-md-6">
-                <h3>Maximum Temperature</h3>
-                <div id="container-8"></div>
+                <h3>Maximum Temperature Correlations</h3>
+                <div id="container-14" width="100%"></div>
             </div>
         </div>
         <div class="row">
@@ -295,6 +327,17 @@
                     <img src="{{MEDIA_URL}}/img/COLD/tmax_pca_correlation_3_legend.png">
                 </div>
             </div> 
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Minimum Temperature PC</h3>
+                <div id="container-7" width="100%"></div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature PC</h3>
+                <div id="container-8" width="100%"></div>
+            </div>
+        </div>
+        <div class="row">
             <div class="col-md-6">
                 <h3>Minimum Temperature Loadings</h3>
                 <div class="col-md-11">
@@ -314,10 +357,6 @@
                 </div>
             </div>
         </div>
-
-        
-
-
    </div><!--col-md-12-->
 </div><!--End row main-->
 
