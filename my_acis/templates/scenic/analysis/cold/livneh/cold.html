@@ -1,0 +1,630 @@
+{% extends "csc_base.html" %}
+
+<meta name="keywords" content="tools, climate product, climate applications, visualization, time series, risk maps, composite maps">
+<meta name="description" content="SW-CKN Station Data Applications">
+
+{% block content %}
+    <script type="text/javascript">
+    $(document).ready(function () {
+        var data_dir = '/csc/media/json/cold/livneh/';
+        //SUMS
+        var data_file = data_dir + 'tmin_ind_sums_years.json';
+        var temp_data = data_dir + 'tmin_ts_years.json'
+        var p_value = 0.8899, pearson_coeff = 0.0181, a0 = -7.9401, a1 = 0.00165;
+        index_sums_years(data_file, temp_data, 'Minimum', 'container-1',p_value, pearson_coeff, a0, a1);
+        data_file = data_dir + 'tmax_ind_sums_years.json';
+        temp_data = data_dir + 'tmax_ts_years.json'
+        p_value = 0.5776, pearson_coeff = 0.0727, a0 =5.09158 , a1 = 0.00763;
+        index_sums_years(data_file, temp_data, 'Maximum', 'container-2',p_value, pearson_coeff, a0, a1);
+
+        //PCA 1 -3
+        data_file = data_dir + 'tmin_pca_component_1_ts.json'
+        pca_ts(data_file, 'container-3', '1')
+        data_file = data_dir + 'tmax_pca_component_1_ts.json'
+        pca_ts(data_file, 'container-4', '1')
+        data_file = data_dir + 'tmin_pca_component_2_ts.json'
+        pca_ts(data_file, 'container-5', '2')
+        data_file = data_dir + 'tmax_pca_component_2_ts.json'
+        pca_ts(data_file, 'container-6', '2')
+        data_file = data_dir + 'tmin_pca_component_3_ts.json'
+        pca_ts(data_file, 'container-7', '3')
+        data_file = data_dir + 'tmax_pca_component_3_ts.json'
+        pca_ts(data_file, 'container-8', '3')
+        /*
+        data_file = data_dir + 'tmin_pca_correlation_1_ts.json'
+        pca_ts(data_file, 'container-9', '1')
+        data_file = data_dir + 'tmax_pca_correlation_1_ts.json'
+        pca_ts(data_file, 'container-10', '1')
+        data_file = data_dir + 'tmin_pca_correlation_2_ts.json'
+        pca_ts(data_file, 'container-11', '2')
+        data_file = data_dir + 'tmax_pca_correlation_2_ts.json'
+        pca_ts(data_file, 'container-12', '2')
+        data_file = data_dir + 'tmin_pca_correlation_3_ts.json'
+        pca_ts(data_file, 'container-13', '3')
+        data_file = data_dir + 'tmax_pca_correlation_3_ts.json'
+        pca_ts(data_file, 'container-14', '3')     
+        */
+        //PCA 4
+        /*
+        data_file = data_dir + 'tmin_pca_correlation_4_ts.json'
+        pca_ts(data_file, 'container-15', '4')
+        data_file = data_dir + 'tmax_pca_correlation_4_ts.json'
+        pca_ts(data_file, 'container-16', '4')
+        */
+        data_file = data_dir + 'tmin_pca_component_4_ts.json'
+        pca_ts(data_file, 'container-17', '4')
+        data_file = data_dir + 'tmax_pca_component_4_ts.json'
+        pca_ts(data_file, 'container-18', '4')
+        //PCA 5
+        /*
+        data_file = data_dir + 'tmin_pca_correlation_5_ts.json'
+        pca_ts(data_file, 'container-19', '5')
+        data_file = data_dir + 'tmax_pca_correlation_5_ts.json'
+        pca_ts(data_file, 'container-20', '5')
+        */
+        data_file = data_dir + 'tmin_pca_component_5_ts.json'
+        pca_ts(data_file, 'container-21', '5')
+        data_file = data_dir + 'tmax_pca_component_5_ts.json'
+        pca_ts(data_file, 'container-22', '5')
+        //PCA 6
+        /*
+        data_file = data_dir + 'tmin_pca_correlation_6_ts.json'
+        pca_ts(data_file, 'container-23', '6')
+        data_file = data_dir + 'tmax_pca_correlation_6_ts.json'
+        pca_ts(data_file, 'container-24', '6')
+        */
+        data_file = data_dir + 'tmin_pca_component_6_ts.json'
+        pca_ts(data_file, 'container-25', '6')
+        data_file = data_dir + 'tmax_pca_component_6_ts.json'
+        pca_ts(data_file, 'container-26', '6')        
+    });
+    </script>
+</head>
+
+<body>
+
+<!-- Content will go here -->
+<h1 align="center">Cold Extremes in the Southwest</h1>
+<div class="row main">
+    <div class="col-md-12">
+        <h2>Intoduction</h2>
+        <p class="large" style="max-width: 90%">
+        We idenpngied cold outbreaks by analyzing minimum and maximum temperature data in the
+        <a target="_blank" href="https://www.esrl.noaa.gov/psd/data/gridded/data.livneh.html">linveh dataset</a> 
+        by computing a cold index each location (lon, lat coordinate). 
+        The cold index at lon, lat coordinate on is defined as the number of degrees below the 5th percentile 
+        observed at that location. The percentiles were computed over the winter season (DJF) and year range 1951 - 2005. 
+        This analysis is run on the livneh grid, BBOX: -125, 31, -102, 49.1 (103968 locations).
+        </p>
+        <h2 align="left">Spatial Domain</h2>
+        <p style="max-width: 100%" align="left">
+            <img src="/csc/media/img/cold/SpatialDomain.png">   
+        </p>
+
+        <!--RESULTS--> 
+        <!--
+        <h1 align="center">DKJLAIJSAO</h1>
+        <h2 align="center">Min and Max Temperature 5th Percentiles</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Minimum Temperature</h3>
+                 <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmin_percentiles.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmin_percentiles_legend.png">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature</h3>
+                 <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmax_percentiles.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmax_percentiles_legend.png">
+                </div>
+            </div>
+        </div> 
+        -->
+        <h2 align="center">Min and Max Temperature Cold Index time series</h2>
+        <p class="large">Cold Indices are summed over the winter season (DJF) and averaged over all gridpoints.</p>
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Minimum Temperature</h3>
+                <div width="100%" id="container-1"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Maximum Temperature</h3>
+                <div width="100%" id="container-2"></div>
+            </div>
+        </div>
+
+        
+        <h2 align="center">Min and Max Temperature Cold Index maps</h2>
+        <!--        
+        <h3>Index sums</h3>
+        <p class="large">Cold Indices are summed over the winter season and averaged over all years.</p>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Minimum Temperature</h3>
+                 <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmin_index_sums.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmin_index_sums_legend.png">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature</h3>
+                 <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmax_index_sums.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmax_index_sums_legend.png">
+                </div>
+            </div>
+        </div>
+        -->
+        <h3 align="center">Index Means</h3>
+        <p class="large">Cold Indices are averaged over the winter season and averaged over all years.</p>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Minimum Temperature</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmin_rcp85_index_aves.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmin_rcp85_index_aves_legend.png">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmax_rcp85_index_aves.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmax_rcp85_index_aves_legend.png">
+                </div>
+            </div>
+        </div>
+        <!--PCA-->
+        <div class="row">
+             <h2 align="center"> PCA Analysis Component 1 </h2>
+             <div class="col-md-6">
+                <h3>Minimum Temperature, Variance explained: 39.260117%</h3>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature, Variance explained: 41.451976%</h3>
+            </div>
+        </div>
+        <!--
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Minimum Temperature Correlations</h3>
+                <div id="container-9" width="100%"></div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature Correlations</h3>
+                <div id="container-10" width="100%"></div>
+            </div>
+        </div>
+        -->
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Minimum Temperature Correlations</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmin_pca_correlation_1.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmin_pca_correlation_1_legend.png">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature Correlations</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmax_pca_correlation_1.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmax_pca_correlation_1_legend.png">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Minimum Temperature PC</h3>
+                <div id="container-3" width="100%"></div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature PC</h3>
+                <div id="container-4" width="100%"></div>
+            </div>
+        </div>
+        <!--
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Minimum Temperature Loadings</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmin_pca_component_1.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmin_pca_component_1_legend.png">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature Loadings</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmax_pca_component_1.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmax_pca_component_1_legend.png">
+                </div>
+            </div>
+        </div>
+        -->
+        <div class="row">
+             <h2 align="center"> PCA Analysis Component 2 </h2>
+             <div class="col-md-6">
+                <h3>Minimum Temperature, Variance explained: 11.904217%</h3>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature, Variance explained: 14.00987%</h3>
+            </div>
+        </div>
+        <!--
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Minimum Temperature Correlations</h3>
+                <div id="container-11" width="100%"></div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature Correlations</h3>
+                <div id="container-12" width="100%"></div>
+            </div>
+        </div>
+        -->
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Minimum Temperature Correlations</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmin_pca_correlation_2.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmin_pca_correlation_2_legend.png">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature Correlations</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmax_pca_correlation_2.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmax_pca_correlation_2_legend.png">
+                </div>
+            </div>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Minimum Temperature PC</h3>
+                <div id="container-5" width="100%"></div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature PC</h3>
+                <div id="container-6" width="100%"></div>
+            </div>
+        </div>
+        <!--
+         <div class="row">
+            <div class="col-md-6">
+                <h3>Minimum Temperature Loadings</h3>
+            <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmin_pca_component_2.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmin_pca_component_2_legend.png">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature Loadings</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmax_pca_component_2.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmax_pca_component_2_legend.png">
+                </div>
+            </div>
+        </div>
+        -->
+        <div class="row">
+            <h2 align="center"> PCA Analysis Component 3 </h2>
+             <div class="col-md-6">
+                <h3>Minimum Temperature, Variance explained: 7.406395%</h3>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature, Variance explained: 5.856181%</h3>
+            </div>
+        </div>
+        <!--
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Minimum Temperature Correlations</h3>
+                <div id="container-13" width="100%"></div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature Correlations</h3>
+                <div id="container-14" width="100%"></div>
+            </div>
+        </div>
+        -->
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Minimum Temperature Correlations</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmin_pca_correlation_3.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmin_pca_correlation_3_legend.png">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature Correlations</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmax_pca_correlation_3.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmax_pca_correlation_3_legend.png">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Minimum Temperature PC</h3>
+                <div id="container-7" width="100%"></div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature PC</h3>
+                <div id="container-8" width="100%"></div>
+            </div>
+        </div>
+        <!--
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Minimum Temperature Loadings</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmin_pca_component_3.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmin_pca_component_3_legend.png">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature Loadings</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmax_pca_component_3.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmax_pca_component_3_legend.png">
+                </div>
+            </div>
+        </div>
+        -->
+        <div class="row">
+            <h2 align="center"> PCA Analysis Component 4 </h2>
+             <div class="col-md-6">
+                <h3>Minimum Temperature, Variance explained: 4.306761%</h3>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature, Variance explained: 4.786483 %</h3>
+            </div>
+        </div>
+        <!--
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Minimum Temperature Correlations</h3>
+                <div id="container-15" width="100%"></div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature Correlations</h3>
+                <div id="container-16" width="100%"></div>
+            </div>
+        </div>
+        -->
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Minimum Temperature Correlations</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmin_pca_correlation_4.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmin_pca_correlation_4_legend.png">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature Correlations</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmax_pca_correlation_4.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmax_pca_correlation_4_legend.png">
+                </div>
+            </div> 
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Minimum Temperature PC</h3>
+                <div id="container-17" width="100%"></div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature PC</h3>
+                <div id="container-18" width="100%"></div>
+            </div>
+        </div>
+        <!--
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Minimum Temperature Loadings</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmin_pca_component_4.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmin_pca_component_4_legend.png">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature Loadings</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmax_pca_component_4.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmax_pca_component_4_legend.png">
+                </div>
+            </div>
+        </div>
+        -->
+        <div class="row">
+            <h2 align="center"> PCA Analysis Component 5 </h2>
+             <div class="col-md-6">
+                <h3>Minimum Temperature, Variance explained: 3.483092%</h3>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature, Variance explained: 3.366754%</h3>
+            </div>
+        </div>
+        <!--
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Minimum Temperature Correlations</h3>
+                <div id="container-19" width="100%"></div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature Correlations</h3>
+                <div id="container-20" width="100%"></div>
+            </div>
+        </div>
+        -->
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Minimum Temperature Correlations</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmin_pca_correlation_5.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmin_pca_correlation_5_legend.png">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature Correlations</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmax_pca_correlation_5.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmax_pca_correlation_5_legend.png">
+                </div>
+            </div> 
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Minimum Temperature PC</h3>
+                <div id="container-21" width="100%"></div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature PC</h3>
+                <div id="container-22" width="100%"></div>
+            </div>
+        </div>
+        <!--
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Minimum Temperature Loadings</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmin_pca_component_5.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmin_pca_component_5_legend.png">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature Loadings</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmax_pca_component_5.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmax_pca_component_5_legend.png">
+                </div>
+            </div>
+        </div>
+        -->
+        <div class="row">
+            <h2 align="center"> PCA Analysis Component 6 </h2>
+             <div class="col-md-6">
+                <h3>Minimum Temperature, Variance explained: 1.903625%</h3>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature, Variance explained: 1.875313%</h3>
+            </div>
+        </div>
+        <!--
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Minimum Temperature Correlations</h3>
+                <div id="container-23" width="100%"></div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature Correlations</h3>
+                <div id="container-24" width="100%"></div>
+            </div>
+        </div>
+        -->
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Minimum Temperature Correlations</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmin_pca_correlation_6.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmin_pca_correlation_6_legend.png">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature Correlations</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmax_pca_correlation_6.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmax_pca_correlation_6_legend.png">
+                </div>
+            </div> 
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Minimum Temperature PC</h3>
+                <div id="container-25" width="100%"></div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature PC</h3>
+                <div id="container-26" width="100%"></div>
+            </div>
+        </div>
+        <!--
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Minimum Temperature Loadings</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmin_pca_component_6.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmin_pca_component_6_legend.png">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature Loadings</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmax_pca_component_6.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmax_pca_component_6_legend.png">
+                </div>
+            </div>
+        </div>
+        -->
+   </div><!--col-md-12-->
+</div><!--End row main-->
+
+{%endblock%}

@@ -1,24 +1,17 @@
+//Function to determine if variable is in list
+String.prototype.inList=function(list){
+   return ( list.indexOf(this.toString()) != -1)
+}
 
-function index_sums_years(index_sums, temp_data, temp_type, container) {
+
+function index_sums_years(index_sums, temp_data, temp_type, container, p_value, pearson_coeff, a0, a1) {
     $.getJSON(index_sums, function( index_ts ) {
         //Results of correlate_ts.py
-        var reg_ts = [], pearson_coeff, p_value;
-        if (temp_type == 'Minimum'){
-            for (var i=0; i<index_ts.length; i++){
-                reg_ts.push(-7.9401 + i*0.00165);
-            }
-            pearson_coeff = 0.0181;
-            p_value = 0.8899;
-            var reg_title = 'Regression, pearson_coeff: ' + String(pearson_coeff) + ', p_value: ' + String(p_value)  + ', slope/intercept: ' + '0.00165/-7.9401';  
+        var reg_ts = [];
+        for (var i=0; i<index_ts.length; i++){
+            reg_ts.push(a0 + i*a1);
         }
-        else{
-            for (var i=0; i<index_ts.length; i++){
-                reg_ts.push(5.09158 + i*0.00763);
-            }
-            pearson_coeff = 0.0727;
-            p_value = 0.5776; 
-            var reg_title = 'Regression, pearson_coeff: ' + String(pearson_coeff) + ', p_value: ' + String(p_value) + ', slope/intercept: ' + '0.00763/5.09158';
-        }
+        var reg_title = 'Regression, pearson_coeff: ' + String(pearson_coeff) + ', p_value: ' + String(p_value)  + ', slope/intercept: ' + a1 + '/' + a0;
         var temps_ts;
         $.getJSON(temp_data, function(t_data) {
             temp_ts = t_data;
@@ -284,18 +277,27 @@ function box_plot_num_days(data_file, container){
 function pca_ts(data_file, container, comp_idx){
     $.getJSON( data_file, function( ts_data ) {
         var data = [], i, d_utc, ymd_str, y, m, d;
-        var doy = 0;
+        var t_step = 0;
+        var tickpositions = [];
+        var categories = [];
+        var year_start_vals = [];
         for (i = 0; i < ts_data.length; i++){
-            doy+=1;
+            t_step+=1;
             ymd_str = ts_data[i][0].split('-');
             y = parseInt(ymd_str[0]);
             m = parseInt(ymd_str[1]) - 1;
             d = parseInt(ymd_str[2]);
             //console.log(String(y) + '-' + String(m) + '-' + String(d))
             d_utc = Date.UTC(y,m,d);
-            val = ts_data[i][1] / 1000.0;
+            val = ts_data[i][1]/ 100;
             //data.push([d_utc, val]);
-            data.push([doy, val])
+            //data.push([t_step, val])
+            data.push(val);
+            categories.push(ts_data[i][0]);
+            if (i % 90 == 0){
+                tickpositions.push(ts_data[i][0]);
+                year_start_vals.push([d_utc, val]);   
+            }
         }
         Highcharts.chart(container, {
             chart: {
@@ -312,15 +314,17 @@ function pca_ts(data_file, container, comp_idx){
                 /*
                 type: 'datetime',
                 dateTimeLabelFormats: { // don't display the dummy year
-                    month: '%e. %b',
-                    year: '%b'
+                    year: '%Y'
+                },
+                labels: {
+                    enabled: false
                 },
                 */
+                categories: categories,
                 title: {
-                    text: 'Time Step'
-                },
-            },
-            
+                    text: 'Date'
+                }
+            }, 
             yAxis: {
                 title: {
                     text: 'Standard deviations'
@@ -334,6 +338,24 @@ function pca_ts(data_file, container, comp_idx){
             series: [{
                 name: 'PCA_' + String(comp_idx),
                 data: data
+                /*
+                dataLabels: {
+                    enabled:true,
+                    formatter: function(){
+                        for (i = 90; i < 5490; i+=90 ) {
+                            if(this.point == this.series.data[i]){
+                                return this.x
+                            }
+                        }
+                        if(this.point === this.series.data[0]){
+                            return this.x
+                        }
+                        if(this.point === this.series.data[this.series.data.length - 1]){
+                            return this.x;
+                        }
+                    } 
+                },
+                */
             }]
         });
     });
