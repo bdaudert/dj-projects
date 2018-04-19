@@ -4,23 +4,29 @@ String.prototype.inList=function(list){
 }
 
 
-function index_sums_years(index_sums, temp_data, temp_type, container, p_value, pearson_coeff, a0, a1) {
+function index_sums_years(index_sums,p1, pc1, a01, a11, temp_data, p2, pc2, a02,a12,temp_type, container) {
     $.getJSON(index_sums, function( index_ts ) {
         //Results of correlate_ts.py
-        var reg_ts = [];
+        var reg_ind = [];
         for (var i=0; i<index_ts.length; i++){
-            reg_ts.push(a0 + i*a1);
+            reg_ind.push(a01 + i*a11);
         }
-        var reg_title = 'Regression, pearson_coeff: ' + String(pearson_coeff) + ', p_value: ' + String(p_value)  + ', slope/intercept: ' + a1 + '/' + a0;
+        var reg_title_ind = 'Regression Index, pearson_coeff: ' + String(pc1) + ', p_value: ' + String(p1)  + ', slope/intercept: ' + a11 + '/' + a01;
         var temps_ts;
         $.getJSON(temp_data, function(t_data) {
             temp_ts = t_data;
+            var reg_temp = [];
+            for (var i=0; i<temp_data.length; i++){
+                reg_temp.push(a02 + i*a12);
+            }        
+            var reg_title_temp = 'Regression Temperature, pearson_coeff: ' + String(pc2) + ', p_value: ' + String(p2)  + ', slope/intercept: ' + a12 + '/' + a02;            
+
             Highcharts.chart(container, {
                 title: {
                     text: 'Index Sums and Mean Temperatures over domain'
                 },
                 subtitle: {
-                    text: reg_title
+                    text: reg_title_ind + '<br>' + reg_title_temp
                 },
                 yAxis: [{
                     title: {
@@ -59,14 +65,21 @@ function index_sums_years(index_sums, temp_data, temp_type, container, p_value, 
                         type: 'spline',
                         name: 'Mean ' + temp_type + ' Temperature',
                         data: temp_ts,
-                        color: '#0000FF',
+                        color: '#0000ff',
                         yAxis: 1
                     },
                     {
                         type: 'line',
-                        name: 'Regression',
-                        data: reg_ts,
-                        color: '#FF0000'
+                        name: 'Regression Index',
+                        data: reg_ind,
+                        color: '#708090'
+                    }, 
+                    {
+                        type: 'line',
+                        name: 'Regression Temperature',
+                        data: reg_temp,
+                        color: '#50a6c2',
+                        yAxis: 1
                     }
                 ]
             });
