@@ -11,10 +11,11 @@
         var data_file = data_dir + 'tmin_ind_sums_years.json';
         var temp_data = data_dir + 'tmin_ts_years.json'
         index_sums_years(data_file, 0.0463,-0.2561,17.6594,-0.1825,temp_data,0.2203,0.1592,-8.2310,0.0103,'Minimum', 'container-1');
+        regression_plots(data_file, temp_data,0.0180,0.889, 13.7526,0.1980,'Minimum', 'container-27')
         data_file = data_dir + 'tmax_ind_sums_years.json';
         temp_data = data_dir + 'tmax_ts_years.json'
         index_sums_years(data_file,0.3202,-0.1293,14.1181,-0.0871, temp_data,0.7915,-0.0345,5.2526,-0.0024, 'Maximum', 'container-2');
-
+        regression_plots(data_file, temp_data,0.0727,0.5776,7.9176,0.6926,'Maximum', 'container-28')
         //PCA 1 -3
         data_file = data_dir + 'tmin_pca_component_1_ts.json'
         pca_ts(data_file, 'container-3', '1')
@@ -72,18 +73,119 @@
         <p class="large">Cold Indices are summed over the winter season (DJF) and averaged over all gridpoints.</p>
         <div class="row">
             <div class="col-md-12">
-                <h3>Minimum Temperature</h3>
+                <h3>Minimum Temperature (Correlation between temperatures an index sums: 0.889)</h3>
                 <div width="100%" id="container-1"></div>
+            </div>
+        </div>
+        <h2 align="center">Slope maps</h2>
+        <p class="large">At each location th slope of the regression line  is computed.</p>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Mean Temperatures</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmin_temps_slopes.png">
+                </div>
+                 <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmin_temps_slopes_legend.png">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3>Index Sums</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmin_sums_slopes.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmin_sums_slopes_legend.png">
+                </div>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
-                <h3>Maximum Temperature</h3>
+                <h3>Maximum Temperature (Correlation between temperatures an index sums: 0.5776)</h3>
                 <div width="100%" id="container-2"></div>
             </div>
         </div>
+        <h2 align="center">Slope maps</h2>
+        <p class="large">At each location th slope of the regression line  is computed.</p>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Mean Temperatures</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmax_temps_slopes.png">
+                </div>
+                 <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmax_temps_slopes_legend.png">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3>Index Sums</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmax_sums_slopes.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmax_sums_slopes_legend.png">
+                </div>
+            </div>
+        </div>
 
-        
+        <h2 align="center">Regression analysis</h2>
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Minimum Temperature</h3>
+                <div width="100%" id="container-27"></div>
+            </div>
+        </div>  
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Maximum Temperature</h3>
+                <div width="100%" id="container-28"></div>
+            </div>  
+        </div>
+        <h2 align="center">Temperature vs Index Sums Slope maps</h2>
+        <p class="large">At each location th slope of the regression line of temperature averages vs index sums is computed.
+        None zero values on the map are slopes where the p-value is less than 0.05</p>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Minimum Temperature</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmin_index_sum_slopes.png">
+                </div>
+                 <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/index_sum_slopes_legend.png">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmax_index_sum_slopes.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/index_sum_slopes_legend.png">
+                </div>
+            </div>
+        </div> 
+        <h2 align="center">Temperature vs Index Correlation Coefficient  maps</h2>
+        <p class="large">At each location the correlation coefficient of the regression line of temperature averages vs index sums is computed.</p>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Minimum Temperature</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmin_index_sum_correlations.png">
+                </div>
+                 <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/livneh_index_sum_correlation_legend.png">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3>Maximum Temperature</h3>
+                <div class="col-md-11">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/tmax_index_sum_correlations.png">
+                </div>
+                <div class="col-md-1">
+                    <img src="{{MEDIA_URL}}/img/cold/livneh/livneh_index_sum_correlation_legend.png">
+                </div>
+            </div>
+        </div>
         <h2 align="center">Min and Max Temperature Cold Index maps</h2>
         <h3 align="center">Index Means</h3>
         <p class="large">Cold Indices are averaged over the winter season and averaged over all years.</p>

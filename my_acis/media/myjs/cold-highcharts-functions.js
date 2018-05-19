@@ -3,6 +3,70 @@ String.prototype.inList=function(list){
    return ( list.indexOf(this.toString()) != -1)
 }
 
+function regression_plots(index_sums, temp_data,p, pc,a0, a1,temp_type, container){
+    $.getJSON(index_sums, function( index_ts ) {
+        $.getJSON(temp_data, function(t_data) {
+            var reg_title = 'Regression Index, pearson_coeff: ' + String(pc) + ', p_value: ' + String(p)  + ', slope/intercept: ' + a1 + '/' + a0;
+            var ts_data = [], reg_data = [], years = [];
+            var sorted_t_ts = t_data.sort(), idx_i;
+            var xmin = Math.min.apply(null, t_data);
+            var xmax = Math.max.apply(null, t_data);
+            for (var i=0; i<sorted_t_ts.length; i++){
+                idx_i = t_data.indexOf(sorted_t_ts[i]);
+                ts_data.push([parseFloat(t_data[idx_i].toFixed(4)), parseFloat(index_ts[idx_i].toFixed(4))]);
+                //reg_data.push(parseFloat((a0 + i*a1).toFixed(4)));
+                years.push(1951 + i);
+            }
+            reg_data = [[xmin, parseFloat((a0 + xmin*a1).toFixed(4))], [xmax, parseFloat((a0 + xmax*a1).toFixed(4))]]
+            Highcharts.chart(container, {
+                title: {
+                    text: 'Mean Temperatures and Index Sums Regression'
+                },
+                subtitle: {
+                    text: reg_title + '<br>'
+                },
+                xAxis: [{
+                    title: 'Temperature', 
+                    min: xmin,
+                    max: xmax
+                }],
+                yAxis: [{
+                    title: {
+                        text: 'Mean sum of Index'
+                    },
+                }],
+                tooltip: {
+                    shared: true
+                },
+                legend: {
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'middle'
+                },
+                plotOptions: {
+                    series: {
+                        label: {
+                            connectorAllowed: false
+                        }
+                    }
+                },
+                series: [{
+                        type: 'scatter',
+                        name: 'Temperature vs Index',
+                        data: ts_data,
+                        color: '#0000ff',
+                    },
+                    {
+                        type: 'line',
+                        name: 'Regression',
+                        data: reg_data,
+                        color: '#000000'
+                }]
+            });      
+        });
+    });
+}
+
 
 function index_sums_years(index_sums,p1, pc1, a01, a11, temp_data, p2, pc2, a02,a12,temp_type, container) {
     $.getJSON(index_sums, function( index_ts ) {
@@ -16,7 +80,7 @@ function index_sums_years(index_sums,p1, pc1, a01, a11, temp_data, p2, pc2, a02,
         $.getJSON(temp_data, function(t_data) {
             temp_ts = t_data;
             var reg_temp = [];
-            for (var i=0; i<temp_data.length; i++){
+            for (var i=0; i<temp_ts.length; i++){
                 reg_temp.push(a02 + i*a12);
             }        
             var reg_title_temp = 'Regression Temperature, pearson_coeff: ' + String(pc2) + ', p_value: ' + String(p2)  + ', slope/intercept: ' + a12 + '/' + a02;            
